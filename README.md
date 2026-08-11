@@ -73,7 +73,7 @@ The Python Worker generates a symmetrical and balanced daily buffer of **exactly
 
 To guarantee a diverse listening experience, tracks are grouped into **mini-blocks of 5 consecutive songs of the same mood** (~12.5 minutes of total immersion per style) before cycling to the next genre. The mix sequence is mathematically calculated in Python by the Worker using the formula:
 
-$$\text{idx} = \left(\frac{\text{next\_seq} - 1}{5}\right) \pmod 4$$
+$$\text{idx} = \left(\frac{\text{nextSeq} - 1}{5}\right) \pmod 4$$
 
 | Sequence Range (Fixed 1 to 100) | Resulting Mood | Musical Genre Description | Visual Label on Cassette |
 | :--- | :--- | :--- | :--- |
