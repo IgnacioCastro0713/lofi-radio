@@ -1,0 +1,13 @@
+# Google Cloud Project Configuration Template for DEV
+# Replace with your actual Google Cloud Project ID (e.g., "my-lofi-radio-project-dev")
+project_id  = "your-gcp-project-id-dev"
+
+# The Google Cloud region where all serverless resources will be deployed (e.g., "us-central1")
+region      = "us-central1"
+
+# The Docker image tag to deploy (e.g., "v0.4.24" or "latest")
+image_tag   = "v0.4.24"
+
+# The number of daily looping tracks to generate dynamically (defaults to 100)
+# This controls the size of the infinite circular queue and adapts C# dynamically!
+track_count = 5

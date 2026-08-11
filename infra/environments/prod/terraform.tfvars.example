@@ -1,0 +1,9 @@
+# Google Cloud Project Configuration Template for PROD
+# Replace with your actual Google Cloud Project ID (e.g., "my-lofi-radio-project-prod")
+project_id  = "your-gcp-project-id-prod"
+
+# The Google Cloud region where all serverless resources will be deployed (e.g., "us-central1")
+region      = "us-central1"
+
+# The Docker image tag to deploy (e.g., "v0.4.24" or "latest")
+image_tag   = "v0.4.24"

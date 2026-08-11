@@ -1,0 +1,321 @@
+@page "/"
+@rendermode InteractiveServer
+@using Radio.Application.Services
+@using Radio.Application.DTOs
+@using Radio.Domain.Models
+@inject IRadioStreamService StreamService
+@inject IJSRuntime JSRuntime
+@inject ILogger<Home> Logger
+@implements IDisposable
+
+<PageTitle>Lofi Radio 24/7 - Sincronizado Global</PageTitle>
+
+<div class="lofi-container">
+    <!-- Widescreen Cinematic Overlay Filters -->
+    <div class="crt-overlay"></div>
+
+    <div class="lofi-header">
+        <h1>LOFI RADIO 24/7</h1>
+        <div class="lofi-tagline">GLOBAL TIME SYNCHRONIZED STREAM</div>
+    </div>
+
+    <div class="lofi-dashboard">
+        <!-- Widescreen Player Card with Centered Retro Cassette & Audio Controls -->
+        <div class="lofi-card player-card @(CurrentState?.Track?.Mood?.ToLower() ?? "day") @(IsPlaying ? "playing" : "")">
+            <div class="live-badge @(IsPlaying ? "playing" : "")">
+                <span class="live-dot"></span>
+                @(IsPlaying ? "LIVE STREAMING" : "STREAM SYNCED")
+            </div>
+
+            <!-- Retro Cassette Tape -->
+            <div class="cassette-body @(IsPlaying ? "playing" : "")">
+                <div class="cassette-label">
+                    <div class="cassette-title">
+                        @(string.IsNullOrEmpty(CurrentState?.Track?.Title) ? CurrentState?.Track?.FileName ?? "No Track Loaded" : CurrentState?.Track?.Title)
+                    </div>
+                    <div class="cassette-mood">
+                        @GetMoodLabel(CurrentState?.Track?.Mood)
+                    </div>
+                    <div class="cassette-window">
+                        <div class="tape-roll left" style="transform: scale(@(GetLeftTapeScale()));"></div>
+                        <div class="cassette-spindle"></div>
+                        <div class="tape-roll right" style="transform: scale(@(GetRightTapeScale()));"></div>
+                        <div class="cassette-spindle"></div>
+                    </div>
+                </div>
+                <div class="cassette-bottom">
+                    <span class="cassette-screw"></span>
+                    <span class="cassette-screw"></span>
+                </div>
+            </div>
+
+            <!-- Audio Visualizer Equalizer -->
+            <div class="lofi-visualizer">
+                <div class="vis-bar"></div>
+                <div class="vis-bar"></div>
+                <div class="vis-bar"></div>
+                <div class="vis-bar"></div>
+                <div class="vis-bar"></div>
+                <div class="vis-bar"></div>
+            </div>
+
+            <!-- Hidden Native HTML5 Audio Player -->
+            <audio id="nativeLofiAudio" style="display: none;">
+                Your browser does not support the audio element.
+            </audio>
+
+            <!-- Render loading state or server-side connection errors -->
+            @if (CurrentState == null)
+            {
+                <div class="empty-state">
+                    @if (!string.IsNullOrEmpty(ErrorMessage))
+                    {
+                        <span class="text-danger">@ErrorMessage</span>
+                    }
+                    else
+                    {
+                        <span>Cargando estación de radio...</span>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Centered Widescreen bottom player controls bar -->
+    <!-- Structure: [Play/Pause] ------ [Timeline Slider] ------ [Volume Icon] ------ [Volume Slider] -->
+    @if (CurrentState != null)
+    {
+        <div class="bottom-player-bar">
+            <!-- Playback Toggle Button -->
+            <button class="bottom-play-btn" @onclick="TogglePlayback" title="@(IsPlaying ? "Pause Stream" : "Listen Live")">
+                @if (IsPlaying)
+                {
+                    <svg class="pause-svg" viewBox="0 0 24 24">
+                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                    </svg>
+                }
+                else
+                {
+                    <svg class="play-svg" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                }
+            </button>
+
+            <!-- Timeline Progress Bar and Labels -->
+            <div class="bottom-timeline-container">
+                <span class="time-label">@FormatTime(CurrentTime)</span>
+                <div class="bottom-slider-wrapper" style="pointer-events: none;">
+                    <input type="range" class="bottom-timeline-slider" min="0" max="@CurrentState.Track.DurationSeconds" step="0.1" 
+                           value="@CurrentTime" readonly />
+                </div>
+                <span class="time-label">@FormatTime(CurrentState.Track.DurationSeconds)</span>
+            </div>
+
+            <!-- Interactive Volume Slider -->
+            <div class="bottom-volume-container">
+                <span class="speaker-icon" title="Volume">
+                    <svg class="speaker-svg" viewBox="0 0 24 24">
+                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                    </svg>
+                </span>
+                <input type="range" class="bottom-volume-slider" min="0" max="1" step="0.01" 
+                       value="@Volume" @oninput="OnVolumeChange" />
+            </div>
+        </div>
+    }
+
+    <div class="lofi-footer">
+        Powered by .NET 10, Vertex AI Lyria 3 Pro & Google Cloud | <a href="https://dev.azure.com" target="_blank">LofiRadio Project</a>
+    </div>
+</div>
+
+@code {
+    private DotNetObjectReference<Home>? _selfRef;
+
+    public StreamStateDto? CurrentState { get; set; }
+    public bool IsPlaying { get; set; }
+    public double Volume { get; set; } = 0.5;
+    public double CurrentTime { get; set; }
+    public double Duration { get; set; }
+    public string? ErrorMessage { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Load initial stream state and history on the server side first (prerender safe!)
+        await SyncStreamStateAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                // Initialize the player
+                _selfRef = DotNetObjectReference.Create(this);
+                await JSRuntime.InvokeVoidAsync("lofiPlayer.init", _selfRef);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Failed to initialize audio player.");
+                ErrorMessage = "Could not initialize audio system.";
+                StateHasChanged();
+            }
+        }
+    }
+
+    private async Task SyncStreamStateAsync()
+    {
+        try
+        {
+            CurrentState = await StreamService.GetCurrentStreamStateAsync();
+            
+            if (CurrentState == null)
+            {
+                ErrorMessage = "The radio queue is currently empty. Run the generator worker.";
+            }
+            else
+            {
+                ErrorMessage = null;
+                // If the stream is currently active and client is playing, we align the player offset (JS-safe check)
+                if (IsPlaying && _selfRef != null)
+                {
+                    await JSRuntime.InvokeVoidAsync("lofiPlayer.syncAndPlay", GetPlayableAudioUrl(CurrentState.Track), CurrentState.OffsetSeconds);
+                }
+            }
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error syncing stream state.");
+            ErrorMessage = "Connection error with radio server.";
+            StateHasChanged();
+        }
+    }
+
+    private async Task TogglePlayback()
+    {
+        if (IsPlaying)
+        {
+            await JSRuntime.InvokeVoidAsync("lofiPlayer.pause");
+        }
+        else
+        {
+            // Re-sync stream state on play action to start exactly at the current global timestamp
+            await SyncStreamStateAsync();
+            if (CurrentState != null)
+            {
+                await JSRuntime.InvokeVoidAsync("lofiPlayer.syncAndPlay", GetPlayableAudioUrl(CurrentState.Track), CurrentState.OffsetSeconds);
+            }
+        }
+    }
+
+    private async Task OnVolumeChange(ChangeEventArgs e)
+    {
+        if (double.TryParse(e.Value?.ToString(), out var vol))
+        {
+            Volume = vol;
+            await JSRuntime.InvokeVoidAsync("lofiPlayer.setVolume", Volume);
+        }
+    }
+
+    [JSInvokable]
+    public virtual void OnPlaybackStatusChanged(bool playing)
+    {
+        IsPlaying = playing;
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void OnTimeUpdate(double currentTime, double duration)
+    {
+        CurrentTime = currentTime;
+        Duration = duration;
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public async Task OnTrackEnded()
+    {
+        Logger.LogInformation("Track ended. Fetching next track.");
+
+        // 1. Fetch next track state safely (avoiding async event timing conflicts)
+        CurrentState = await StreamService.GetCurrentStreamStateAsync();
+        
+        if (CurrentState == null)
+        {
+            ErrorMessage = "The radio queue is currently empty. Run the generator worker.";
+        }
+        else
+        {
+            ErrorMessage = null;
+            IsPlaying = true;
+            
+            // Trigger JS play deterministically in a single call to start playback of the new track
+            await JSRuntime.InvokeVoidAsync("lofiPlayer.syncAndPlay", GetPlayableAudioUrl(CurrentState.Track), CurrentState.OffsetSeconds);
+        }
+        
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void OnPlaybackError(string message)
+    {
+        ErrorMessage = message;
+        IsPlaying = false;
+        StateHasChanged();
+    }
+
+    private static string FormatTime(double seconds)
+    {
+        var time = TimeSpan.FromSeconds(seconds);
+        return $"{(int)time.TotalMinutes:D2}:{time.Seconds:D2}";
+    }
+
+    private static string GetPlayableAudioUrl(RadioTrack? track)
+    {
+        if (track == null) return string.Empty;
+        
+        // If it is a relative path (local fallback /media/...), play it directly
+        if (!track.AudioUrl.StartsWith("http"))
+        {
+            return track.AudioUrl;
+        }
+        
+        // Secure proxy streaming - routes the private GCS request securely through our authorized Web container!
+        return $"/api/stream/audio/{track.FileName}";
+    }
+
+    private static string GetMoodLabel(string? mood)
+    {
+        if (string.IsNullOrEmpty(mood)) return "🎶 LOFI VIBES";
+        return mood.ToLower() switch
+        {
+            "day" => "🌅 DAY FOCUS",
+            "evening" => "🌇 CHILL COFFEE",
+            "night" => "🌌 NIGHT GLOW",
+            "pixel" => "👾 RETRO PIXEL",
+            _ => "🎶 LOFI VIBES"
+        };
+    }
+
+    private double GetLeftTapeScale()
+    {
+        double p = Duration > 0 ? CurrentTime / Duration : 0;
+        p = Math.Clamp(p, 0, 1);
+        return 1.7 - (0.9 * p);
+    }
+
+    private double GetRightTapeScale()
+    {
+        double p = Duration > 0 ? CurrentTime / Duration : 0;
+        p = Math.Clamp(p, 0, 1);
+        return 0.8 + (0.9 * p);
+    }
+
+    public void Dispose()
+    {
+        _selfRef?.Dispose();
+    }
+}

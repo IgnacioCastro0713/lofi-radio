@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Dark deep space background gradient -->
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#140b28" />
+      <stop offset="100%" stop-color="#070314" />
+    </radialGradient>
+
+    <!-- Neon Pink Gradient -->
+    <linearGradient id="neonPink" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff007f" />
+      <stop offset="100%" stop-color="#b30059" />
+    </linearGradient>
+
+    <!-- Neon Cyan Gradient -->
+    <linearGradient id="neonCyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f0ff" />
+      <stop offset="100%" stop-color="#008ca1" />
+    </linearGradient>
+
+    <!-- Neon Glow Filter -->
+    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="-140%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    
+    <!-- Subtle Glow Filter for Accents -->
+    <filter id="subtleGlow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Deep space circular background -->
+  <circle cx="256" cy="256" r="240" fill="url(#bgGrad)" stroke="#1a0f3d" stroke-width="6" />
+
+  <!-- Outer glowing neon-pink circle ring (Neon Sign effect) -->
+  <circle cx="256" cy="256" r="215" fill="none" stroke="url(#neonPink)" stroke-width="8" filter="url(#neonGlow)" opacity="0.9" />
+
+  <!-- Inner neon-cyan accent ring -->
+  <circle cx="256" cy="256" r="195" fill="none" stroke="url(#neonCyan)" stroke-width="3" filter="url(#subtleGlow)" opacity="0.6" stroke-dasharray="15 8" />
+
+  <!-- Stylized Neon Cassette Group -->
+  <g transform="translate(116, 166)">
+    <!-- Cassette Body with rounded corners -->
+    <rect x="0" y="0" width="280" height="180" rx="20" ry="20" fill="#090514" stroke="url(#neonPink)" stroke-width="8" filter="url(#neonGlow)" />
+    
+    <!-- Cassette Inner Label -->
+    <rect x="30" y="25" width="220" height="90" rx="10" ry="10" fill="#120924" stroke="url(#neonCyan)" stroke-width="4" filter="url(#subtleGlow)" />
+    
+    <!-- Cassette Window -->
+    <rect x="75" y="45" width="130" height="50" rx="8" ry="8" fill="#07030d" stroke="#1c1130" stroke-width="2" />
+    
+    <!-- Left Spindle -->
+    <circle cx="105" cy="70" r="16" fill="none" stroke="url(#neonCyan)" stroke-width="4" filter="url(#subtleGlow)" />
+    <circle cx="105" cy="70" r="6" fill="url(#neonCyan)" />
+    
+    <!-- Right Spindle -->
+    <circle cx="175" cy="70" r="16" fill="none" stroke="url(#neonCyan)" stroke-width="4" filter="url(#subtleGlow)" />
+    <circle cx="175" cy="70" r="6" fill="url(#neonCyan)" />
+
+    <!-- Cute Cassette Trapezoid Bottom Base -->
+    <path d="M 60 180 L 80 150 L 200 150 L 220 180 Z" fill="#090514" stroke="url(#neonPink)" stroke-width="6" />
+    
+    <!-- Left Screw -->
+    <circle cx="20" cy="160" r="5" fill="#1c1130" />
+    <!-- Right Screw -->
+    <circle cx="260" cy="160" r="5" fill="#1c1130" />
+  </g>
+
+  <!-- Symmetrical glowing audio visualizer bars below the cassette -->
+  <g transform="translate(176, 365)" filter="url(#subtleGlow)">
+    <rect x="0" y="0" width="12" height="40" rx="6" fill="url(#neonCyan)" />
+    <rect x="28" y="-10" width="12" height="50" rx="6" fill="url(#neonPink)" />
+    <rect x="56" y="-25" width="12" height="65" rx="6" fill="url(#neonCyan)" />
+    <rect x="84" y="-25" width="12" height="65" rx="6" fill="url(#neonCyan)" />
+    <rect x="112" y="-10" width="12" height="50" rx="6" fill="url(#neonPink)" />
+    <rect x="140" y="0" width="12" height="40" rx="6" fill="url(#neonCyan)" />
+  </g>
+</svg>
