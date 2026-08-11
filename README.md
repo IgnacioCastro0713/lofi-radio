@@ -33,12 +33,11 @@ graph TD
 
     %% Worker Flows (Daily Job)
     Scheduler -->|Triggers once daily| Worker
-    Worker -->|Phase 1: Atomic Purge| GCS
-    Worker -->|Phase 1: Atomic Purge| Firestore
-    Worker -->|Phase 2: AI Generation| VertexAI["🧠 Vertex AI (Lyria 3 Pro)"]
+    Worker -->|AI Generation| VertexAI["🧠 Vertex AI (Lyria 3 Pro)"]
     VertexAI -->|MP3 Audio| Worker
-    Worker -->|Uploads MP3s with UUIDs| GCS
-    Worker -->|Injects 100 fixed documents| Firestore
+    Worker -->|Uploads fresh MP3s| GCS
+    Worker -->|In-Place Overwrite - Sequence 1 to 100| Firestore
+    GCS -->|Lifecycle Rule: Autocleans files older than 24h| GCS
 
     %% Web App Flows
     UserA -->|Visits Web App| WebApp
