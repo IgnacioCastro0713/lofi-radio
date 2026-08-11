@@ -1,0 +1,16 @@
+{
+  "name": "LofiRadio 24/7",
+  "short_name": "LofiRadio",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#070314",
+  "theme_color": "#ff9cfc",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

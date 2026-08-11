@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="@Assets["Radio.Web.styles.css"]" />
     <ImportMap />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="manifest" href="manifest.json" />
     <HeadOutlet />
 </head>
 
@@ -19,6 +20,11 @@
     <ReconnectModal />
     <script src="@Assets["js/lofiPlayer.js"]"></script>
     <script src="@Assets["_framework/blazor.web.js"]"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js');
+        }
+    </script>
 </body>
 
 </html>
