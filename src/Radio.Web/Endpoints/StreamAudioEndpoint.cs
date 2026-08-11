@@ -1,20 +1,25 @@
+using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Radio.Application.Interfaces;
 
 namespace Radio.Web.Endpoints;
 
-public class StreamEndpoints : IEndpoint
+public class StreamAudioEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        RouteGroupBuilder group = app.MapGroup("/api/stream");
-
         // Secure Audio Proxy Streamer - Streams private objects from GCS securely via Web Service Account with HTTP Range processing enabled
-        group.MapGet("/audio/{fileName}", async (string fileName, IStorageService storageService, CancellationToken cancellationToken) =>
+        app.MapGet("/api/stream/audio/{fileName}", async (string fileName, IStorageService storageService, CancellationToken cancellationToken) =>
         {
             try
             {
                 Stream stream = await storageService.GetAudioStreamAsync(fileName, cancellationToken);
-                string contentType = fileName.EndsWith(".wav") ? "audio/wav" : "audio/mpeg";
+                string contentType = fileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) ? "audio/wav" : "audio/mpeg";
                 
                 // Enable Range Processing to allow modern browsers (Chrome, Safari, iOS) to seek, buffer, and stream correctly!
                 return Results.Stream(stream, contentType, enableRangeProcessing: true);
