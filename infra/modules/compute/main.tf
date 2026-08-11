@@ -8,11 +8,11 @@ resource "google_cloud_run_v2_service" "lofi_web" {
     service_account  = var.web_sa_email
     session_affinity = true # Enforces Session Affinity (sticky sessions) for Blazor Server SignalR/WebSockets!
 
-    # 🛡️ Wallet-Busting & Billing DDoS Shield: Limit max instances to 3.
-    # NET 10 can easily serve thousands of concurrent listeners with just 3 instances,
+    # 🛡️ Wallet-Busting & Billing DDoS Shield: Limit max instances to 2.
+    # NET 10 can easily serve thousands of concurrent listeners with just 2 instances,
     # completely capping your maximum cloud bill to pocket change under any brutal DDoS attack!
     scaling {
-      max_instance_count = 3
+      max_instance_count = 2
     }
 
     containers {
