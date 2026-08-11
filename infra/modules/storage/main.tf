@@ -5,6 +5,14 @@ resource "google_storage_bucket" "lofi_audio_bucket" {
 
   uniform_bucket_level_access = true
 
+  # Enable CORS so modern browsers can stream audio directly from Google Cloud Storage via Signed URLs
+  cors {
+    origin          = ["*"]
+    method          = ["GET", "HEAD", "OPTIONS"]
+    response_header = ["*"]
+    max_age_seconds = 3600
+  }
+
   # Rule autocleans objects older than 1 day (24 hours) to prevent storage bloat and reduce costs
   lifecycle_rule {
     condition {

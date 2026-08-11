@@ -8,24 +8,24 @@ namespace Radio.Infrastructure.Services;
 public class CloudStorageService(IConfiguration configuration, ILogger<CloudStorageService> logger)
     : IStorageService
 {
-    public async Task<Stream> GetAudioStreamAsync(string fileName, CancellationToken cancellationToken = default)
+    public async Task<string> GetSignedUrlAsync(string fileName, TimeSpan expiry, CancellationToken cancellationToken = default)
     {
         string bucketName = configuration["GCS_BUCKET_NAME"] ?? configuration["LofiRadio:BucketName"] ?? 
             throw new InvalidOperationException("GCS Bucket Name is not configured in settings. Check 'GCS_BUCKET_NAME' or 'LofiRadio:BucketName'.");
 
-        logger.LogInformation("Downloading and streaming {FileName} from private GCS Bucket '{Bucket}'...", fileName, bucketName);
+        logger.LogInformation("Generating signed URL for {FileName} in bucket '{Bucket}' with expiry of {Expiry}...", fileName, bucketName, expiry);
 
-        StorageClient client = await StorageClient.CreateAsync();
-        MemoryStream memoryStream = new();
-        
-        // Securely download the private object to our memory stream using the Web SA credentials
-        await client.DownloadObjectAsync(
-            bucketName, 
-            fileName, 
-            memoryStream, 
+        // Fetch Application Default Credentials (ADC) - standard on Cloud Run & local gcloud setups
+        Google.Apis.Auth.OAuth2.GoogleCredential credential = await Google.Apis.Auth.OAuth2.GoogleCredential.GetApplicationDefaultAsync(cancellationToken);
+        UrlSigner signer = UrlSigner.FromCredential(credential);
+
+        string signedUrl = await signer.SignAsync(
+            bucketName,
+            fileName,
+            expiry,
+            HttpMethod.Get,
             cancellationToken: cancellationToken);
-            
-        memoryStream.Position = 0; // Reset position to allow reading from start
-        return memoryStream;
+
+        return signedUrl;
     }
 }

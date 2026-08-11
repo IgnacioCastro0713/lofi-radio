@@ -39,3 +39,10 @@ resource "google_project_iam_member" "worker_bigquery" {
   role    = "roles/bigquery.jobUser"
   member  = "serviceAccount:${google_service_account.worker_sa.email}"
 }
+
+# Grant Service Account Token Creator to Web SA (required to self-sign GCS URLs without local JSON key files)
+resource "google_project_iam_member" "web_token_creator" {
+  project = var.project_id
+  role    = "roles/iam.serviceAccountTokenCreator"
+  member  = "serviceAccount:${google_service_account.web_sa.email}"
+}

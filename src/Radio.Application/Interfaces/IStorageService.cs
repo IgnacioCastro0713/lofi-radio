@@ -2,5 +2,5 @@ namespace Radio.Application.Interfaces;
 
 public interface IStorageService
 {
-    Task<Stream> GetAudioStreamAsync(string fileName, CancellationToken cancellationToken = default);
+    Task<string> GetSignedUrlAsync(string fileName, TimeSpan expiry, CancellationToken cancellationToken = default);
 }

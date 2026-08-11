@@ -18,6 +18,7 @@ Before running `terraform apply`, you must ensure that your Google Cloud Project
 | **Cloud Scheduler API** | `scheduler.googleapis.com` | Automating the Mon-Fri daily trigger of the Python worker job. |
 | **BigQuery API** | `bigquery.googleapis.com` | Required internally by Vertex AI for model usage metrics and ingestion. |
 | **IAM API** | `iam.googleapis.com` | Provisioning dedicated secure Service Accounts (`sa-web` and `sa-worker`). |
+| **IAM Credentials API** | `iamcredentials.googleapis.com` | Required for programmatic self-signing of GCS URLs (IAM `signBlob` API) under serverless ADC. |
 | **Resource Manager API** | `cloudresourcemanager.googleapis.com` | Managing IAM Policy Bindings and service account roles with least privilege. |
 
 ---
@@ -36,6 +37,7 @@ gcloud services enable \
   scheduler.googleapis.com \
   bigquery.googleapis.com \
   iam.googleapis.com \
+  iamcredentials.googleapis.com \
   cloudresourcemanager.googleapis.com \
   --project=YOUR_GCP_PROJECT_ID
 ```

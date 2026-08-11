@@ -44,9 +44,11 @@ graph TD
     UserA -->|Visits Web App| WebApp
     UserB -->|Visits Web App| WebApp
     WebApp -->|Queries State in Transaction| Firestore
-    WebApp -->|Secure Auth Proxy Stream| GCS
-    WebApp -->|Milisec-Exact Synchrony| UserA
-    WebApp -->|Milisec-Exact Synchrony| UserB
+    WebApp -->|Generates Secure Signed URL| WebApp
+    WebApp -->|HTTP 302 Redirect| UserA
+    WebApp -->|HTTP 302 Redirect| UserB
+    UserA -->|Direct Streaming - HTTP Range| GCS
+    UserB -->|Direct Streaming - HTTP Range| GCS
 ```
 
 ---
@@ -108,8 +110,8 @@ The GCP ecosystem is configured with airtight security following the **Principle
 (C# Web App Serverless App)                           (Python Generator Worker Job)
                 |                                                       |
   - roles/datastore.user (Read/Write)                     - roles/datastore.user (Read/Write)
-  - GCS: roles/storage.objectViewer (Stream audio)        - roles/aiplatform.user (Call Lyria Pro API)
-                                                          - roles/bigquery.jobUser (Data Ingestion)
+  - roles/iam.serviceAccountTokenCreator (URL Signer)     - roles/aiplatform.user (Call Lyria Pro API)
+  - GCS: roles/storage.objectViewer (Stream audio)        - roles/bigquery.jobUser (Data Ingestion)
                                                           - GCS: roles/storage.objectUser (Cleanup/Create MP3s)
 ```
 
@@ -117,7 +119,7 @@ The GCP ecosystem is configured with airtight security following the **Principle
 
 | GCP Resource | Resource Name | Configuration / Operating Range | Service Account (SA) / IAM Role |
 | :--- | :--- | :--- | :--- |
-| **Web SA** | `lofi-web-sa-dev` | Exclusive identity for the Web App | `roles/datastore.user` (Firestore), `roles/storage.objectViewer` (GCS) |
+| **Web SA** | `lofi-web-sa-dev` | Exclusive identity for the Web App | `roles/datastore.user` (Firestore), `roles/storage.objectViewer` (GCS), `roles/iam.serviceAccountTokenCreator` (URL Signer) |
 | **Worker SA**| `lofi-worker-sa-dev`| Exclusive identity for the Python Worker | `roles/datastore.user`, `roles/aiplatform.user` (Vertex AI), `roles/bigquery.jobUser`, **`roles/storage.objectUser`** (List, Create, and Delete objects in GCS) |
 | **Cloud Run Service**| `lofi-web-service-dev` | Auto-scalable down to 0 instances when idle | Hosts the Interactive Blazor Web App in .NET 10 |
 | **Cloud Run Job** | `lofi-generator-job-dev`| **Timeout: 120 minutes (7200s)**, Task Count: 1 | Executes the sequential daily 100-track purge and generation |
