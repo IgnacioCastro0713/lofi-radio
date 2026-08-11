@@ -16,7 +16,7 @@ public class CloudStorageService(IConfiguration configuration, ILogger<CloudStor
         logger.LogInformation("Downloading and streaming {FileName} from private GCS Bucket '{Bucket}'...", fileName, bucketName);
 
         StorageClient client = await StorageClient.CreateAsync();
-        MemoryStream memoryStream = new MemoryStream();
+        MemoryStream memoryStream = new();
         
         // Securely download the private object to our memory stream using the Web SA credentials
         await client.DownloadObjectAsync(

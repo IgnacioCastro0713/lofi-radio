@@ -7,7 +7,7 @@ public static class RadioTrackExtensions
 {
     public static RadioTrack ToTrack(this DocumentSnapshot doc)
     {
-        RadioTrack track = new RadioTrack
+        RadioTrack track = new()
         {
             Id = doc.Id // Store the actual native Firestore Document ID string
         };

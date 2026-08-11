@@ -17,18 +17,11 @@ public class RadioTrackRepository(FirestoreDb firestoreDb, IFirestoreUnitOfWork 
             .Limit(1);
 
         QuerySnapshot snapshot = await query.GetSnapshotAsync(cancellationToken);
-        if (snapshot.Count > 0)
-        {
-            RadioTrack track = snapshot.Documents[0].ToTrack();
+        if (snapshot.Count <= 0) return null;
+        RadioTrack track = snapshot.Documents[0].ToTrack();
 
-            // Delegate the active playback and drift buffer evaluation directly to the Rich Domain Model!
-            if (track.IsActive(now))
-            {
-                return track;
-            }
-        }
-
-        return null;
+        // Delegate the active playback and drift buffer evaluation directly to the Rich Domain Model!
+        return track.IsActive(now) ? track : null;
     }
 
     public async Task<List<RadioTrack>> GetExpiredActiveTracksAsync(
@@ -64,12 +57,7 @@ public class RadioTrackRepository(FirestoreDb firestoreDb, IFirestoreUnitOfWork 
             .Limit(1);
 
         QuerySnapshot snapshot = await query.GetSnapshotAsync(cancellationToken);
-        if (snapshot.Count > 0)
-        {
-            return snapshot.Documents[0].ToTrack();
-        }
-
-        return null;
+        return snapshot.Count > 0 ? snapshot.Documents[0].ToTrack() : null;
     }
 
     public async Task<int> GetTrackCountAsync(CancellationToken cancellationToken = default)

@@ -20,9 +20,8 @@ public static class DependencyInjection
         services.AddSingleton(sp =>
         {
             string projectId = configuration["GCP_PROJECT_ID"] ?? 
-                               configuration["LofiRadio:ProjectId"] ?? 
-                               Environment.GetEnvironmentVariable("GOOGLE_CLOUD_PROJECT") ?? 
-                               "lofi-radio";
+                               configuration["LofiRadio:ProjectId"] ??
+                               throw new InvalidOperationException("GCP Project ID is not configured.");
             
             _ = Console.ForegroundColor;
             Console.WriteLine($"[Firestore] Initializing Resilient FirestoreDb Client for Project ID: '{projectId}'");
@@ -44,7 +43,7 @@ public static class DependencyInjection
                 EnableMultipleHttp2Connections = true
             };
 
-            FirestoreDbBuilder builder = new FirestoreDbBuilder
+            FirestoreDbBuilder builder = new()
             {
                 ProjectId = projectId,
                 GrpcAdapter = Google.Api.Gax.Grpc.GrpcNetClientAdapter.Default.WithAdditionalOptions(options =>

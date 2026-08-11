@@ -74,7 +74,7 @@
                     }
                     else
                     {
-                        <span>Cargando estación de radio...</span>
+                        <span>Loading station...</span>
                     }
                 </div>
             }
@@ -106,10 +106,10 @@
             <div class="bottom-timeline-container">
                 <span class="time-label">@FormatTime(CurrentTime)</span>
                 <div class="bottom-slider-wrapper" style="pointer-events: none;">
-                    <input type="range" class="bottom-timeline-slider" min="0" max="@CurrentState.Track.DurationSeconds" step="0.1" 
+                    <input type="range" class="bottom-timeline-slider" min="0" max="@CurrentState!.Track!.DurationSeconds" step="0.1" 
                            value="@CurrentTime" readonly />
                 </div>
-                <span class="time-label">@FormatTime(CurrentState.Track.DurationSeconds)</span>
+                <span class="time-label">@FormatTime(CurrentState!.Track.DurationSeconds)</span>
             </div>
 
             <!-- Interactive Volume Slider -->
