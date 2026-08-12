@@ -38,10 +38,9 @@ public class RadioStreamService(IRadioTrackRepository repository, IUnitOfWork un
             RadioTrack? activeTrack = await repository.GetCurrentActiveTrackAsync(now, cts.Token);
             if (activeTrack != null)
             {
-                // Calculate Playhead Offset directly through the Rich Domain Model (encapsulates Zero Clamp Guard!)
-                double offset = activeTrack.GetPlaybackOffset(now);
-                
                 await unitOfWork.CommitTransactionAsync(cts.Token);
+                // Calculate Playhead Offset right before returning to eliminate DB transaction latency!
+                double offset = activeTrack.GetPlaybackOffset(DateTimeOffset.UtcNow);
                 return new StreamStateDto { Track = activeTrack, OffsetSeconds = offset };
             }
 
@@ -120,8 +119,8 @@ public class RadioStreamService(IRadioTrackRepository repository, IUnitOfWork un
                     await unitOfWork.SaveChangesAsync(cts.Token);
                     await unitOfWork.CommitTransactionAsync(cts.Token);
 
-                    // Calculate Playhead Offset directly through the Rich Domain Model (encapsulates Zero Clamp Guard!)
-                    double offset = nextTrack.GetPlaybackOffset(now);
+                    // Calculate Playhead Offset right before returning to eliminate DB transaction latency!
+                    double offset = nextTrack.GetPlaybackOffset(DateTimeOffset.UtcNow);
                     
                     return new StreamStateDto { Track = nextTrack, OffsetSeconds = offset };
                 }

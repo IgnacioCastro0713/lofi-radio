@@ -37,9 +37,9 @@
                         @GetMoodLabel(CurrentState?.Track?.Mood)
                     </div>
                     <div class="cassette-window">
-                        <div class="tape-roll left" style="transform: scale(@(GetLeftTapeScale()));"></div>
+                        <div class="tape-roll left" id="tapeRollLeft" style="transform: scale(@(GetLeftTapeScale()));"></div>
                         <div class="cassette-spindle"></div>
-                        <div class="tape-roll right" style="transform: scale(@(GetRightTapeScale()));"></div>
+                        <div class="tape-roll right" id="tapeRollRight" style="transform: scale(@(GetRightTapeScale()));"></div>
                         <div class="cassette-spindle"></div>
                     </div>
                 </div>
@@ -104,9 +104,9 @@
 
             <!-- Timeline Progress Bar and Labels -->
             <div class="bottom-timeline-container">
-                <span class="time-label">@FormatTime(CurrentTime)</span>
+                <span class="time-label" id="lofiCurrentTime">@FormatTime(CurrentTime)</span>
                 <div class="bottom-slider-wrapper" style="pointer-events: none;">
-                    <input type="range" class="bottom-timeline-slider" min="0" max="@CurrentState!.Track!.DurationSeconds" step="0.1" 
+                    <input type="range" id="lofiTimelineSlider" class="bottom-timeline-slider" min="0" max="@CurrentState!.Track!.DurationSeconds" step="0.1" 
                            value="@CurrentTime" readonly />
                 </div>
                 <span class="time-label">@FormatTime(CurrentState!.Track.DurationSeconds)</span>
@@ -178,6 +178,9 @@
             else
             {
                 ErrorMessage = null;
+                CurrentTime = CurrentState.OffsetSeconds;
+                Duration = CurrentState.Track.DurationSeconds;
+                
                 // If the stream is currently active and client is playing, we align the player offset (JS-safe check)
                 if (IsPlaying && _selfRef != null)
                 {
@@ -251,6 +254,8 @@
         {
             ErrorMessage = null;
             IsPlaying = true;
+            CurrentTime = CurrentState.OffsetSeconds;
+            Duration = CurrentState.Track.DurationSeconds;
             
             // Trigger JS play deterministically in a single call to start playback of the new track
             await JSRuntime.InvokeVoidAsync("lofiPlayer.syncAndPlay", GetPlayableAudioUrl(CurrentState.Track), CurrentState.OffsetSeconds);

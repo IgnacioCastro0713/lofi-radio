@@ -5,6 +5,7 @@ window.lofiPlayer = {
     userVolume: 0.5,       // Tracks the user's selected volume
     fadeDuration: 5,       // Duration of the fade-out effect in seconds
     fadeInDuration: 3,     // Duration of the fade-in effect in seconds
+    lastUpdateTime: 0,     // Timestamp for SignalR network throttling
 
     init: function (dotNetReference) {
         this.dotNetRef = dotNetReference;
@@ -21,9 +22,11 @@ window.lofiPlayer = {
                 // Add event listeners to notify Blazor of playback changes
                 this.audio.addEventListener('play', () => {
                     this.dotNetRef.invokeMethodAsync('OnPlaybackStatusChanged', true);
+                    this.startSyncTimer(); // Start smooth local UI updates
                 });
                 this.audio.addEventListener('pause', () => {
                     this.dotNetRef.invokeMethodAsync('OnPlaybackStatusChanged', false);
+                    this.stopSyncTimer(); // Stop local UI updates to conserve resources
                 });
                 this.audio.addEventListener('timeupdate', () => {
                     const currentTime = this.audio.currentTime;
@@ -49,32 +52,90 @@ window.lofiPlayer = {
                         }
                     }
 
-                    this.dotNetRef.invokeMethodAsync('OnTimeUpdate', currentTime, duration);
+                    // IMPROVEMENT 2: SignalR throttling - limit network synchronization to once every 5 seconds to minimize WebSocket traffic
+                    const now = Date.now();
+                    if (now - this.lastUpdateTime >= 5000) {
+                        this.lastUpdateTime = now;
+                        this.dotNetRef.invokeMethodAsync('OnTimeUpdate', currentTime, duration);
+                    }
                 });
                 this.audio.addEventListener('ended', () => {
                     this.dotNetRef.invokeMethodAsync('OnTrackEnded');
+                    this.stopSyncTimer();
                 });
                 this.audio.addEventListener('error', (e) => {
                     console.error("Audio playback error:", e);
                     this.dotNetRef.invokeMethodAsync('OnPlaybackError', "Failed to load audio stream.");
+                    this.stopSyncTimer();
                 });
 
-                // Dynamically attach a synchronous click event listener to the play button
-                setTimeout(() => {
-                    const playBtn = document.querySelector(".bottom-play-btn");
+                // IMPROVEMENT 1: Global click event delegation.
+                // Register the event listener once on the document so it remains unaffected when Blazor recreates the button.
+                document.addEventListener('click', (e) => {
+                    const playBtn = e.target.closest('.bottom-play-btn');
                     if (playBtn) {
-                        console.log("Attached synchronous autoplay unlock listener to the play button.");
-                        playBtn.addEventListener('click', () => {
-                            this.unlock();
-                        });
+                        this.unlock();
                     }
-                }, 100);
+                });
 
             } else {
                 console.error("Failed to find nativeLofiAudio element on screen!");
             }
         }
         return true;
+    },
+
+    startSyncTimer: function () {
+        this.stopSyncTimer();
+        this.syncInterval = setInterval(() => {
+            if (this.audio && !this.audio.paused) {
+                const currentTime = this.audio.currentTime;
+                const duration = this.audio.duration;
+                this.updateLocalUI(currentTime, duration);
+            }
+        }, 100); // 100ms interval for 60fps-smooth visual rendering!
+    },
+
+    stopSyncTimer: function () {
+        if (this.syncInterval) {
+            clearInterval(this.syncInterval);
+            this.syncInterval = null;
+        }
+    },
+
+    updateLocalUI: function (currentTime, duration) {
+        // 1. Current Time Label
+        const timeLabel = document.getElementById("lofiCurrentTime");
+        if (timeLabel) {
+            timeLabel.textContent = this.formatTime(currentTime);
+        }
+        
+        // 2. Timeline Slider
+        const slider = document.getElementById("lofiTimelineSlider");
+        if (slider) {
+            slider.value = currentTime;
+            if (duration) {
+                slider.max = duration;
+            }
+        }
+        
+        // 3. Left and Right Tape Rolls scale
+        const leftRoll = document.getElementById("tapeRollLeft");
+        const rightRoll = document.getElementById("tapeRollRight");
+        if (leftRoll && rightRoll && duration > 0) {
+            const p = Math.min(Math.max(currentTime / duration, 0), 1);
+            const leftScale = 1.7 - (0.9 * p);
+            const rightScale = 0.8 + (0.9 * p);
+            leftRoll.style.transform = `scale(${leftScale})`;
+            rightRoll.style.transform = `scale(${rightScale})`;
+        }
+    },
+
+    formatTime: function (seconds) {
+        if (isNaN(seconds) || seconds === Infinity) return "00:00";
+        const min = Math.floor(seconds / 60);
+        const sec = Math.floor(seconds % 60);
+        return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
     },
 
     unlock: function () {
@@ -92,6 +153,7 @@ window.lofiPlayer = {
     syncAndPlay: function (audioUrl, offsetSeconds) {
         if (!this.audio) return;
         
+        const initTime = Date.now(); // Record exact call timestamp (universal UTC milliseconds)
         console.log(`Syncing audio: ${audioUrl} starting at ${offsetSeconds}s`);
         
         // Prevent reloading the audio if it's already playing the correct track
@@ -108,14 +170,28 @@ window.lofiPlayer = {
         // before play() is called. We must defer setting the time until 'loadedmetadata' fires if readyState < 1.
         if (this.audio.readyState >= 1) {
             try {
-                this.audio.currentTime = offsetSeconds;
+                const elapsedSeconds = (Date.now() - initTime) / 1000;
+                const adjustedOffset = offsetSeconds + elapsedSeconds;
+                const duration = this.audio.duration;
+                const finalOffset = duration ? Math.min(adjustedOffset, duration - 0.1) : adjustedOffset;
+                
+                console.log(`Drift compensation applied directly: original offset ${offsetSeconds.toFixed(2)}s, adjusted to ${finalOffset.toFixed(2)}s`);
+                this.audio.currentTime = finalOffset;
+                this.updateLocalUI(finalOffset, duration); // Update UI immediately
             } catch (err) {
                 console.warn("Failed to set currentTime directly:", err);
             }
         } else {
             const onMetadataLoaded = () => {
                 try {
-                    this.audio.currentTime = offsetSeconds;
+                    const elapsedSeconds = (Date.now() - initTime) / 1000;
+                    const adjustedOffset = offsetSeconds + elapsedSeconds;
+                    const duration = this.audio.duration;
+                    const finalOffset = duration ? Math.min(adjustedOffset, duration - 0.1) : adjustedOffset;
+                    
+                    console.log(`Drift compensation applied on loadedmetadata: original offset ${offsetSeconds.toFixed(2)}s, adjusted to ${finalOffset.toFixed(2)}s (loading took ${elapsedSeconds.toFixed(2)}s)`);
+                    this.audio.currentTime = finalOffset;
+                    this.updateLocalUI(finalOffset, duration); // Update UI immediately
                 } catch (err) {
                     console.warn("Failed to set currentTime inside loadedmetadata:", err);
                 }
@@ -147,6 +223,7 @@ window.lofiPlayer = {
         if (this.audio) {
             try {
                 this.audio.currentTime = value;
+                this.updateLocalUI(value, this.audio.duration);
             } catch (err) {
                 console.warn("Failed to seek to time:", err);
             }
