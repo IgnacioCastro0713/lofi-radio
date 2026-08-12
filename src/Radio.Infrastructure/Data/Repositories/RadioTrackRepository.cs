@@ -38,14 +38,16 @@ public class RadioTrackRepository(FirestoreDb firestoreDb, IFirestoreUnitOfWork 
 
     public async Task<RadioTrack?> GetLastPlayedTrackAsync(CancellationToken cancellationToken = default)
     {
-        // Fetch all tracks (max 100, blazingly fast) to perform date-based sequence tracking in memory,
-        // which preserves chronological sequence memory perfectly across subsequent loop rounds!
-        QuerySnapshot snapshot = await firestoreDb.Collection("radio_tracks").GetSnapshotAsync(cancellationToken);
-        return snapshot.Documents
-            .Select(d => d.ToTrack())
-            .Where(t => t.PlayStartTime != null)
-            .OrderByDescending(t => t.PlayStartTime)
-            .FirstOrDefault();
+        Query query = firestoreDb.Collection("radio_tracks")
+            .OrderByDescending("play_start_time")
+            .Limit(1);
+
+        QuerySnapshot snapshot = await query.GetSnapshotAsync(cancellationToken);
+        if (snapshot.Count <= 0) return null;
+
+        RadioTrack track = snapshot.Documents[0].ToTrack();
+        
+        return track.PlayStartTime != null ? track : null;
     }
 
     public async Task<RadioTrack?> GetNextTrackBySequenceAsync(

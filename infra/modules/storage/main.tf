@@ -5,6 +5,11 @@ resource "google_storage_bucket" "lofi_audio_bucket" {
 
   uniform_bucket_level_access = true
 
+  # Disable soft delete policy to prevent GCS from retaining deleted MP3 files for 7 days
+  soft_delete_policy {
+    retention_duration_seconds = 0
+  }
+
   # Enable CORS so modern browsers can stream audio directly from Google Cloud Storage via Signed URLs
   cors {
     origin          = ["*"]
