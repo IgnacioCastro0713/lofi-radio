@@ -254,8 +254,7 @@ def main():
                         audio_bytes = base64.b64decode(audio_bytes)
 
                     # Upload to GCS
-                    file_uuid = uuid.uuid4().hex
-                    file_name = f"track_{next_seq}_{file_uuid}.mp3"
+                    file_name = f"{uuid.uuid4().hex}.mp3"
                     
                     bucket = storage_client.bucket(bucket_name)
                     blob = bucket.blob(file_name)
