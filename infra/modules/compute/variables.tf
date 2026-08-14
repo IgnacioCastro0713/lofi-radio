@@ -39,3 +39,15 @@ variable "track_count" {
   description = "The number of daily looping tracks to generate (e.g., 100)"
   default     = 100
 }
+
+variable "music_model" {
+  type        = string
+  description = "The DeepMind music generation model name."
+  default     = "lyria-3-pro-preview"
+}
+
+variable "image_model" {
+  type        = string
+  description = "The Gemini image generation model name."
+  default     = "gemini-3.1-flash-image"
+}

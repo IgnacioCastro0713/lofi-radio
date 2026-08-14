@@ -57,6 +57,8 @@ module "compute" {
   web_sa_email    = module.iam.web_sa_email
   bucket_name     = module.storage.bucket_name
   track_count     = var.track_count
+  music_model     = var.music_model
+  image_model     = var.image_model
 
   depends_on = [google_firestore_database.database, module.storage]
 }

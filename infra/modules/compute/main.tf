@@ -92,6 +92,16 @@ resource "google_cloud_run_v2_job" "lofi_worker" {
           name  = "USE_REAL_LYRIA"
           value = "true"
         }
+
+        env {
+          name  = "MUSIC_MODEL"
+          value = var.music_model
+        }
+
+        env {
+          name  = "IMAGE_MODEL"
+          value = var.image_model
+        }
       }
     }
   }

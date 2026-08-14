@@ -4,7 +4,7 @@ import time
 import base64
 from PIL import Image
 from google.genai import types
-from config import ai_client
+from config import ai_client, MUSIC_MODEL, IMAGE_MODEL
 
 # Mood theme datasets
 day_adj = ["Sunny", "Pixel", "Focus", "Cozy", "Desk", "Morning", "Warm", "Coffee", "Fresh", "Bright"]
@@ -193,7 +193,7 @@ def generate_single_track(next_seq, shuffled_blocks):
         prompt = get_prompt_for_mood(mood, title)
 
         if prompt_attempt == 0:
-            print(f"[Generator] Generating track {next_seq} ('{title}' - [{mood}]) with Lyria 3 Pro...")
+            print(f"[Generator] Generating track {next_seq} ('{title}' - [{mood}]) with {MUSIC_MODEL}...")
         else:
             print(f"[Generator] Retrying track {next_seq} with fresh prompt ('{title}' - [{mood}]) [Attempt {prompt_attempt+1}/{max_prompt_retries}]...")
 
@@ -206,7 +206,7 @@ def generate_single_track(next_seq, shuffled_blocks):
         for attempt in range(max_network_retries):
             try:
                 interaction = ai_client.interactions.create(
-                    model="lyria-3-pro-preview",
+                    model=MUSIC_MODEL,
                     input=prompt
                 )
                 break
@@ -394,11 +394,11 @@ def generate_mood_image(mood, ai_client):
     and then programmatically converted to WebP in memory to guarantee lightweight transmission.
     """
     prompt = generate_dynamic_image_prompt(mood)
-    print(f"[Generator] Generating daily pixel art image for mood '{mood}' using gemini-3.1-flash-image...")
+    print(f"[Generator] Generating daily pixel art image for mood '{mood}' using {IMAGE_MODEL}...")
     
     try:
         response = ai_client.models.generate_content(
-            model="gemini-3.1-flash-image",
+            model=IMAGE_MODEL,
             contents=prompt,
             config=types.GenerateContentConfig(
                 response_modalities=["IMAGE"]

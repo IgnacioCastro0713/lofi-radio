@@ -7,3 +7,11 @@ region      = "us-central1"
 
 # The Docker image tag to deploy (e.g., "v0.4.24" or "latest")
 image_tag   = "v0.4.24"
+
+# The number of daily looping tracks to generate dynamically
+# This controls the size of the infinite circular queue and adapts C# dynamically!
+track_count = 30
+
+# AI models for music and image generator
+music_model = "lyria-3-pro-preview"
+image_model = "gemini-3.1-flash-image"
