@@ -2,7 +2,7 @@
 
 Welcome to **LofiRadio**, an automated, global time-synchronized 24/7 Lofi radio station. The platform is built using **.NET 10 Clean Architecture (Blazor Server)** on the Frontend/API, and an automated modular music generator in **Python 3.11** powered by **Google DeepMind Vertex AI Lyria 3 Pro** and **Gemini 3.1** artificial intelligence.
 
-The entire ecosystem is designed under a **$0.00 USD Cost Serverless** paradigm utilizing Google Cloud Platform (GCP) infrastructure.
+The entire web hosting and database infrastructure is designed under a **$0.00 USD Cost Serverless** paradigm (leveraging Google Cloud free tiers), while GenAI API generation costs are kept to an optimized minimum (see the [Financial Section](#-6-financial-billing--cost-breakdown-usd) for full details).
 
 <p align="center">
   <img src="./{F9A93164-865D-4CE6-9C25-F32EAA2BE673}.png" alt="LofiRadio Retro Widescreen Player Interface" width="90%" />
@@ -19,8 +19,8 @@ The system operates in a completely decoupled and asynchronous manner. There are
 We intentionally chose a **Timeline-Synchronized Pseudo-Streaming Architecture** (simulating a live broadcast on the client-side via UTC calculations and HTTP Range requests from GCS) over a traditional continuous streaming server (such as Icecast, SHOUTcast, or HLS segments):
 
 *   **The Traditional Approach (Real Streaming):** Requires a dedicated VM or container running 24/7, continuously decoding, mixing, and transcoding audio tracks in memory. This represents a constant, high CPU consumption and a fixed monthly billing of **$15 – $30+ USD** (even with 0 active listeners), introducing server-side bottlenecks under heavy traffic spikes.
-*   **Our Timeline-Synchronized Approach:** By completely decoupling the audio delivery and letting Google Cloud Storage (GCS) serve the static `.mp3` files directly to listeners' browsers, we achieve **infinite, global scalability at $0.00 USD hosting costs**. C# only runs lightweight UTC clock calculations in milliseconds to tell the browser the exact playhead offset, completely offloading the heavy audio decoding/decryption and bandwidth tasks to the client and Google's high-speed CDN.
-*   **Conclusion:** This design choice is a deliberate engineering trade-off. We exchange minor client-side clock drifts (fully compensated in C#) for **decade-scale serverless robustness and absolute cost-effectiveness**, keeping the entire 24/7 radio platform operating entirely within Google Cloud's free-tier threshold.
+*   **Our Timeline-Synchronized Approach:** By completely decoupling the audio delivery and letting Google Cloud Storage (GCS) serve the static `.mp3` files directly to listeners' browsers, we achieve **infinite, global scalability at $0.00 USD hosting costs** (staying well within standard GCS Free Tier bandwidth and operation thresholds). C# only runs lightweight UTC clock calculations in milliseconds to tell the browser the exact playhead offset, completely offloading the heavy audio decoding/decryption and bandwidth tasks to the client and Google's high-speed CDN.
+*   **Conclusion:** This design choice is a deliberate engineering trade-off. We exchange minor client-side clock drifts (fully compensated in C#) for **decade-scale serverless robustness and absolute cost-effectiveness**, keeping the entire 24/7 radio web hosting and database infrastructure operating entirely within Google Cloud's free-tier threshold.
 
 ```mermaid
 graph TD
@@ -153,7 +153,29 @@ The GCP ecosystem is configured with airtight security following the **Principle
 
 ---
 
-## 📺 6. Widescreen UI & User Experience (UI/UX)
+## 💰 6. Financial Billing & Cost Breakdown (USD)
+
+While LofiRadio's **hosting and server computing infrastructure** is completely serverless and costs **$0.00 USD** (fully operating within Google Cloud's permanent Free Tier allocations for Cloud Run, Firestore, and GCS), the **Generative AI creation APIs** have real, pay-as-you-go commercial costs once standard free trial limits are exceeded.
+
+All generative costs are managed under Vertex AI's standard billing rates:
+
+### 📊 GenAI Cost Matrix (Our Optimized 30-Track Target)
+
+| GenAI Task | Model / Service | Unit Price (USD) | Daily Cost (Mon-Fri) | Monthly Cost (22 Days) |
+| :--- | :--- | :--- | :--- | :--- |
+| **Widescreen Artwork** | `gemini-3.1-flash-image` | **$0.04** / image | **$0.16** (4 images) | **$3.52** (88 images) |
+| **Lofi Audio synthesis** | `lyria-3-pro-preview` | **$0.08** / song | **$2.40** (30 songs) | **$52.80** (660 songs) |
+| **GCS Storage & Data** | Standard Hot Storage | **$0.02** / GB-month | **<$0.001** (~480 KB/day) | **<$0.001** (~10.5 MB/month) |
+| **Total Platform Cost** | **Vertex AI + GCS** | — | **$2.56 USD** | **$56.32 USD** |
+
+### 🧠 Billing Safeguards & Efficiencies
+1.  **Welcome Trial Credits:** Google Cloud provides **$300 USD in free welcome credits** upon registration. This covers the total operational GenAI cost of LofiRadio for **117 consecutive days of 100% free production broadcasting**.
+2.  **No-Charge Failed Requests:** You are **only billed for successful 200 OK responses**. If an AI prompt is blocked by Google safety filters and our self-healing worker loop retries with a fresh prompt variation, **failed/blocked attempts are never charged**.
+3.  **In-Memory WebP Compression:** Moving from raw PNGs to Pillow-compressed `.webp` files (reduced from ~1.3MB to ~120KB) keeps GCS storage and regional network egress costs completely zeroed under the standard free tiers.
+
+---
+
+## 📺 7. Widescreen UI & User Experience (UI/UX)
 
 The Blazor interface is optimized to deliver a cinematic, high-fidelity retro player:
 *   **Widescreen Cinematic Interface (Desktop)**: Edge-to-edge layout where the widescreen pixel art background fits perfectly, removing any unnecessary margins, headers, or footers.
@@ -165,7 +187,7 @@ The Blazor interface is optimized to deliver a cinematic, high-fidelity retro pl
 
 ---
 
-## 🛠️ 7. Local Execution & Testing Guide (Your Machine)
+## 🛠️ 8. Local Execution & Testing Guide (Your Machine)
 
 ### 🧪 Run the Unit Test Suite (C#)
 To verify the stateful transactional loop, the drift silence guard, and the Unit of Work contracts:
