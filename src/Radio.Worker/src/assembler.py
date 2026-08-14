@@ -38,7 +38,7 @@ def assemble_contiguous_sequence(generated_tracks=None):
         folders_to_keep = sorted_folders[-2:]
         print(f"[Assembler] Selecting the last 2 folders: {folders_to_keep}")
         
-        # Gap-check: If there is a weekend or holiday gap (> 1 day), discard the older folder
+        # Gap-check: If there is an extensive holiday or inactive gap (> 3 days), discard the older folder
         # to prevent streaming files that are scheduled to be deleted mid-day by GCS lifecycle rules.
         if len(folders_to_keep) == 2:
             try:
@@ -46,8 +46,8 @@ def assemble_contiguous_sequence(generated_tracks=None):
                 date_a = datetime.datetime.strptime(folders_to_keep[0], date_format)
                 date_b = datetime.datetime.strptime(folders_to_keep[1], date_format)
                 delta_days = (date_b - date_a).days
-                if delta_days > 1:
-                    print(f"[Assembler] Detected gap of {delta_days} days between {folders_to_keep[0]} and {folders_to_keep[1]} (e.g., weekend).")
+                if delta_days > 3:
+                    print(f"[Assembler] Detected critical gap of {delta_days} days between {folders_to_keep[0]} and {folders_to_keep[1]} (exceeding 3-day weekend).")
                     print(f"[Assembler] Discarding older folder {folders_to_keep[0]} to avoid mid-day GCS lifecycle deletions.")
                     folders_to_keep = [folders_to_keep[1]]
             except Exception as e:

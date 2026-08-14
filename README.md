@@ -148,7 +148,7 @@ The GCP ecosystem is configured with airtight security following the **Principle
 | **Cloud Run Service**| `lofi-web-service-dev` | Auto-scalable down to 0 instances when idle | Hosts the Interactive Blazor Web App in .NET 10 |
 | **Cloud Run Job** | `lofi-generator-job-dev`| **Timeout: 120 minutes (7200s)**, Task Count: 1 | Executes the sequential daily track purge and generation (dynamic length configured via `TRACK_COUNT`, e.g., 40 tracks) |
 | **Cloud Scheduler** | `trigger-lofi-generator-job-dev`| **Schedule: `"0 6 * * 1-5"`** (Mon-Fri at 6:00 AM UTC / 1:00 AM GMT-5) | `roles/run.invoker` (Invokes the Cloud Run Job) |
-| **GCS Bucket** | `lofi-radio-lofi-audio-dev`| **Lifecycle Rule: Delete objects older than 24 hours** | Secure private storage of `.mp3` and `.webp` audio/visual assets |
+| **GCS Bucket** | `lofi-radio-lofi-audio-dev`| **Lifecycle Rule: Delete objects older than 5 days** | Secure private storage of `.mp3` and `.webp` audio/visual assets |
 | **Firestore NoSQL** | `radio_tracks` | Unified track metadata collection | Indexed Firestore database |
 
 ---
