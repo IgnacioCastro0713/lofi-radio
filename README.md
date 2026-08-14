@@ -14,6 +14,14 @@ The entire ecosystem is designed under a **$0.00 USD Cost Serverless** paradigm 
 
 The system operates in a completely decoupled and asynchronous manner. There are no heavy audio stream processes consuming CPU 24/7 in the cloud; instead, a live synchronized radio broadcast is simulated through real-time UTC timeline calculations.
 
+### 💡 Architectural Decision: Timeline Pseudo-Streaming vs. Traditional Continuous Stream
+
+We intentionally chose a **Timeline-Synchronized Pseudo-Streaming Architecture** (simulating a live broadcast on the client-side via UTC calculations and HTTP Range requests from GCS) over a traditional continuous streaming server (such as Icecast, SHOUTcast, or HLS segments):
+
+*   **The Traditional Approach (Real Streaming):** Requires a dedicated VM or container running 24/7, continuously decoding, mixing, and transcoding audio tracks in memory. This represents a constant, high CPU consumption and a fixed monthly billing of **$15 – $30+ USD** (even with 0 active listeners), introducing server-side bottlenecks under heavy traffic spikes.
+*   **Our Timeline-Synchronized Approach:** By completely decoupling the audio delivery and letting Google Cloud Storage (GCS) serve the static `.mp3` files directly to listeners' browsers, we achieve **infinite, global scalability at $0.00 USD hosting costs**. C# only runs lightweight UTC clock calculations in milliseconds to tell the browser the exact playhead offset, completely offloading the heavy audio decoding/decryption and bandwidth tasks to the client and Google's high-speed CDN.
+*   **Conclusion:** This design choice is a deliberate engineering trade-off. We exchange minor client-side clock drifts (fully compensated in C#) for **decade-scale serverless robustness and absolute cost-effectiveness**, keeping the entire 24/7 radio platform operating entirely within Google Cloud's free-tier threshold.
+
 ```mermaid
 graph TD
     %% Cloud Infrastructure
