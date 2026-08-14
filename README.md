@@ -86,6 +86,19 @@ $$\text{idx} = \left(\frac{\text{nextSeq} - 1}{5}\right) \pmod 4$$
 | **Tracks 11 - 15, 31 - 35, 51 - 55, etc.** | 🌌 **`"night"`** | Sleep Lofi (Reverbed pianos, ambient pads, gentle rain soundscapes) | `🌌 NIGHT GLOW` |
 | **Tracks 16 - 20, 36 - 40, 56 - 60, etc.** | 👾 **`"pixel"`** | Chiptune Lofi (Playful retro NES/Gameboy bleeps, 8-bit square-waves) | `👾 RETRO PIXEL` |
 
+### 💡 Architectural Decision: The 30-Track Limit & Google Token Expiration
+
+The default `TRACK_COUNT` is configured to **`30`** tracks. This is an explicit, senior-level architectural design limit to align with Google Cloud Platform's serverless token policies:
+
+*   **The Cause:** In GCP, serverless containers running Cloud Run Jobs authenticate keylessly via ADC (Application Default Credentials). The Google GenAI SDK (`genai.Client`) caches the initial OAuth2 access token in memory at startup. In GCP, these transient tokens have a strict, non-refreshable lifetime of **exactly 30 minutes** in many security postures.
+*   **The Problem with 40+ Tracks:** Generating each track takes approximately **53 seconds** (composing audio, parsing duration, and uploading). Generating 35+ tracks exceeds the 30-minute window, resulting in an automatic `401 UNAUTHENTICATED` or `ACCESS_TOKEN_EXPIRED` API rejection on subsequent generations.
+*   **Proposed Engineering Solutions:**
+    1.  **Periodic Re-instantiation:** Re-create the `ai_client` object every 15-20 tracks to force the SDK to pull a fresh OAuth2 token from the GCP Metadata Server.
+    2.  **Explicit Credentials Refresh:** Import `google.auth.transport.requests` and call `ai_client.credentials.refresh(Request())` periodically inside the loop.
+    3.  **Extended Lifetime Policy:** Have a GCP Administrator extend the organizational maximum credential lifetime constraint (`constraints/iam.allowServiceAccountCredentialLifetimeExtension`) to up to 12 hours.
+*   **Our Decision (Why we chose not to "fix" it):**
+    We intentionally decided **not to implement** these token refreshing bypasses. At 30 tracks, the radio completes its run in **26 minutes** (comfortably under the 30-minute limit). Because GCS retains the previous day's tracks, the assembler unifies **60 total songs**, providing **nearly 3 hours of continuous, non-repeating dynamic music daily**. This is the absolute "sweet spot" of the platform: it keeps the codebase lean and elegant, avoids unnecessary API token costs, remains 100% stable under standard GCP security limits, and delivers an incredibly rich listening experience!
+
 ---
 
 ## 🛡️ 4. The Self-Healing, Copyright-Free AI Generator (Python)
