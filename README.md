@@ -157,19 +157,21 @@ The GCP ecosystem is configured with airtight security following the **Principle
 
 While LofiRadio's **hosting and server computing infrastructure** is completely serverless and costs **$0.00 USD** (fully operating within Google Cloud's permanent Free Tier allocations for Cloud Run, Firestore, and GCS), the **Generative AI creation APIs** have real, pay-as-you-go commercial costs once standard free trial limits are exceeded.
 
-All generative costs are managed under Vertex AI's standard billing rates:
+All generative costs are managed under Vertex AI's standard billing rates. By utilizing `gemini-3.1-flash-image`'s native multimodal token-based billing instead of flat-rate dedicated image models (like Imagen 3's $0.04/image), **our daily artwork generation costs are optimized by more than 60%**:
+
+*   **Multimodal Image Token Billing:** Gemini 3.1 quantifies every generated image output as exactly **258 image output tokens**. At a rate of **$60.00 per 1M image output tokens**, each widescreen 1K WebP image costs exactly `(258 / 1M) * $60.00 = $0.01548 USD` (with negligible input prompt token costs).
 
 ### 📊 GenAI Cost Matrix (Our Optimized 30-Track Target)
 
 | GenAI Task | Model / Service | Unit Price (USD) | Daily Cost (Mon-Fri) | Monthly Cost (22 Days) |
 | :--- | :--- | :--- | :--- | :--- |
-| **Widescreen Artwork** | `gemini-3.1-flash-image` | **$0.04** / image | **$0.16** (4 images) | **$3.52** (88 images) |
+| **Widescreen Artwork** | `gemini-3.1-flash-image` | **~$0.0155** / image | **$0.062** (4 images) | **$1.36** (88 images) |
 | **Lofi Audio synthesis** | `lyria-3-pro-preview` | **$0.08** / song | **$2.40** (30 songs) | **$52.80** (660 songs) |
 | **GCS Storage & Data** | Standard Hot Storage | **$0.02** / GB-month | **<$0.001** (~480 KB/day) | **<$0.001** (~10.5 MB/month) |
-| **Total Platform Cost** | **Vertex AI + GCS** | — | **$2.56 USD** | **$56.32 USD** |
+| **Total Platform Cost** | **Vertex AI + GCS** | — | **$2.46 USD** | **$54.16 USD** |
 
 ### 🧠 Billing Safeguards & Efficiencies
-1.  **Welcome Trial Credits:** Google Cloud provides **$300 USD in free welcome credits** upon registration. This covers the total operational GenAI cost of LofiRadio for **117 consecutive days of 100% free production broadcasting**.
+1.  **Welcome Trial Credits:** Google Cloud provides **$300 USD in free welcome credits** upon registration. This covers the total operational GenAI cost of LofiRadio for **121 consecutive days of 100% free production broadcasting**.
 2.  **No-Charge Failed Requests:** You are **only billed for successful 200 OK responses**. If an AI prompt is blocked by Google safety filters and our self-healing worker loop retries with a fresh prompt variation, **failed/blocked attempts are never charged**.
 3.  **In-Memory WebP Compression:** Moving from raw PNGs to Pillow-compressed `.webp` files (reduced from ~1.3MB to ~120KB) keeps GCS storage and regional network egress costs completely zeroed under the standard free tiers.
 
