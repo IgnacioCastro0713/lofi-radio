@@ -1,11 +1,11 @@
 # 📻 LofiRadio 24/7 - Exact Time-Synchronized Streaming & AI Music Generator 👾🌅🌇🌌
 
-Welcome to **LofiRadio**, an automated, global time-synchronized 24/7 Lofi radio station. The platform is built using **.NET 10 Clean Architecture (Blazor Web)** on the Frontend/API, and an automated music generator in **Python 3.11** powered by **Google DeepMind Vertex AI Lyria 3 Pro** artificial intelligence.
+Welcome to **LofiRadio**, an automated, global time-synchronized 24/7 Lofi radio station. The platform is built using **.NET 10 Clean Architecture (Blazor Server)** on the Frontend/API, and an automated modular music generator in **Python 3.11** powered by **Google DeepMind Vertex AI Lyria 3 Pro** and **Gemini 3.1** artificial intelligence.
 
 The entire ecosystem is designed under a **$0.00 USD Cost Serverless** paradigm utilizing Google Cloud Platform (GCP) infrastructure.
 
 <p align="center">
-  <img src="./{BE817437-9789-4353-8803-E8580B304B3C}.png" alt="LofiRadio Retro Widescreen Player Interface" width="90%" />
+  <img src="./{F9A93164-865D-4CE6-9C25-F32EAA2BE673}.png" alt="LofiRadio Retro Widescreen Player Interface" width="90%" />
 </p>
 
 ---
@@ -33,10 +33,13 @@ graph TD
 
     %% Worker Flows (Daily Job)
     Scheduler -->|Triggers once daily| Worker
-    Worker -->|AI Generation| VertexAI["🧠 Vertex AI (Lyria 3 Pro)"]
+    Worker -->|AI Audio Generation| VertexAI["🧠 Vertex AI (Lyria 3 Pro)"]
+    Worker -->|AI Image Generation| Gemini["🧠 Gemini 3.1 (gemini-3.1-flash-image)"]
     VertexAI -->|MP3 Audio| Worker
-    Worker -->|Uploads fresh MP3s| GCS
-    Worker -->|In-Place Overwrite - Sequence 1 to 100| Firestore
+    Gemini -->|PNG Image| Worker
+    Worker -->|In-Memory WebP Compression| Worker
+    Worker -->|Uploads fresh MP3s & WebPs with Metadata| GCS
+    Worker -->|Wipes & Saves Contiguous Playlist Sequence| Firestore
     GCS -->|Lifecycle Rule: Autocleans files older than 24h| GCS
 
     %% Web App Flows
@@ -70,29 +73,30 @@ To completely eliminate synchronization anomalies and erratic track-jumping caus
 
 ## 🎨 3. The Symmetrical 5-in-5 Dynamic Block Mix (Option B)
 
-The Python Worker generates a symmetrical and balanced daily buffer of **exactly 100 tracks** in the database (with fixed sequence indexes from **`1` to `100`**).
+The Python Worker generates a symmetrical and balanced daily buffer of **a dynamic number of tracks** in the database (controlled by the `TRACK_COUNT` environment variable, with sequence indexes from **`1` to `TRACK_COUNT`**, e.g., 40 tracks).
 
 To guarantee a diverse listening experience, tracks are grouped into **mini-blocks of 5 consecutive songs of the same mood** (~12.5 minutes of total immersion per style) before cycling to the next genre. The mix sequence is mathematically calculated in Python by the Worker using the formula:
 
 $$\text{idx} = \left(\frac{\text{nextSeq} - 1}{5}\right) \pmod 4$$
 
-| Sequence Range (Fixed 1 to 100) | Resulting Mood | Musical Genre Description | Visual Label on Cassette |
+| Sequence Range (Up to TRACK_COUNT) | Resulting Mood | Musical Genre Description | Visual Label on Cassette |
 | :--- | :--- | :--- | :--- |
-| **Tracks 1 - 5, 21 - 25, 41 - 45...** | 🌅 **`"day"`** | Focus Lofi (Warm electric pianos, clean guitars, vinyl crackle) | `🌅 DAY FOCUS` |
-| **Tracks 6 - 10, 26 - 30, 46 - 50...** | 🌇 **`"evening"`** | Jazzhop Lofi (Smooth saxophones, jazz hollow-body guitars, cozy fireplace) | `🌇 CHILL COFFEE` |
-| **Tracks 11 - 15, 31 - 35, 51 - 55...** | 🌌 **`"night"`** | Sleep Lofi (Reverbed pianos, ambient pads, gentle rain soundscapes) | `🌌 NIGHT GLOW` |
-| **Tracks 16 - 20, 36 - 40, 56 - 60...** | 👾 **`"pixel"`** | Chiptune Lofi (Playful retro NES/Gameboy bleeps, 8-bit square-waves) | `👾 RETRO PIXEL` |
+| **Tracks 1 - 5, 21 - 25, 41 - 45, etc.** | 🌅 **`"day"`** | Focus Lofi (Warm electric pianos, clean guitars, vinyl crackle) | `🌅 DAY FOCUS` |
+| **Tracks 6 - 10, 26 - 30, 46 - 50, etc.** | 🌇 **`"evening"`** | Jazzhop Lofi (Smooth saxophones, jazz hollow-body guitars, cozy fireplace) | `🌇 CHILL COFFEE` |
+| **Tracks 11 - 15, 31 - 35, 51 - 55, etc.** | 🌌 **`"night"`** | Sleep Lofi (Reverbed pianos, ambient pads, gentle rain soundscapes) | `🌌 NIGHT GLOW` |
+| **Tracks 16 - 20, 36 - 40, 56 - 60, etc.** | 👾 **`"pixel"`** | Chiptune Lofi (Playful retro NES/Gameboy bleeps, 8-bit square-waves) | `👾 RETRO PIXEL` |
 
 ---
 
 ## 🛡️ 4. The Self-Healing, Copyright-Free AI Generator (Python)
 
-The `src/Radio.Worker/main.py` script is heavily hardened to **ensure that the daily generation Job in the cloud never crashes due to Vertex AI safety filters**:
+The `src/Radio.Worker/src/main.py` script is heavily hardened to **ensure that the daily generation Job in the cloud never crashes due to Vertex AI safety filters**:
 
 *   **Trademark Exclusion (Brand-Free)**: All trademarked and commercial brand names of instruments or retro consoles (such as *Fender*, *Stratocaster*, *Rhodes*, *Wurlitzer*, *NES*, or *Game Boy*) have been completely purged from the codebase. They are replaced by rich acoustic descriptors (e.g., *clean electric guitar*, *vintage handheld console*) that **pass Google safety filters 100% of the time**.
 *   **Dynamic Prompt Assembler**: For every single track generated, Python randomly mixes distinct tempos (BPMs), acoustic string instruments, keyboards, drum styles, and environmental textures (rain, beach, fireplace, arcade bleeps), producing **thousands of unique prompt combinations** and infinite musical variety.
 *   **Self-Healing Loop**:
     If Google AI Studio rejects a prompt due to an unforeseen safety policy block (`content_blocked` 400), the Worker **catches the exception asynchronously, discards the prompt, immediately assembles a completely new randomized theme, and retries** (up to 5 times per song) in a fully transparent, self-healing loop.
+*   **Rate-Limit Fallbacks**: If the Vertex AI Lyria 3 Pro API limits are temporarily exhausted (Error Code 429), the generator intercepts the exception and seamlessly falls back to a high-quality synthetic mock track, preserving 100% pipeline continuity and preventing job crashes.
 
 ---
 
@@ -121,36 +125,21 @@ The GCP ecosystem is configured with airtight security following the **Principle
 | **Web SA** | `lofi-web-sa-dev` | Exclusive identity for the Web App | `roles/datastore.user` (Firestore), `roles/storage.objectViewer` (GCS), `roles/iam.serviceAccountTokenCreator` (URL Signer) |
 | **Worker SA**| `lofi-worker-sa-dev`| Exclusive identity for the Python Worker | `roles/datastore.user`, `roles/aiplatform.user` (Vertex AI), `roles/bigquery.jobUser`, **`roles/storage.objectUser`** (List, Create, and Delete objects in GCS) |
 | **Cloud Run Service**| `lofi-web-service-dev` | Auto-scalable down to 0 instances when idle | Hosts the Interactive Blazor Web App in .NET 10 |
-| **Cloud Run Job** | `lofi-generator-job-dev`| **Timeout: 120 minutes (7200s)**, Task Count: 1 | Executes the sequential daily 100-track purge and generation |
+| **Cloud Run Job** | `lofi-generator-job-dev`| **Timeout: 120 minutes (7200s)**, Task Count: 1 | Executes the sequential daily track purge and generation (dynamic length configured via `TRACK_COUNT`, e.g., 40 tracks) |
 | **Cloud Scheduler** | `trigger-lofi-generator-job-dev`| **Schedule: `"0 6 * * 1-5"`** (Mon-Fri at 6:00 AM UTC / 1:00 AM GMT-5) | `roles/run.invoker` (Invokes the Cloud Run Job) |
-| **GCS Bucket** | `lofi-radio-lofi-audio-dev`| **Lifecycle Rule: Delete objects older than 24 hours** | Secure private storage of `.mp3` audio files |
+| **GCS Bucket** | `lofi-radio-lofi-audio-dev`| **Lifecycle Rule: Delete objects older than 24 hours** | Secure private storage of `.mp3` and `.webp` audio/visual assets |
 | **Firestore NoSQL** | `radio_tracks` | Unified track metadata collection | Indexed Firestore database |
-
----
-
-### 💵 Vertex AI Lyria 3 Billing & Cost Projection
-
-When transitioning from the Free Tier to the commercial Paid Tier, the billing is calculated strictly on a per-request (per-song) basis, ensuring robust data privacy where user inputs are never utilized for model training.
-
-#### Google Lyria 3 Model Pricing Table
-| Model Name | Free Tier | Paid Tier (per song in USD) | Data Used for Product Improvement |
-| :--- | :--- | :--- | :--- |
-| **Lyria 3 Clip Preview (30s)** | Not available | **$0.04** | No |
-| **Lyria 3 Pro Preview (Full Song)** | Not available | **$0.08** | No |
-
-#### 📊 100-Track Daily Loop Financial Forecast (Paid Tier)
-By running the Python generator once a day to clear GCS/Firestore and generate exactly 100 fresh, full-length tracks using `lyria-3-pro-preview`, the monthly operating cost is completely predictable and controlled:
-*   **Daily Generation Cost**: $100 \times \$0.08$ = **$8.00 USD / day**
-*   **Monthly Operating Cost**: $\$8.00 \times 30 \text{ days}$ = **$240.00 USD / month**
-*   *Note*: Cloud compute, Firestore read/write, and Cloud Storage disk space remain completely within GCP's monthly **Free Tier ($0.00 USD)**, meaning Vertex AI is your only active operating expense.
 
 ---
 
 ## 📺 6. Widescreen UI & User Experience (UI/UX)
 
-The Blazor interface is optimized to deliver a cinematic, high-fidelity retro retro player:
-*   **Interactive Neon Cassette**: The cassette rotates physically and lights up with fluorescent indicators that dynamically adapt their color to match the playing mood.
-*   **Read-Only Timeline Slider**: The widescreen timeline progress bar is styled with **`pointer-events: none;`** and the `readonly` attribute. Users can enjoy the exact second-by-second progress of the tape, but mouse/touch interactions are completely blocked to prevent manual seek actions, protecting the global synchronized live stream concept.
+The Blazor interface is optimized to deliver a cinematic, high-fidelity retro player:
+*   **Widescreen Cinematic Interface (Desktop)**: Edge-to-edge layout where the widescreen pixel art background fits perfectly, removing any unnecessary margins, headers, or footers.
+*   **YouTube Music-Style Console (Mobile/Portrait)**: Responsive mobile media query triggers on portrait devices, centering the pixel art as a gorgeous 1:1 rounded square album cover. It renders the player controls as a compact, touch-friendly, dark bottom console, completely avoiding scroll overflows and keeping buttons comfortable at thumb-level.
+*   **Custom Vector Branding (`favicon.svg`)**: Features a custom-designed, pixel-perfect vector cassette tape radio icon with crisp-edges rendering, completely optimized down to a lightweight 225 KB.
+*   **Double-Layer Fallbacks**: If a GCS image fails to load or hasn't been generated yet, a smooth opacity transition hides the error and renders beautiful, animated vector SVGs (`day`, `evening`, `night`, `pixel`) beneath the image layer.
+*   **High-Contrast Live Badge**: The top-left badge has a dark translucent backdrop (`rgba(15, 10, 25, 0.85)`), text-shadows, and blur, making it perfectly readable against any light background.
 *   **Interactive Volume Slider**: The volume control on the right remains **100% interactive and slidable**, allowing listeners to adjust, mute, or unmute their music easily.
 
 ---
@@ -171,7 +160,7 @@ $env:GCP_PROJECT_ID="lofi-radio"
 $env:GCS_BUCKET_NAME="lofi-radio-lofi-audio-dev"
 
 # 2. Run the Worker (Task 0 will automatically clear GCS and Firestore before starting)
-python src/Radio.Worker/main.py
+python src/Radio.Worker/src/main.py
 ```
 *(Note: Once 3 to 5 tracks are successfully generated in your terminal, you can press `Ctrl + C` to stop the script and test them in your web browser).*
 

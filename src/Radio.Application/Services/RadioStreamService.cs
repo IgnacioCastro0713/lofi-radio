@@ -18,7 +18,7 @@ public class RadioStreamService(IRadioTrackRepository repository, IUnitOfWork un
         DateTimeOffset now = DateTimeOffset.UtcNow;
 
         using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-        cts.CancelAfter(TimeSpan.FromSeconds(5));
+        cts.CancelAfter(TimeSpan.FromSeconds(30));
 
         // Use thread-safe stateful Firestore Transactions directly managed by the Unit of Work
         await unitOfWork.BeginTransactionAsync(cts.Token);

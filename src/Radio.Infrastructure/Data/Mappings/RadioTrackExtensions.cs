@@ -19,6 +19,7 @@ public static class RadioTrackExtensions
         if (doc.ContainsField("status")) track.Status = doc.GetValue<string>("status");
         if (doc.ContainsField("title")) track.Title = doc.GetValue<string>("title");
         if (doc.ContainsField("mood")) track.Mood = doc.GetValue<string>("mood");
+        if (doc.ContainsField("image_path")) track.ImagePath = doc.GetValue<string>("image_path");
         
         if (doc.ContainsField("play_start_time") && doc.GetValue<object>("play_start_time") != null)
         {
@@ -46,7 +47,8 @@ public static class RadioTrackExtensions
             { "play_start_time", track.PlayStartTime != null ? Timestamp.FromDateTimeOffset(track.PlayStartTime.Value) : (object)null! },
             { "created_at", Timestamp.FromDateTimeOffset(track.CreatedAt) },
             { "title", track.Title },
-            { "mood", track.Mood }
+            { "mood", track.Mood },
+            { "image_path", track.ImagePath }
         };
     }
 }

@@ -7,7 +7,7 @@ public class StreamAudioEndpoint : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         // Secure Audio Signed URL Redirector - Generates a secure, temporary GCS URL and redirects the client to download directly
-        app.MapGet("/api/stream/audio/{fileName}", async (string fileName, IStorageService storageService, CancellationToken cancellationToken) =>
+        app.MapGet("/api/stream/audio/{*fileName}", async (string fileName, IStorageService storageService, CancellationToken cancellationToken) =>
         {
             try
             {

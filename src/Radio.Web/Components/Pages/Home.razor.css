@@ -1,7 +1,8 @@
 /* Retro Widescreen Lofi Radio Stylesheet */
 
 .lofi-container {
-    min-height: 100vh;
+    height: 100vh;
+    width: 100vw;
     background: linear-gradient(135deg, #1d1826 0%, #2f1d40 40%, #401f3e 70%, #1a101f 100%);
     color: #f3e9f8;
     font-family: 'Courier New', Courier, monospace;
@@ -9,80 +10,75 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 2rem;
-    padding-bottom: 120px; /* Leave space for the widescreen bottom player bar! */
-    overflow-x: hidden;
-}
-
-/* Header */
-.lofi-header {
-    text-align: center;
-    margin-bottom: 2.5rem;
-}
-
-.lofi-header h1 {
-    font-size: 2.8rem;
-    font-weight: bold;
-    color: #ff9cfc;
-    text-shadow: 0 0 10px rgba(255, 156, 252, 0.6), 0 0 20px rgba(255, 156, 252, 0.3);
-    margin-bottom: 0.5rem;
-    letter-spacing: 3px;
-}
-
-.lofi-tagline {
-    font-size: 1.1rem;
-    color: #bfaed3;
-    letter-spacing: 3px;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
 }
 
 /* Main Dashboard layout - Beautifully centered single-column layout */
 .lofi-dashboard {
     display: flex;
     justify-content: center;
+    align-items: center;
     width: 100%;
-    max-width: 580px; /* Widescreen cinematic centering */
+    height: 100%;
+    max-width: none;
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-/* Player Card - Centered Widescreen Box */
+/* Player Card - Centered Widescreen Box with 16:9 aspect ratio */
 .lofi-card {
     background: rgba(30, 21, 46, 0.75);
-    border: 2px solid #5a3f78;
-    border-radius: 16px;
-    padding: 2.5rem;
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(90, 63, 120, 0.35);
+    border: none;
+    border-radius: 0;
+    padding: 0; /* Clear padding so pixel-art-viewport spans 100% of card bounds! */
+    box-shadow: none;
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
     width: 100%;
+    height: 100%;
     box-sizing: border-box;
 }
 
 .lofi-card:hover {
-    border-color: #ff9cfc;
-    box-shadow: 0 12px 48px rgba(255, 156, 252, 0.2), inset 0 0 20px rgba(255, 156, 252, 0.15);
+    border-color: transparent;
+    box-shadow: none;
 }
 
 .player-card {
+    position: relative;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
 }
 
+/* Widescreen Live Badge (pinned absolutely on top left) */
 .live-badge {
+    position: absolute;
+    top: 16px;
+    left: 24px;
+    z-index: 9;
+    margin-bottom: 0;
     display: inline-flex;
     align-items: center;
-    background: rgba(255, 69, 102, 0.15);
+    background: rgba(15, 10, 25, 0.85); /* Solid dark translucent backdrop */
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     border: 1px solid #ff4566;
     color: #ff4566;
-    padding: 0.4rem 1rem;
+    padding: 0.3rem 0.8rem;
     border-radius: 20px;
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 2px;
-    margin-bottom: 2.5rem;
-    box-shadow: 0 0 10px rgba(255, 69, 102, 0.2);
+    box-shadow: 0 0 10px rgba(255, 69, 102, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8); /* Robust text shadow to pop text */
 }
 
 .live-badge.playing .live-dot {
@@ -90,11 +86,11 @@
 }
 
 .live-dot {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     background-color: #ff4566;
     border-radius: 50%;
-    margin-right: 8px;
+    margin-right: 6px;
 }
 
 @keyframes pulse {
@@ -103,124 +99,371 @@
     100% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(255, 69, 102, 0); }
 }
 
-/* Widescreen Cassette Design - 28% larger and highly detailed! */
-.cassette-body {
-    width: 360px;
-    height: 215px;
-    background: #2b1f3d;
-    border: 5px solid #4d3a66;
-    border-radius: 16px;
-    position: relative;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px;
-    margin-bottom: 2.5rem;
-    transition: all 0.3s ease;
-}
-
-.cassette-body:hover {
-    border-color: #5d427d;
-    transform: translateY(-2px);
-}
-
-.cassette-label {
+/* Widescreen Pixel Art Viewport (background layer) */
+.pixel-art-viewport {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 105px;
-    background: linear-gradient(180deg, #ff7ba0 0%, #ff9cfc 50%, #90d3ff 100%);
-    border-radius: 8px;
-    border: 3px solid #1c152b;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+    background: #000;
+}
+
+.pixel-scene, .ai-generated-scene {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    image-rendering: pixelated; /* True retro pixel art feel */
+}
+
+.ai-generated-scene {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 5; /* Lay on top of local SVG fallback but behind other UI overlays */
+}
+
+/* Centered BIG Retro Hero Title block overlay */
+.centered-hero-text {
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 8;
+    pointer-events: none;
+    width: 85%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-around;
-    padding: 6px;
+    gap: 8px;
+}
+
+.centered-hero-text h2 {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: #ffffff;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.6), 0 4px 12px rgba(0, 0, 0, 0.95);
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.hero-tagline {
+    position: absolute;
+    top: 16px;
+    right: 24px;
+    z-index: 9;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 6px 14px;
+    border-radius: 12px;
+    backdrop-filter: blur(2px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tagline-icon {
+    font-size: 1.1rem;
+}
+
+.tagline-text {
+    font-size: 0.75rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.tagline-text.day { color: #00f0ff; text-shadow: 0 0 5px rgba(0, 240, 255, 0.5); }
+.tagline-text.evening { color: #ff7f50; text-shadow: 0 0 5px rgba(255, 127, 80, 0.5); }
+.tagline-text.night { color: #b17aff; text-shadow: 0 0 5px rgba(177, 122, 255, 0.5); }
+.tagline-text.pixel { color: #00ff7f; text-shadow: 0 0 5px rgba(0, 255, 127, 0.5); }
+
+/* Integrated Translucent Bottom Player Bar */
+.integrated-player-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(15, 10, 25, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the inner content container */
+    z-index: 10;
     box-sizing: border-box;
 }
 
-.cassette-title {
-    font-size: 0.95rem;
+.bar-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px; /* Comfortably groups controls together on wider viewports */
+    gap: 24px; /* Healthier gap to prevent elements from feeling crowded */
+}
+
+/* Bar Left: Song details */
+.bar-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 25%;
+    flex-shrink: 0;
+    text-align: left;
+}
+
+.bar-song-title {
+    font-size: 0.9rem;
     font-weight: bold;
-    color: #1a101f;
-    text-align: center;
-    max-width: 95%;
+    color: #ffffff;
+    max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
 }
 
-.cassette-mood {
+.bar-song-sub {
     font-size: 0.65rem;
-    font-weight: bold;
-    color: #1a101f;
+    color: #bfaed3;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    text-align: center;
-    opacity: 0.95;
+    margin-top: 2px;
 }
 
-.cassette-window {
-    width: 140px;
+/* Bar Center: Playback button & Timeline Progress Slider */
+.bar-center {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    gap: 24px; /* Stronger gap to keep controls distinct and readable */
+    justify-content: center;
+}
+
+.bar-play-btn {
+    background: #ff9cfc;
+    border: none;
+    color: #1a101f;
+    width: 38px;
     height: 38px;
-    background: rgba(18, 12, 28, 0.95);
-    border: 2px solid #3c2e54;
-    border-radius: 6px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 0 12px;
-}
-
-.cassette-spindle {
-    width: 26px;
-    height: 26px;
-    background: #4a3e63;
-    border: 3px dashed #ff9cfc;
     border-radius: 50%;
-}
-
-.cassette-body.playing .cassette-spindle {
-    animation: spin 6s linear infinite;
-}
-
-@keyframes spin {
-    100% { transform: rotate(360deg); }
-}
-
-.cassette-bottom {
-    width: 210px;
-    height: 30px;
-    background: #1e152d;
-    border-radius: 6px;
-    border: 2px solid #3d2b4f;
     display: flex;
-    justify-content: space-around;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(255, 156, 252, 0.4);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    outline: none;
+}
+
+.bar-play-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 14px rgba(255, 156, 252, 0.75);
+}
+
+.bar-play-btn svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+    fill: #1a101f;
+}
+
+.bar-play-btn svg.play-svg {
+    transform: translateX(1.5px);
+}
+
+.bar-timeline-container {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.bar-slider-wrapper {
+    flex-grow: 1;
+    position: relative;
+    display: flex;
     align-items: center;
 }
 
-.cassette-screw {
-    width: 8px;
-    height: 8px;
-    background: #4e3f61;
-    border-radius: 50%;
+.bar-timeline-slider {
+    width: 100%;
+    -webkit-appearance: none;
+    background: rgba(43, 31, 61, 0.7);
+    outline: none;
+    height: 6px;
+    border-radius: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Visualizer (Equalizer) */
+.bar-timeline-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #ff9cfc;
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(255, 156, 252, 0.8);
+}
+
+.bar-time {
+    font-size: 0.75rem;
+    color: #bfaed3;
+    width: 40px;
+    text-align: center;
+}
+
+/* Bar Right: Volume Control */
+.bar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 140px;
+    flex-shrink: 0;
+    justify-content: flex-end;
+}
+
+.bar-volume-icon {
+    display: flex;
+    align-items: center;
+}
+
+.bar-volume-icon svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+    fill: #ff9cfc;
+}
+
+.bar-volume-slider {
+    width: 80px;
+    -webkit-appearance: none;
+    background: rgba(43, 31, 61, 0.7);
+    outline: none;
+    height: 4px;
+    border-radius: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.bar-volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ff9cfc;
+    cursor: pointer;
+    box-shadow: 0 0 4px rgba(255, 156, 252, 0.6);
+}
+
+/* ==========================================================================
+   PIXEL ART ANIMATIONS
+   ========================================================================== */
+
+/* 1. Animated steam rising from coffee mugs */
+.steam-group {
+    opacity: 0.8;
+}
+
+.steam-line {
+    animation: riseSteam 3s ease-in-out infinite;
+    transform-origin: bottom center;
+}
+
+.steam1 { animation-delay: 0s; }
+.steam2 { animation-delay: 1s; }
+.steam3 { animation-delay: 1.8s; }
+
+@keyframes riseSteam {
+    0% { transform: translateY(0) scaleY(0.7); opacity: 0; }
+    50% { transform: translateY(-4px) scaleY(1); opacity: 0.8; }
+    100% { transform: translateY(-10px) scaleY(0.8); opacity: 0; }
+}
+
+/* 2. Twinkling stars */
+.star {
+    animation: twinkle 2s ease-in-out infinite;
+}
+
+.star1 { animation-delay: 0s; }
+.star2 { animation-delay: 0.4s; }
+.star3 { animation-delay: 0.8s; }
+.star4 { animation-delay: 1.2s; }
+.star5 { animation-delay: 1.5s; }
+.star6 { animation-delay: 1.8s; }
+
+@keyframes twinkle {
+    0% { opacity: 0.3; }
+    50% { opacity: 1; transform: scale(1.1); }
+    100% { opacity: 0.3; }
+}
+
+/* 3. Glowing neon moon */
+.neon-moon {
+    animation: neonMoonGlow 4s ease-in-out infinite;
+}
+
+@keyframes neonMoonGlow {
+    0% { filter: drop-shadow(0 0 2px rgba(233, 214, 255, 0.4)); }
+    50% { filter: drop-shadow(0 0 8px rgba(233, 214, 255, 0.8)); fill: #fff; }
+    100% { filter: drop-shadow(0 0 2px rgba(233, 214, 255, 0.4)); }
+}
+
+/* 4. Raining pixels */
+.rain-drop {
+    animation: rainFall 1.2s linear infinite;
+}
+
+.drop1 { animation-delay: 0s; }
+.drop2 { animation-delay: 0.3s; }
+.drop3 { animation-delay: 0.6s; }
+.drop4 { animation-delay: 0.9s; }
+
+@keyframes rainFall {
+    0% { transform: translate(10px, -20px); opacity: 0; }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.6; }
+    100% { transform: translate(-10px, 30px); opacity: 0; }
+}
+
+/* 5. Floating space invader sprite */
+.invader-float {
+    animation: floatInvader 6s ease-in-out infinite;
+}
+
+@keyframes floatInvader {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+    100% { transform: translateY(0); }
+}
+
+/* Visualizer (Equalizer) - pinned absolutely on top right */
 .lofi-visualizer {
+    position: absolute;
+    top: 16px;
+    right: 24px;
+    z-index: 9;
+    margin-bottom: 0;
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    gap: 6px;
-    height: 45px;
-    width: 180px;
-    margin-bottom: 0.5rem;
+    gap: 5px;
+    height: 25px;
+    width: 90px;
 }
 
 .vis-bar {
-    width: 8px;
+    width: 5px;
     height: 4px;
     background-color: #90d3ff;
     border-radius: 4px;
@@ -239,165 +482,25 @@
 
 @keyframes bounce {
     0% { height: 4px; }
-    100% { height: 45px; }
-}
-
-/* WIDESCREEN BOTTOM PLAYER BAR */
-.bottom-player-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100vw;
-    background: rgba(18, 12, 28, 0.95);
-    border-top: 2px solid #5a3f78;
-    backdrop-filter: blur(12px);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.2rem 3rem;
-    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.7);
-    z-index: 1000;
-    box-sizing: border-box;
-}
-
-/* Play/Pause Button - Middle Left */
-.bottom-play-btn {
-    background: #ff9cfc;
-    border: none;
-    color: #1a101f;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 0 12px rgba(255, 156, 252, 0.4);
-    transition: all 0.2s ease;
-    flex-shrink: 0;
-    outline: none;
-}
-
-.bottom-play-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 18px rgba(255, 156, 252, 0.75);
-}
-
-.bottom-play-btn svg {
-    width: 22px;
-    height: 22px;
-    display: block;
-    fill: #1a101f;
-}
-
-/* Optical centering adjustment for standard triangular play icon */
-.bottom-play-btn svg.play-svg {
-    transform: translateX(2px);
-}
-
-/* Timeline - Center */
-.bottom-timeline-container {
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    margin: 0 3rem;
-}
-
-.bottom-slider-wrapper {
-    flex-grow: 1;
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.bottom-timeline-slider {
-    width: 100%;
-    -webkit-appearance: none;
-    background: #2b1f3d;
-    outline: none;
-    height: 8px;
-    border-radius: 4px;
-    border: 1px solid #4a3363;
-}
-
-.bottom-timeline-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #ff9cfc;
-    cursor: pointer;
-    box-shadow: 0 0 8px rgba(255, 156, 252, 1);
-    transition: transform 0.1s ease;
-}
-
-.bottom-timeline-slider::-webkit-slider-thumb:hover {
-    transform: scale(1.2);
-}
-
-.time-label {
-    font-size: 0.9rem;
-    color: #bfaed3;
-    font-family: 'Courier New', Courier, monospace;
-    width: 50px;
-    text-align: center;
-}
-
-/* Volume Control - Right */
-.bottom-volume-container {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    width: 160px;
-    flex-shrink: 0;
-}
-
-.speaker-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.speaker-icon svg {
-    width: 22px;
-    height: 22px;
-    display: block;
-    fill: #ff9cfc; /* Glowing Pink */
-}
-
-.bottom-volume-slider {
-    width: 110px;
-    -webkit-appearance: none;
-    background: #2b1f3d;
-    outline: none;
-    height: 6px;
-    border-radius: 3px;
-    border: 1px solid #4a3363;
-}
-
-.bottom-volume-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: #ff9cfc;
-    cursor: pointer;
-    box-shadow: 0 0 6px rgba(255, 156, 252, 0.8);
+    100% { height: 25px; }
 }
 
 /* Empty State / Warning */
 .empty-state {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     text-align: center;
     color: #bfaed3;
-    padding: 2rem 0;
     font-style: italic;
+    z-index: 10;
 }
 
 /* Footer note */
 .lofi-footer {
     text-align: center;
-    margin-top: 3.5rem;
+    margin-top: 3rem;
     font-size: 0.8rem;
     color: #6c538c;
 }
@@ -416,56 +519,21 @@
    ========================================================================== */
 
 /* 🛡️ Idea 2: Reactive Ambient Mood Underglows */
-.lofi-card.day {
-    box-shadow: 0 12px 64px rgba(0, 240, 255, 0.22), inset 0 0 24px rgba(0, 240, 255, 0.12);
-    border-color: #00f0ff;
+.player-card.day {
+    box-shadow: none;
+    border-color: transparent;
 }
-.lofi-card.evening {
-    box-shadow: 0 12px 64px rgba(255, 127, 80, 0.22), inset 0 0 24px rgba(255, 127, 80, 0.12);
-    border-color: #ff7f50;
+.player-card.evening {
+    box-shadow: none;
+    border-color: transparent;
 }
-.lofi-card.night {
-    box-shadow: 0 12px 64px rgba(127, 0, 255, 0.22), inset 0 0 24px rgba(127, 0, 255, 0.12);
-    border-color: #7f00ff;
+.player-card.night {
+    box-shadow: none;
+    border-color: transparent;
 }
-.lofi-card.pixel {
-    box-shadow: 0 12px 64px rgba(0, 255, 127, 0.22), inset 0 0 24px rgba(0, 255, 127, 0.12);
-    border-color: #00ff7f;
-}
-
-/* 📼 Idea 1: Skeuomorphic Tape Embobinado */
-.cassette-window {
-    position: relative; /* Anchor the absolute-positioned tape rolls */
-    overflow: hidden;
-}
-
-.tape-roll {
-    position: absolute;
-    width: 52px;
-    height: 52px;
-    background: radial-gradient(circle, #5e3e29 0%, #3c271a 75%, #261810 100%); /* Wound magnetic tape texture (oxide brown) */
-    border: 1px solid rgba(255, 255, 255, 0.22); /* Clear silver tape-outer boundary for maximum tab-visibility */
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
-    border-radius: 50%;
-    transition: transform 0.2s ease-out;
-    pointer-events: none;
-    z-index: 1; /* Render behind the rotating spindles */
-}
-
-.tape-roll.left {
-    left: 12px;
-    top: 50%;
-    margin-top: -26px;
-}
-
-.tape-roll.right {
-    right: 12px;
-    top: 50%;
-    margin-top: -26px;
-}
-
-.cassette-spindle {
-    z-index: 2; /* Render in front of the tape rolls */
+.player-card.pixel {
+    box-shadow: none;
+    border-color: transparent;
 }
 
 /* 📺 Idea 3: CRT Filter & Scanlines Overlay */
@@ -475,7 +543,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.14) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.14) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 255, 0, 0.03));
     background-size: 100% 4px, 6px 100%;
     pointer-events: none;
     z-index: 9999;
@@ -487,4 +555,187 @@
     0% { opacity: 0.12; }
     50% { opacity: 0.11; }
     100% { opacity: 0.12; }
+}
+
+/* ==========================================================================
+   MOBILE & TABLET STACKED CONSOLE LAYOUT (v0.4.46)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .lofi-container {
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #090511; /* Even darker obsidian background for higher contrast */
+    }
+
+    .lofi-dashboard {
+        width: 100%;
+        height: 100%;
+        max-width: 480px; /* Binds content into a sleek phone frame width */
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .player-card {
+        flex-direction: column;
+        justify-content: space-between; /* Push image to top, controls to bottom */
+        align-items: stretch;
+        height: 100%;
+        width: 100%;
+        background: #090511;
+        padding-top: 56px; /* Elegant space for top notches and status bars */
+        padding-bottom: 24px; /* Safety margin for screen bottom */
+        box-sizing: border-box;
+    }
+
+    /* Top Section: Pixel art styled as a centered 1:1 Album Cover (YouTube Music Style!) */
+    .pixel-art-viewport {
+        position: relative;
+        width: calc(100% - 48px); /* Beautiful 24px side margins */
+        aspect-ratio: 1 / 1; /* Pure square album art frame */
+        height: auto;
+        flex-shrink: 0;
+        margin: 0 auto; /* Horizontally centered */
+        border-radius: 16px; /* Elegant smooth rounded corners */
+        overflow: hidden;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65); /* Rich depth shadow */
+    }
+
+    /* Floating badges positioned precisely in the top-left and top-right corners of the rounded album art cover */
+    .live-badge {
+        top: 16px; /* Stuck beautifully 16px from top edge of cover art */
+        left: 16px; /* Stuck beautifully 16px from left edge of cover art */
+        background: rgba(9, 5, 17, 0.85);
+        border-color: #ff4566;
+    }
+
+    .hero-tagline {
+        top: 16px; /* Stuck beautifully 16px from top edge of cover art */
+        right: 16px; /* Stuck beautifully 16px from right edge of cover art */
+        background: rgba(9, 5, 17, 0.85);
+    }
+
+    /* Bottom Section: Compact, lower dark console pushed towards the thumb level */
+    .integrated-player-bar {
+        position: relative;
+        flex-grow: 1;
+        background: transparent; /* Seamless integration with page background */
+        border-top: none;
+        padding: 24px 32px 16px 32px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end; /* Lowers controls comfortably to the bottom */
+        box-sizing: border-box;
+    }
+
+    .bar-content {
+        flex-direction: column;
+        justify-content: flex-end;
+        height: auto;
+        width: 100%;
+        max-width: 360px; /* Constrain controls tightly */
+        gap: 20px; /* Tighter vertical spacing like YouTube Music */
+        margin: 0 auto;
+    }
+
+    /* Mobile Left Section: Track Title and sub closer to progress */
+    .bar-left {
+        width: 100%;
+        text-align: left; /* Align left to match YouTube Music cover alignment */
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding-left: 4px;
+    }
+
+    .bar-song-title {
+        font-size: 1.35rem; /* Larger, prominent title */
+        font-weight: 800;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+        text-align: left;
+        width: 100%;
+        color: #ffffff;
+    }
+
+    .bar-song-sub {
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+        margin-top: 4px;
+        color: #a395c4; /* Softer mauve subtitle */
+        text-align: left;
+        text-transform: none; /* YouTube music uses natural capitalization */
+    }
+
+    /* Mobile Center Section: timeline on top, play button below */
+    .bar-center {
+        width: 100%;
+        flex-direction: column-reverse;
+        gap: 20px; /* Comfortable spacing */
+        flex-grow: 0;
+    }
+
+    /* Mobile Timeline progress */
+    .bar-timeline-container {
+        width: 100%;
+        padding: 0;
+        gap: 12px;
+    }
+
+    .bar-time {
+        font-size: 0.75rem;
+        color: #8c7ea8;
+        min-width: 38px;
+        text-align: left;
+    }
+    
+    .bar-timeline-container .bar-time:last-child {
+        text-align: right;
+    }
+
+    .bar-timeline-slider {
+        height: 4px; /* Thinner, ultra-modern timeline bar */
+    }
+
+    /* Mobile Play Button - Beautifully centered primary control circle */
+    .bar-play-btn {
+        width: 68px; /* Prominent primary toggle button */
+        height: 68px;
+        background: #ff9cfc; /* Restored original retro neon pink color! */
+        color: #1a101f;
+        box-shadow: 0 4px 16px rgba(255, 156, 252, 0.45); /* Restored neon pink glow */
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+
+    .bar-play-btn svg {
+        width: 28px;
+        height: 28px;
+        fill: #ffffff; /* White icon for perfect visible contrast on the pink button */
+    }
+
+    /* Mobile Right Section: Minimalist volume handle centered as a tight block */
+    .bar-right {
+        display: flex;
+        width: auto;
+        justify-content: center;
+        align-items: center;
+        margin: 8px auto 0 auto; /* Force perfect horizontal block centering */
+        gap: 12px;
+    }
+
+    .bar-volume-icon svg {
+        fill: #a395c4;
+    }
+
+    .bar-volume-slider {
+        width: 110px;
+    }
 }

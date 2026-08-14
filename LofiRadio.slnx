@@ -50,9 +50,16 @@
     <Project Path="src/Radio.Web/Radio.Web.csproj" />
   </Folder>
   <Folder Name="/src/Radio.Worker/">
-    <File Path="src/Radio.Worker/main.py" />
     <File Path="src/Radio.Worker/requirements.txt" />
     <File Path="src/Radio.Worker/Dockerfile" />
+  </Folder>
+  <Folder Name="/src/Radio.Worker/src/">
+    <File Path="src/Radio.Worker/src/assembler.py" />
+    <File Path="src/Radio.Worker/src/config.py" />
+    <File Path="src/Radio.Worker/src/firestore_db.py" />
+    <File Path="src/Radio.Worker/src/gcs.py" />
+    <File Path="src/Radio.Worker/src/generator.py" />
+    <File Path="src/Radio.Worker/src/main.py" />
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/Radio.Tests/Radio.Tests.csproj" />

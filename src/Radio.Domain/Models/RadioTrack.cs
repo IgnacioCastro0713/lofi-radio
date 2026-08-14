@@ -12,6 +12,7 @@ public class RadioTrack
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     public string Title { get; set; } = string.Empty;
     public string Mood { get; set; } = string.Empty;
+    public string ImagePath { get; set; } = string.Empty;
     public string Status { get; set; } = "queued";
     public DateTimeOffset? PlayStartTime { get; set; }
 

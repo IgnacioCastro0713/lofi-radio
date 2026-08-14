@@ -16,7 +16,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy python source files
-COPY main.py .
+COPY src/ ./src/
 
 # Trigger execution of the main python script
-CMD ["python", "main.py"]
+CMD ["python", "src/main.py"]

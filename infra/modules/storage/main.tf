@@ -18,10 +18,10 @@ resource "google_storage_bucket" "lofi_audio_bucket" {
     max_age_seconds = 3600
   }
 
-  # Rule autocleans objects older than 1 day (24 hours) to prevent storage bloat and reduce costs
+  # Rule autocleans objects older than 3 days to prevent storage bloat and match the 3-day sliding window
   lifecycle_rule {
     condition {
-      age = 1 # Greater than 24 hours (1 day)
+      age = 3 # Greater than 3 days
     }
     action {
       type = "Delete"
