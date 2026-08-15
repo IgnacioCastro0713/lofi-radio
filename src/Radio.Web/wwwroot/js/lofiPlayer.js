@@ -15,8 +15,6 @@ window.lofiPlayer = {
             this.audio = document.getElementById("nativeLofiAudio");
             
             if (this.audio) {
-                this.audio.crossOrigin = "anonymous";
-                
                 // Set initial volume
                 this.audio.volume = this.userVolume;
 
@@ -192,47 +190,13 @@ window.lofiPlayer = {
         }
 
         // HTML5 Audio safety guard: setting 'currentTime' on an audio element with readyState < 1 (HAVE_METADATA)
-        // throws an InvalidStateError exception in many modern browsers, crashing the JavaScript execution 
-        // before play() is called. We must defer setting the time until 'loadedmetadata' fires if readyState < 1.
+        // throws an InvalidStateError exception in many modern browsers, crashing the JavaScript execution.
+        // We must defer applying drift compensation until 'loadedmetadata' fires if readyState < 1.
         if (this.audio.readyState >= 1) {
-            try {
-                const elapsedSeconds = (Date.now() - initTime) / 1000;
-                const adjustedOffset = offsetSeconds + elapsedSeconds;
-                const duration = this.audio.duration;
-                const finalOffset = duration ? Math.min(adjustedOffset, duration - 0.1) : adjustedOffset;
-                
-                // Smart Drift Threshold Guard: Only force seek if the audio is paused, or if the local playhead
-                // is substantially out of sync (drift > 4 seconds), eliminating annoying jumps upon mobile unlocking.
-                const currentDiff = Math.abs(this.audio.currentTime - finalOffset);
-                if (this.audio.paused || currentDiff > 4) {
-                    console.log(`[lofiPlayer] Playhead drift of ${currentDiff.toFixed(2)}s detected (or paused). Realigning playhead to ${finalOffset.toFixed(2)}s`);
-                    this.audio.currentTime = finalOffset;
-                } else {
-                    console.log(`[lofiPlayer] Local playhead is in perfect sync (drift of ${currentDiff.toFixed(2)}s is within safe 4s threshold). Keeping smooth playback.`);
-                }
-                this.updateLocalUI(this.audio.currentTime, duration); // Update UI immediately
-            } catch (err) {
-                console.warn("Failed to set currentTime directly:", err);
-            }
+            this.applyDriftCompensation(offsetSeconds, initTime);
         } else {
             const onMetadataLoaded = () => {
-                try {
-                    const elapsedSeconds = (Date.now() - initTime) / 1000;
-                    const adjustedOffset = offsetSeconds + elapsedSeconds;
-                    const duration = this.audio.duration;
-                    const finalOffset = duration ? Math.min(adjustedOffset, duration - 0.1) : adjustedOffset;
-                    
-                    const currentDiff = Math.abs(this.audio.currentTime - finalOffset);
-                    if (this.audio.paused || currentDiff > 4) {
-                        console.log(`[lofiPlayer] Playhead drift of ${currentDiff.toFixed(2)}s detected on metadata (or paused). Realigning to ${finalOffset.toFixed(2)}s (loading took ${elapsedSeconds.toFixed(2)}s)`);
-                        this.audio.currentTime = finalOffset;
-                    } else {
-                        console.log(`[lofiPlayer] Local playhead is in perfect sync on metadata (drift of ${currentDiff.toFixed(2)}s is within safe 4s threshold). Keeping smooth playback.`);
-                    }
-                    this.updateLocalUI(this.audio.currentTime, duration); // Update UI immediately
-                } catch (err) {
-                    console.warn("Failed to set currentTime inside loadedmetadata:", err);
-                }
+                this.applyDriftCompensation(offsetSeconds, initTime);
                 this.audio.removeEventListener('loadedmetadata', onMetadataLoaded);
             };
             this.audio.addEventListener('loadedmetadata', onMetadataLoaded);
@@ -243,6 +207,39 @@ window.lofiPlayer = {
             console.warn("Autoplay blocked or playback error:", error);
             this.dotNetRef.invokeMethodAsync('OnPlaybackStatusChanged', false);
         });
+    },
+
+    applyDriftCompensation: function (offsetSeconds, initTime) {
+        try {
+            const elapsedSeconds = (Date.now() - initTime) / 1000;
+            const adjustedOffset = offsetSeconds + elapsedSeconds;
+            const duration = this.audio.duration;
+            const finalOffset = duration ? Math.min(adjustedOffset, duration - 0.1) : adjustedOffset;
+            
+            const currentDiff = this.audio.currentTime - finalOffset; // Negative if client is behind (lagging), positive if ahead
+            const absDiff = Math.abs(currentDiff);
+
+            if (this.audio.paused || absDiff > 4) {
+                // 1. HARD JUMP: Force realign if paused or drift is major (> 4 seconds)
+                console.log(`[lofiPlayer] Hard playhead drift of ${absDiff.toFixed(2)}s detected (or paused). Force realigning playhead to ${finalOffset.toFixed(2)}s`);
+                this.audio.currentTime = finalOffset;
+                this.audio.playbackRate = 1.0; // Reset speed
+            } else if (absDiff > 0.4) {
+                // 2. MICRO-PITCH SEAMLESS SYNC: Adjust playback speed by 2.5% to catch up (1.025x if lagging) or slow down (0.975x if leading)
+                const speed = currentDiff < 0 ? 1.025 : 0.975;
+                const driftType = currentDiff < 0 ? "lag" : "lead";
+                
+                this.audio.playbackRate = speed;
+                console.log(`[lofiPlayer] Minor ${driftType} of ${absDiff.toFixed(2)}s. Adjusting speed to ${speed}x for seamless alignment.`);
+            } else {
+                // 3. IN-SYNC: Negligible drift, play at normal 1.0x speed
+                this.audio.playbackRate = 1.0;
+                console.log(`[lofiPlayer] Local playhead is in perfect sync (drift of ${absDiff.toFixed(2)}s is within safe 0.4s limit). Playing at 1.0x.`);
+            }
+            this.updateLocalUI(this.audio.currentTime, duration); // Update UI immediately
+        } catch (err) {
+            console.warn("Failed to apply drift compensation:", err);
+        }
     },
 
     play: function () {
