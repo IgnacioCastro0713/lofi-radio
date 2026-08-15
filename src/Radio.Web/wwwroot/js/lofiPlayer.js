@@ -88,44 +88,18 @@ window.lofiPlayer = {
                     }
                 });
                 this.audio.addEventListener('ended', () => {
-                    // LAYER 1 (PRIMARY PATH): Synchronous Pre-load (0ms Latency)
+                    // Transition synchronously first to preserve the event context and satisfy strict mobile security!
                     if (this.nextTrackData) {
                         console.log(`[lofiPlayer] Synchronous seamless transition in 'ended' context to: '${this.nextTrackData.title}'`);
                         const next = this.nextTrackData;
                         this.nextTrackData = null; // Clear pre-load cache
                         this.syncAndPlay(next.audioUrl, 0, next.title, next.mood, next.artworkUrl);
-                        
-                        // Notify Blazor Server in the background afterwards
-                        this.dotNetRef.invokeMethodAsync('OnTrackEnded');
+                    } else {
+                        this.stopSyncTimer();
                     }
-                    // LAYER 2 (BACKUP PATH): Fallback HTTP Fetch (~150ms Latency)
-                    else {
-                        console.log("[lofiPlayer] nextTrackData is missing (WebSocket throttled/sleeping). Activating fallback HTTP fetch...");
-                        fetch('/api/stream/next-track')
-                            .then(response => {
-                                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                                return response.json();
-                            })
-                            .then(data => {
-                                if (data && data.track) {
-                                    const url = `/api/stream/audio/${data.track.fileName}`;
-                                    const artwork = `/api/stream/audio/${data.track.imagePath}`;
-                                    console.log(`[lofiPlayer] Fallback next-track fetched successfully: '${data.track.title}'`);
-                                    
-                                    // Play the rescued track immediately
-                                    this.syncAndPlay(url, data.offsetSeconds, data.track.title, data.track.mood, artwork);
-                                    
-                                    // Sync back to Blazor Server in the background
-                                    this.dotNetRef.invokeMethodAsync('OnTrackEnded');
-                                } else {
-                                    this.stopSyncTimer();
-                                }
-                            })
-                            .catch(err => {
-                                console.error("Critical: Fallback next-track fetch failed:", err);
-                                this.stopSyncTimer();
-                            });
-                    }
+
+                    // Notify Blazor Server in the background afterwards
+                    this.dotNetRef.invokeMethodAsync('OnTrackEnded');
                 });
                 this.audio.addEventListener('error', (e) => {
                     console.warn("Audio playback error (possibly due to a daily GCS playlist wipe). Attempting self-healing re-sync with server...", e);
