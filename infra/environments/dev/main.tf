@@ -41,7 +41,7 @@ module "storage" {
   source          = "../../modules/storage"
   project_id      = var.project_id
   region          = var.region
-  environment     = "dev"
+  environment     = local.environment
   worker_sa_email = module.iam.worker_sa_email
   web_sa_email    = module.iam.web_sa_email
 }
@@ -68,7 +68,7 @@ module "scheduler" {
   source             = "../../modules/scheduler"
   project_id         = var.project_id
   region             = var.region
-  environment        = "dev"
+  environment        = local.environment
   job_name           = module.compute.job_name
   scheduler_sa_email = module.iam.scheduler_sa_email
 
