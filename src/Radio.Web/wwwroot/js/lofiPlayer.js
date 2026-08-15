@@ -37,22 +37,13 @@ window.lofiPlayer = {
                     console.log("[lofiPlayer] iOS device detected. Native volume control constraint active.");
                 }
 
-                // Register native Media Session play/pause/nexttrack actions (lock screen support)
+                // Register native Media Session play/pause actions (lock screen support)
                 if ('mediaSession' in navigator) {
                     navigator.mediaSession.setActionHandler('play', () => {
                         this.play();
                     });
                     navigator.mediaSession.setActionHandler('pause', () => {
                         this.pause();
-                    });
-                    navigator.mediaSession.setActionHandler('nexttrack', () => {
-                        // Force transition synchronously to the preloaded next track if available
-                        if (this.nextTrackData) {
-                            const next = this.nextTrackData;
-                            this.nextTrackData = null;
-                            this.syncAndPlay(next.audioUrl, 0, next.title, next.mood, next.artworkUrl);
-                            this.dotNetRef.invokeMethodAsync('OnTrackEnded');
-                        }
                     });
                 }
                 
@@ -97,10 +88,7 @@ window.lofiPlayer = {
                     }
                 });
                 this.audio.addEventListener('ended', () => {
-                    // 1. Notify Blazor Server in the background so it advances its state
-                    this.dotNetRef.invokeMethodAsync('OnTrackEnded');
-                    
-                    // 2. Transition synchronously and seamlessly in the native event context to bypass mobile lock screen blocks
+                    // 1. Transition synchronously first to preserve the event context and satisfy strict Android Chrome (Blink) security!
                     if (this.nextTrackData) {
                         console.log(`[lofiPlayer] Synchronous seamless transition in 'ended' context to: '${this.nextTrackData.title}'`);
                         const next = this.nextTrackData;
@@ -109,6 +97,9 @@ window.lofiPlayer = {
                     } else {
                         this.stopSyncTimer();
                     }
+
+                    // 2. Notify Blazor Server in the background afterwards
+                    this.dotNetRef.invokeMethodAsync('OnTrackEnded');
                 });
                 this.audio.addEventListener('error', (e) => {
                     console.warn("Audio playback error (possibly due to a daily GCS playlist wipe). Attempting self-healing re-sync with server...", e);
