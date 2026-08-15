@@ -273,12 +273,12 @@
                             </button>
 
                             <div class="bar-timeline-container">
-                                <span class="bar-time" id="lofiCurrentTime">@FormatTime(CurrentTime)</span>
+                                <span class="bar-time" id="lofiCurrentTime">00:00</span>
                                 <div class="bar-slider-wrapper" style="pointer-events: none;">
-                                    <input type="range" id="lofiTimelineSlider" class="bar-timeline-slider" min="0" max="@CurrentState!.Track!.DurationSeconds" step="0.1" 
-                                           value="@CurrentTime" readonly />
+                                    <input type="range" id="lofiTimelineSlider" class="bar-timeline-slider" min="0" max="100" step="0.1" 
+                                           value="0" readonly />
                                 </div>
-                                <span class="bar-time">@FormatTime(CurrentState!.Track.DurationSeconds)</span>
+                                <span class="bar-time" id="lofiTotalTime">00:00</span>
                             </div>
                         </div>
 
@@ -461,7 +461,29 @@
     [JSInvokable]
     public async Task OnTrackEnded()
     {
-        Logger.LogInformation("Track ended. Fetching next track.");
+        Logger.LogInformation("Track ended. Transitioning UI and fetching next track.");
+
+        // Optimistic UI Pre-transition: Reset timeline and advance metadata immediately 
+        // to keep the visual state in perfect sync with the instant JavaScript audio transition
+        if (CurrentState?.NextTrack != null)
+        {
+            var nextTrack = CurrentState.NextTrack;
+            CurrentState = new StreamStateDto
+            {
+                Track = nextTrack,
+                OffsetSeconds = 0,
+                NextTrack = null // We will load the next-next track from Firestore in a moment
+            };
+            CurrentTime = 0;
+            Duration = nextTrack.DurationSeconds;
+            StateHasChanged(); // Force immediate render before Firestore await
+        }
+        else
+        {
+            CurrentTime = 0;
+            Duration = 0;
+            StateHasChanged();
+        }
 
         // 1. Fetch next track state safely (avoiding async event timing conflicts)
         CurrentState = await StreamService.GetCurrentStreamStateAsync();
@@ -496,12 +518,6 @@
         ErrorMessage = message;
         IsPlaying = false;
         StateHasChanged();
-    }
-
-    private static string FormatTime(double seconds)
-    {
-        var time = TimeSpan.FromSeconds(seconds);
-        return $"{(int)time.TotalMinutes:D2}:{time.Seconds:D2}";
     }
 
     private static string GetPlayableAudioUrl(RadioTrack? track)

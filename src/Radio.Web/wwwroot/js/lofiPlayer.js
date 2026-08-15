@@ -147,12 +147,18 @@ window.lofiPlayer = {
         if (timeLabel) {
             timeLabel.textContent = this.formatTime(currentTime);
         }
+
+        // 2. Total Duration Label
+        const totalLabel = document.getElementById("lofiTotalTime");
+        if (totalLabel && duration && !isNaN(duration)) {
+            totalLabel.textContent = this.formatTime(duration);
+        }
         
-        // 2. Timeline Slider
+        // 3. Timeline Slider
         const slider = document.getElementById("lofiTimelineSlider");
         if (slider) {
             slider.value = currentTime;
-            if (duration) {
+            if (duration && !isNaN(duration)) {
                 slider.max = duration;
             }
         }

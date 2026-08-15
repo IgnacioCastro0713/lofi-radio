@@ -19,7 +19,7 @@ def main():
     print("\n--- [Main] Generating 4 Daily AI Pixel Art Mood Images ---")
     for mood in ["day", "evening", "night", "pixel"]:
         try:
-            image_bytes = generator.generate_mood_image(mood, ai_client)
+            image_bytes = generator.generate_mood_image(mood)
             if image_bytes:
                 gcs.upload_mood_image(image_bytes, mood)
         except Exception as e:

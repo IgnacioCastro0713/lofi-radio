@@ -387,7 +387,7 @@ def generate_dynamic_image_prompt(mood):
 
     return "detailed 16-bit lofi style pixel art, 16:9 widescreen format"
 
-def generate_mood_image(mood, ai_client):
+def generate_mood_image(mood):
     """
     Generates a beautiful lofi pixel art image using gemini-3.1-flash-image
     corresponding to the specified mood globally. The image is generated natively
