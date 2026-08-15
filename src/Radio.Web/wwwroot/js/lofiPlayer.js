@@ -18,13 +18,41 @@ window.lofiPlayer = {
                 // Set initial volume
                 this.audio.volume = this.userVolume;
 
-                // Register native Media Session play/pause actions (lock screen support)
+                // iOS 18+ Hack: Force the audio session category to 'playback'
+                // This makes WebKit ignore the physical Mute/Silent switch on iPhones!
+                if (navigator.audioSession) {
+                    try {
+                        navigator.audioSession.type = 'playback';
+                        console.log("[lofiPlayer] iOS audioSession set to 'playback' (bypassing physical mute switch).");
+                    } catch (e) {
+                        console.warn("[lofiPlayer] Failed to set audioSession type:", e);
+                    }
+                }
+
+                // Detect iOS/Apple devices to apply specific CSS and layout rules
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.platform) || 
+                              (navigator.userAgent.includes("Mac") && "ontouchend" in document);
+                if (isIOS) {
+                    document.documentElement.classList.add('is-ios');
+                    console.log("[lofiPlayer] iOS device detected. Native volume control constraint active.");
+                }
+
+                // Register native Media Session play/pause/nexttrack actions (lock screen support)
                 if ('mediaSession' in navigator) {
                     navigator.mediaSession.setActionHandler('play', () => {
                         this.play();
                     });
                     navigator.mediaSession.setActionHandler('pause', () => {
                         this.pause();
+                    });
+                    navigator.mediaSession.setActionHandler('nexttrack', () => {
+                        // Force transition synchronously to the preloaded next track if available
+                        if (this.nextTrackData) {
+                            const next = this.nextTrackData;
+                            this.nextTrackData = null;
+                            this.syncAndPlay(next.audioUrl, 0, next.title, next.mood, next.artworkUrl);
+                            this.dotNetRef.invokeMethodAsync('OnTrackEnded');
+                        }
                     });
                 }
                 

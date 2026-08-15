@@ -739,3 +739,8 @@
         width: 110px;
     }
 }
+
+/* Custom iOS Native Volume Layout Constraints */
+html.is-ios .bar-right {
+    display: none !important; /* Hide non-functional JS volume control on Apple devices */
+}
