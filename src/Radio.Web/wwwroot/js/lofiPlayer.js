@@ -2,6 +2,7 @@ window.lofiPlayer = {
     audio: null,
     dotNetRef: null,
     syncInterval: null,
+    nextTrackData: null,   // Pre-loaded metadata for the upcoming track to support seamless locked screen transitions
     userVolume: 0.5,       // Tracks the user's selected volume
     fadeDuration: 5,       // Duration of the fade-out effect in seconds
     fadeInDuration: 3,     // Duration of the fade-in effect in seconds
@@ -70,13 +71,23 @@ window.lofiPlayer = {
                     }
                 });
                 this.audio.addEventListener('ended', () => {
+                    // 1. Notify Blazor Server in the background so it advances its state
                     this.dotNetRef.invokeMethodAsync('OnTrackEnded');
-                    this.stopSyncTimer();
+                    
+                    // 2. Transition synchronously and seamlessly in the native event context to bypass mobile lock screen blocks
+                    if (this.nextTrackData) {
+                        console.log(`[lofiPlayer] Synchronous seamless transition in 'ended' context to: '${this.nextTrackData.title}'`);
+                        const next = this.nextTrackData;
+                        this.nextTrackData = null; // Clear pre-load cache
+                        this.syncAndPlay(next.audioUrl, 0, next.title, next.mood, next.artworkUrl);
+                    } else {
+                        this.stopSyncTimer();
+                    }
                 });
                 this.audio.addEventListener('error', (e) => {
-                    console.error("Audio playback error:", e);
-                    this.dotNetRef.invokeMethodAsync('OnPlaybackError', "Failed to load audio stream.");
-                    this.stopSyncTimer();
+                    console.warn("Audio playback error (possibly due to a daily GCS playlist wipe). Attempting self-healing re-sync with server...", e);
+                    // Call OnTrackEnded to force Blazor to fetch the fresh, newly updated track from Firestore and resume the stream!
+                    this.dotNetRef.invokeMethodAsync('OnTrackEnded');
                 });
 
                 // IMPROVEMENT 1: Global click event delegation.
@@ -190,9 +201,16 @@ window.lofiPlayer = {
                 const duration = this.audio.duration;
                 const finalOffset = duration ? Math.min(adjustedOffset, duration - 0.1) : adjustedOffset;
                 
-                console.log(`Drift compensation applied directly: original offset ${offsetSeconds.toFixed(2)}s, adjusted to ${finalOffset.toFixed(2)}s`);
-                this.audio.currentTime = finalOffset;
-                this.updateLocalUI(finalOffset, duration); // Update UI immediately
+                // Smart Drift Threshold Guard: Only force seek if the audio is paused, or if the local playhead
+                // is substantially out of sync (drift > 4 seconds), eliminating annoying jumps upon mobile unlocking.
+                const currentDiff = Math.abs(this.audio.currentTime - finalOffset);
+                if (this.audio.paused || currentDiff > 4) {
+                    console.log(`[lofiPlayer] Playhead drift of ${currentDiff.toFixed(2)}s detected (or paused). Realigning playhead to ${finalOffset.toFixed(2)}s`);
+                    this.audio.currentTime = finalOffset;
+                } else {
+                    console.log(`[lofiPlayer] Local playhead is in perfect sync (drift of ${currentDiff.toFixed(2)}s is within safe 4s threshold). Keeping smooth playback.`);
+                }
+                this.updateLocalUI(this.audio.currentTime, duration); // Update UI immediately
             } catch (err) {
                 console.warn("Failed to set currentTime directly:", err);
             }
@@ -204,9 +222,14 @@ window.lofiPlayer = {
                     const duration = this.audio.duration;
                     const finalOffset = duration ? Math.min(adjustedOffset, duration - 0.1) : adjustedOffset;
                     
-                    console.log(`Drift compensation applied on loadedmetadata: original offset ${offsetSeconds.toFixed(2)}s, adjusted to ${finalOffset.toFixed(2)}s (loading took ${elapsedSeconds.toFixed(2)}s)`);
-                    this.audio.currentTime = finalOffset;
-                    this.updateLocalUI(finalOffset, duration); // Update UI immediately
+                    const currentDiff = Math.abs(this.audio.currentTime - finalOffset);
+                    if (this.audio.paused || currentDiff > 4) {
+                        console.log(`[lofiPlayer] Playhead drift of ${currentDiff.toFixed(2)}s detected on metadata (or paused). Realigning to ${finalOffset.toFixed(2)}s (loading took ${elapsedSeconds.toFixed(2)}s)`);
+                        this.audio.currentTime = finalOffset;
+                    } else {
+                        console.log(`[lofiPlayer] Local playhead is in perfect sync on metadata (drift of ${currentDiff.toFixed(2)}s is within safe 4s threshold). Keeping smooth playback.`);
+                    }
+                    this.updateLocalUI(this.audio.currentTime, duration); // Update UI immediately
                 } catch (err) {
                     console.warn("Failed to set currentTime inside loadedmetadata:", err);
                 }
@@ -272,5 +295,15 @@ window.lofiPlayer = {
                 ]
             });
         }
+    },
+
+    setNextTrack: function (audioUrl, title, mood, artworkUrl) {
+        this.nextTrackData = {
+            audioUrl: audioUrl,
+            title: title,
+            mood: mood,
+            artworkUrl: artworkUrl
+        };
+        console.log(`[lofiPlayer] Next track metadata pre-loaded successfully: '${title}'`);
     }
 };

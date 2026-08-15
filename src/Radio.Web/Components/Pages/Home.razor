@@ -373,6 +373,12 @@
                 {
                     await JSRuntime.InvokeVoidAsync("lofiPlayer.syncAndPlay", GetPlayableAudioUrl(CurrentState.Track), CurrentState.OffsetSeconds, CurrentState.Track.Title, CurrentState.Track.Mood, GetMoodImageUrl(CurrentState.Track));
                 }
+
+                // Pre-load the NEXT track metadata into the JS player to support locked screen seamless playback
+                if (CurrentState.NextTrack != null && _selfRef != null)
+                {
+                    await JSRuntime.InvokeVoidAsync("lofiPlayer.setNextTrack", GetPlayableAudioUrl(CurrentState.NextTrack), CurrentState.NextTrack.Title, CurrentState.NextTrack.Mood, GetMoodImageUrl(CurrentState.NextTrack));
+                }
             }
             StateHasChanged();
         }
@@ -446,6 +452,12 @@
             
             // Trigger JS play deterministically in a single call to start playback of the new track
             await JSRuntime.InvokeVoidAsync("lofiPlayer.syncAndPlay", GetPlayableAudioUrl(CurrentState.Track), CurrentState.OffsetSeconds, CurrentState.Track.Title, CurrentState.Track.Mood, GetMoodImageUrl(CurrentState.Track));
+
+            // Pre-load the NEXT track metadata into the JS player to support locked screen seamless playback
+            if (CurrentState.NextTrack != null)
+            {
+                await JSRuntime.InvokeVoidAsync("lofiPlayer.setNextTrack", GetPlayableAudioUrl(CurrentState.NextTrack), CurrentState.NextTrack.Title, CurrentState.NextTrack.Mood, GetMoodImageUrl(CurrentState.NextTrack));
+            }
         }
         
         StateHasChanged();

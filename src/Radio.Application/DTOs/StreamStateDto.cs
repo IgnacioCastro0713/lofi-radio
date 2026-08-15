@@ -6,4 +6,5 @@ public class StreamStateDto
 {
     public RadioTrack Track { get; set; } = null!;
     public double OffsetSeconds { get; set; }
+    public RadioTrack? NextTrack { get; set; }
 }

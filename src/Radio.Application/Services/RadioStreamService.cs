@@ -38,10 +38,15 @@ public class RadioStreamService(IRadioTrackRepository repository, IUnitOfWork un
             RadioTrack? activeTrack = await repository.GetCurrentActiveTrackAsync(now, cts.Token);
             if (activeTrack != null)
             {
+                long nextSeq = activeTrack.SequenceIndex + 1;
+                int count = await repository.GetTrackCountAsync(cts.Token);
+                if (nextSeq > count) nextSeq = 1;
+                RadioTrack? nextTrack = await repository.GetNextTrackBySequenceAsync(nextSeq, cts.Token);
+
                 await unitOfWork.CommitTransactionAsync(cts.Token);
                 // Calculate Playhead Offset right before returning to eliminate DB transaction latency!
                 double offset = activeTrack.GetPlaybackOffset(DateTimeOffset.UtcNow);
-                return new StreamStateDto { Track = activeTrack, OffsetSeconds = offset };
+                return new StreamStateDto { Track = activeTrack, OffsetSeconds = offset, NextTrack = nextTrack };
             }
 
             // 3. Perform a clean catch-up or activate the next queued track in sequence
@@ -112,6 +117,11 @@ public class RadioStreamService(IRadioTrackRepository repository, IUnitOfWork un
                 }
                 else
                 {
+                    long nextSeq = nextTrack.SequenceIndex + 1;
+                    int count = await repository.GetTrackCountAsync(cts.Token);
+                    if (nextSeq > count) nextSeq = 1;
+                    RadioTrack? followingTrack = await repository.GetNextTrackBySequenceAsync(nextSeq, cts.Token);
+
                     // Delegate State Transition and Start Playback to the Rich Domain Model!
                     nextTrack.StartPlayback(nextStartTime);
                     await repository.UpdateAsync(nextTrack, cts.Token);
@@ -122,7 +132,7 @@ public class RadioStreamService(IRadioTrackRepository repository, IUnitOfWork un
                     // Calculate Playhead Offset right before returning to eliminate DB transaction latency!
                     double offset = nextTrack.GetPlaybackOffset(DateTimeOffset.UtcNow);
                     
-                    return new StreamStateDto { Track = nextTrack, OffsetSeconds = offset };
+                    return new StreamStateDto { Track = nextTrack, OffsetSeconds = offset, NextTrack = followingTrack };
                 }
             }
         }
