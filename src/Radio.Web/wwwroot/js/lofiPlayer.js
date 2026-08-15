@@ -88,7 +88,7 @@ window.lofiPlayer = {
                     }
                 });
                 this.audio.addEventListener('ended', () => {
-                    // CAPA 1 (CAMINO PRINCIPAL): Pre-carga Síncrona (0ms de Latencia)
+                    // LAYER 1 (PRIMARY PATH): Synchronous Pre-load (0ms Latency)
                     if (this.nextTrackData) {
                         console.log(`[lofiPlayer] Synchronous seamless transition in 'ended' context to: '${this.nextTrackData.title}'`);
                         const next = this.nextTrackData;
@@ -98,7 +98,7 @@ window.lofiPlayer = {
                         // Notify Blazor Server in the background afterwards
                         this.dotNetRef.invokeMethodAsync('OnTrackEnded');
                     }
-                    // CAPA 2 (CAMINO DE RESPALDO): Fallback de Fetch HTTP (~150ms de Latencia)
+                    // LAYER 2 (BACKUP PATH): Fallback HTTP Fetch (~150ms Latency)
                     else {
                         console.log("[lofiPlayer] nextTrackData is missing (WebSocket throttled/sleeping). Activating fallback HTTP fetch...");
                         fetch('/api/stream/next-track')
