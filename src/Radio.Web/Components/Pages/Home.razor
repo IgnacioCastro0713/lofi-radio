@@ -371,7 +371,7 @@
                 // If the stream is currently active and client is playing, we align the player offset (JS-safe check)
                 if (IsPlaying && _selfRef != null)
                 {
-                    await JSRuntime.InvokeVoidAsync("lofiPlayer.syncAndPlay", GetPlayableAudioUrl(CurrentState.Track), CurrentState.OffsetSeconds);
+                    await JSRuntime.InvokeVoidAsync("lofiPlayer.syncAndPlay", GetPlayableAudioUrl(CurrentState.Track), CurrentState.OffsetSeconds, CurrentState.Track.Title, CurrentState.Track.Mood, GetMoodImageUrl(CurrentState.Track));
                 }
             }
             StateHasChanged();
@@ -396,7 +396,7 @@
             await SyncStreamStateAsync();
             if (CurrentState != null)
             {
-                await JSRuntime.InvokeVoidAsync("lofiPlayer.syncAndPlay", GetPlayableAudioUrl(CurrentState.Track), CurrentState.OffsetSeconds);
+                await JSRuntime.InvokeVoidAsync("lofiPlayer.syncAndPlay", GetPlayableAudioUrl(CurrentState.Track), CurrentState.OffsetSeconds, CurrentState.Track.Title, CurrentState.Track.Mood, GetMoodImageUrl(CurrentState.Track));
             }
         }
     }
@@ -445,7 +445,7 @@
             Duration = CurrentState.Track.DurationSeconds;
             
             // Trigger JS play deterministically in a single call to start playback of the new track
-            await JSRuntime.InvokeVoidAsync("lofiPlayer.syncAndPlay", GetPlayableAudioUrl(CurrentState.Track), CurrentState.OffsetSeconds);
+            await JSRuntime.InvokeVoidAsync("lofiPlayer.syncAndPlay", GetPlayableAudioUrl(CurrentState.Track), CurrentState.OffsetSeconds, CurrentState.Track.Title, CurrentState.Track.Mood, GetMoodImageUrl(CurrentState.Track));
         }
         
         StateHasChanged();

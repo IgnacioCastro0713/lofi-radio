@@ -18,6 +18,16 @@ window.lofiPlayer = {
                 
                 // Set initial volume
                 this.audio.volume = this.userVolume;
+
+                // Register native Media Session play/pause actions (lock screen support)
+                if ('mediaSession' in navigator) {
+                    navigator.mediaSession.setActionHandler('play', () => {
+                        this.play();
+                    });
+                    navigator.mediaSession.setActionHandler('pause', () => {
+                        this.pause();
+                    });
+                }
                 
                 // Add event listeners to notify Blazor of playback changes
                 this.audio.addEventListener('play', () => {
@@ -150,11 +160,16 @@ window.lofiPlayer = {
         }
     },
 
-    syncAndPlay: function (audioUrl, offsetSeconds) {
+    syncAndPlay: function (audioUrl, offsetSeconds, title, mood, artworkUrl) {
         if (!this.audio) return;
         
         const initTime = Date.now(); // Record exact call timestamp (universal UTC milliseconds)
         console.log(`Syncing audio: ${audioUrl} starting at ${offsetSeconds}s`);
+        
+        // Push metadata to mobile lock screen/Media Session HUD if provided
+        if (title && mood && artworkUrl) {
+            this.updateMetadata(title, mood, artworkUrl);
+        }
         
         // Prevent reloading the audio if it's already playing the correct track
         const currentSrc = this.audio.src ? new URL(this.audio.src).pathname : '';
@@ -239,5 +254,23 @@ window.lofiPlayer = {
 
     getVolume: function () {
         return this.audio ? this.audio.volume : 0.5;
+    },
+
+    updateMetadata: function (title, mood, artworkUrl) {
+        if ('mediaSession' in navigator) {
+            const absoluteArtworkUrl = artworkUrl.startsWith('http') 
+                ? artworkUrl 
+                : window.location.origin + artworkUrl;
+
+            console.log(`[MediaSession] Updating Lockscreen Metadata: '${title}' - [${mood}] with artwork ${absoluteArtworkUrl}`);
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: title,
+                artist: 'LofiRadio 24/7',
+                album: 'Ambient Mood: ' + mood.toUpperCase(),
+                artwork: [
+                    { src: absoluteArtworkUrl, sizes: '512x512', type: 'image/webp' }
+                ]
+            });
+        }
     }
 };
