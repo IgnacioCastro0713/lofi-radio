@@ -65,7 +65,6 @@ def assemble_contiguous_sequence(generated_tracks=None):
             mood = metadata.get("mood")
             duration_str = metadata.get("duration_seconds")
             image_path = metadata.get("image_path")
-            created_at_utc = metadata.get("created_at_utc")
             
             # Fallback if metadata is missing (e.g., manually uploaded files)
             if not title:
@@ -84,10 +83,6 @@ def assemble_contiguous_sequence(generated_tracks=None):
             # Keep original high-precision created_at from GCS blob time_created
             created_at = blob.time_created or datetime.datetime.now(datetime.timezone.utc)
             
-            # Extract or fallback for the new string property created_at_utc
-            if not created_at_utc:
-                created_at_utc = created_at.strftime("%Y-%m-%d")
-                
             audio_url = f"https://storage.cloud.google.com/{BUCKET_NAME}/{file_name}"
             
             tracks_to_save.append({
@@ -95,7 +90,6 @@ def assemble_contiguous_sequence(generated_tracks=None):
                 "audio_url": audio_url,
                 "duration_seconds": duration_seconds,
                 "created_at": created_at,
-                "created_at_utc": created_at_utc,
                 "title": title,
                 "mood": mood,
                 "image_path": image_path

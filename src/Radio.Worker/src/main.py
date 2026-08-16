@@ -56,7 +56,7 @@ def main():
                     duration_seconds = 180.0
 
                 # 3. Upload the MP3 file to GCS folder with metadata
-                file_name, audio_url, created_at_utc = gcs.upload_track_audio(audio_bytes, title, mood, duration_seconds)
+                file_name, audio_url = gcs.upload_track_audio(audio_bytes, title, mood, duration_seconds)
 
                 # 4. Buffer the track metadata in memory
                 track_metadata = {
@@ -66,7 +66,6 @@ def main():
                     "status": "queued",
                     "play_start_time": None,
                     "created_at": datetime.datetime.now(datetime.timezone.utc),
-                    "created_at_utc": created_at_utc,
                     "title": title,
                     "mood": mood,
                     "image_path": f"{file_name.split('/')[0]}/images/{mood}.webp"
