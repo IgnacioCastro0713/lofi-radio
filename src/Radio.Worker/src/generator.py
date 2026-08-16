@@ -5,7 +5,7 @@ import base64
 from PIL import Image
 from google.genai import types
 from config import ai_client, MUSIC_MODEL, IMAGE_MODEL
-from prompts_data import TITLE_WORDS, TITLE_SUFFIXES, AUDIO_TEMPOS, AUDIO_GENRES, AUDIO_ELEMENTS, VISUAL_ELEMENTS, VISUAL_TEMPLATES
+from prompts_data import TITLE_WORDS, TITLE_SUFFIXES, AUDIO_TEMPOS, AUDIO_GENRES, AUDIO_ELEMENTS, VISUAL_ELEMENTS, VISUAL_TEMPLATES, AUDIO_TEMPLATES
 
 def determine_mood(next_seq, shuffled_blocks):
     """Determine the block index (0-based) for this sequence index"""
@@ -31,29 +31,34 @@ def generate_title(mood):
     return base_title.title()
 
 def get_prompt_for_mood(mood, title):
-    """Generate a randomized compliant descriptive prompt for Vertex AI Lyria"""
+    """Generate a randomized compliant descriptive prompt for Vertex AI Lyria using dynamic structural templates"""
     if mood not in AUDIO_ELEMENTS or mood not in AUDIO_GENRES:
         mood = "day"
         
     tempo = random.choice(AUDIO_TEMPOS)
     elem = AUDIO_ELEMENTS[mood]
     
-    instruments = random.choice(elem["instruments"])
-    beats = random.choice(elem["beats"])
-    textures = random.choice(elem["textures"])
-    harmonies = random.choice(elem["harmonies"])
+    # Randomly select one of the four unique audio prompt template styles
+    template = random.choice(AUDIO_TEMPLATES)
     
-    # Dynamically select a randomized genre and theme template
+    # Dynamically select randomized genre and theme template
     # All lofi genres are strictly defined as relaxing, warm, cozy, and soothing!
     genre_data = random.choice(AUDIO_GENRES[mood])
     genre_desc = genre_data["genre"]
     theme_desc = genre_data["theme"]
+    
+    vars_dict = {
+        "genre_desc": genre_desc,
+        "theme_desc": theme_desc,
+        "tempo": tempo,
+        "harmonies": random.choice(elem["harmonies"]),
+        "instruments": random.choice(elem["instruments"]),
+        "beats": random.choice(elem["beats"]),
+        "textures": random.choice(elem["textures"]),
+        "title": title
+    }
         
-    return (
-        f"A {genre_desc} at a {tempo}, {harmonies}. "
-        f"Featuring {instruments}, accompanied by {beats}, and wrapped in {textures}. "
-        f"Purely instrumental, no vocals. Inspired by the {theme_desc}: '{title}'."
-    )
+    return template.format(**vars_dict)
 
 def generate_single_track(next_seq, shuffled_blocks):
     """
@@ -200,7 +205,8 @@ def generate_mood_image(mood):
     and then programmatically converted to WebP in memory to guarantee lightweight transmission.
     """
     prompt = generate_dynamic_image_prompt(mood)
-    print(f"[Generator] Generating daily pixel art image for mood '{mood}' using {IMAGE_MODEL}...")
+    print(f"[Generator] Generating daily pixel art image for mood '{mood}' using {IMAGE_MODEL}..."
+    )
     
     try:
         response = ai_client.models.generate_content(

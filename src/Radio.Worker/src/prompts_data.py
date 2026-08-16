@@ -1,6 +1,6 @@
 # Prompts Dataset for LofiRadio AI Music and Artwork Generation
 
-# 1. Expanded vocabulary databases for randomized track title generation
+# 1. Vocabulary databases for randomized track title generation
 # 40 adjectives and 40 nouns per mood (40 * 40 = 1600 base combinations per mood)
 TITLE_WORDS = {
     "day": {
@@ -49,7 +49,7 @@ TITLE_WORDS = {
         "adj": [
             "8-Bit", "Chiptune", "Retro", "Pixel", "Arcade", "Glitch", "Console", "Level", "Vintage", "Handheld",
             "Sprite", "Classic", "Polygon", "Vector", "Binary", "Playful", "Cozy", "Tiny", "Soundcard", "Gamepad",
-            "Pixelated", "Blocky", "Amiga", "Sega", "NES", "Gameboy", "Nostalgic", "Cute", "Digital", "Dithered",
+            "Pixelated", "Blocky", "Chiptune", "Vaporwave", "Arcade-Style", "Handheld-Style", "Nostalgic", "Cute", "Digital", "Dithered",
             "Vibrant", "Charming", "Sprites", "Soundchip", "Arcade", "Retro", "Tiny", "Blocky", "Lofi", "Pixel"
         ],
         "noun": [
@@ -116,7 +116,7 @@ AUDIO_TEMPOS = [
     "cozy 82 BPM", "chill 85 BPM", "grooving 88 BPM"
 ]
 
-# Randomized audio genre descriptions and themes (all Lofi are strictly relaxing, warm, and cozy!)
+# Randomized audio genre descriptions and themes (all Lofi are strictly defined as relaxing, warm, cozy, and soothing!)
 AUDIO_GENRES = {
     "day": [
         {"genre": "relaxing, peaceful, and highly focused day lofi hip hop track", "theme": "cozy theme"},
@@ -530,3 +530,12 @@ VISUAL_TEMPLATES = {
         "cinematic synthwave highway in beautiful 16-bit pixel art, 80s retrowave vibes. {vehicle} driving into the sunset of {sun}, surrounded by the cosmic landscape of {bg}, 16:9 widescreen format"
     ]
 }
+
+# 5. Randomized Audio prompt templates for Vertex AI Lyria (4 distinct compositions per mood!)
+# Fully resolves the lack of prompt variety and forces the AI model to prioritize elements differently!
+AUDIO_TEMPLATES = [
+    "A {genre_desc} at a {tempo}, {harmonies}. Featuring {instruments}, accompanied by {beats}, and wrapped in {textures}. Purely instrumental, no vocals. Inspired by the {theme_desc}: '{title}'.",
+    "An instrumental {genre_desc} inspired by '{title}'. The soundscape is wrapped in {textures}, driven by {beats} at a {tempo}. Melodically, it features {instruments} playing {harmonies}. No vocals.",
+    "Instrumental {genre_desc} ({tempo}). Featuring {instruments} with a {harmonies} progression. Accompanied by {beats} and deeply textured with {textures}. Inspired by the theme: '{title}'.",
+    "A {tempo} {genre_desc} with cozy '{title}' vibes. Layered with {textures} and {harmonies}. Led by {instruments} and backed by {beats}. Instrumental, no vocals, inspired by the {theme_desc}."
+]
