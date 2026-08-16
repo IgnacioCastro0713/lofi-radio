@@ -1,58 +1,113 @@
 # Prompts Dataset for LofiRadio AI Music and Artwork Generation
 
-# 1. Vocabulary databases for randomized track title generation
-# 20 adjectives and 20 nouns per mood (20 * 20 = 400 unique combinations per mood, 2000+ total!)
+# 1. Expanded vocabulary databases for randomized track title generation
+# 40 adjectives and 40 nouns per mood (40 * 40 = 1600 base combinations per mood)
 TITLE_WORDS = {
     "day": {
         "adj": [
             "Sunny", "Pixel", "Focus", "Cozy", "Desk", "Morning", "Warm", "Coffee", "Fresh", "Bright",
-            "Gentle", "Silent", "Calm", "Golden", "Smooth", "Light", "Pure", "Lucid", "Velvet", "Radiant"
+            "Gentle", "Silent", "Calm", "Golden", "Smooth", "Light", "Pure", "Lucid", "Velvet", "Radiant",
+            "Serene", "Mellow", "Tranquil", "Peaceful", "Soothing", "Warm", "Soft", "Shining", "Clear", "Vibrant",
+            "Lofi", "Aesthetic", "Minimal", "Simple", "Lazy", "Cozy", "Dreamy", "Restful", "Relaxed", "Hazy"
         ],
         "noun": [
             "Terminal", "Keys", "Chords", "Workspace", "Keyboard", "Window", "Code", "Beat", "Vibes", "Mug",
-            "Screen", "Forest", "Leaves", "Raindrop", "Study", "Notebook", "Garden", "Sketch", "Breeze", "Pencil"
+            "Screen", "Forest", "Leaves", "Raindrop", "Study", "Notebook", "Garden", "Sketch", "Breeze", "Pencil",
+            "Desk", "Plants", "Mug", "Room", "Hills", "Coffee", "Latte", "Sunbeam", "Blinds", "Slippers",
+            "Pen", "Canvas", "Aura", "Zen", "Chill", "Cafe", "Loft", "Studio", "Balcony", "Haven"
         ]
     },
     "evening": {
         "adj": [
             "Sunset", "Golden", "Mellow", "Twilight", "Orange", "Cozy", "Rainy", "Chill", "Velvet", "Dreamy",
-            "Warm", "Soulful", "Vintage", "Amber", "Smooth", "Slow", "Peaceful", "Autumn", "Soft", "Dusty"
+            "Warm", "Soulful", "Vintage", "Amber", "Smooth", "Slow", "Peaceful", "Autumn", "Soft", "Dusty",
+            "Smoky", "Calm", "Relaxed", "Serene", "Dim", "Glow", "Dusk", "Late", "Breezy", "Cozy",
+            "Whispering", "Soothing", "Quiet", "Restful", "Tranquil", "Warm", "Rustling", "Shadowy", "Aesthetic", "Cozy"
         ],
         "noun": [
             "Station", "Dream", "Saxo", "Beat", "Train", "Avenue", "Lounge", "Steam", "Shadows", "Vibes",
-            "Fireplace", "Cup", "Streetcar", "Boulevard", "Coffee", "Bookstore", "Rain", "Alley", "Lantern", "Tea"
+            "Fireplace", "Cup", "Streetcar", "Boulevard", "Coffee", "Bookstore", "Rain", "Alley", "Lantern", "Tea",
+            "Vinyl", "Jazz", "Saxophone", "Guitar", "Piano", "Trumpet", "Lamps", "Cafe", "Balcony", "Benches",
+            "Raindrop", "Canopy", "Sidewalk", "Storefront", "Dusk", "Breeze", "Sip", "Starlight", "Porch", "Rug"
         ]
     },
     "night": {
         "adj": [
             "Midnight", "Neon", "Cosmic", "Deep", "Dreamy", "Silent", "Purple", "Starry", "Rainy", "Velvet",
-            "Astral", "Calm", "Ethereal", "Lunar", "Floating", "Gentle", "Cozy", "Soothing", "Misty", "Shadow"
+            "Astral", "Calm", "Ethereal", "Lunar", "Floating", "Gentle", "Cozy", "Soothing", "Misty", "Shadow",
+            "Nocturnal", "Serene", "Dark", "Sleeping", "Spaced", "Quiet", "Still", "Whispering", "Reverbed", "Dusty",
+            "Nebula", "Starlit", "Crescent", "Peaceful", "Restful", "Chilled", "Hazy", "Blanketed", "Deep", "Dreamy"
         ],
         "noun": [
             "Hum", "Memory", "Rain", "Waves", "Lullaby", "Star", "Computer", "Sleeper", "Echo", "Glow",
-            "Moon", "Beach", "Thunder", "Pillow", "Nebula", "Breeze", "Horizon", "Clock", "Blanket", "Tide"
+            "Moon", "Beach", "Thunder", "Pillow", "Nebula", "Breeze", "Horizon", "Clock", "Blanket", "Tide",
+            "Bed", "Room", "Nightsky", "Window", "Blinds", "Lava", "Fairy", "Lamp", "Crickets", "Ocean",
+            "Soles", "Clouds", "Pajamas", "Sleep", "Slumber", "Whisper", "Stardust", "Constellation", "Slippers", "Silence"
         ]
     },
     "pixel": {
         "adj": [
             "8-Bit", "Chiptune", "Retro", "Pixel", "Arcade", "Glitch", "Console", "Level", "Vintage", "Handheld",
-            "Sprite", "Classic", "Polygon", "Vector", "Binary", "Playful", "Cozy", "Tiny", "Soundcard", "Gamepad"
+            "Sprite", "Classic", "Polygon", "Vector", "Binary", "Playful", "Cozy", "Tiny", "Soundcard", "Gamepad",
+            "Pixelated", "Blocky", "Amiga", "Sega", "NES", "Gameboy", "Nostalgic", "Cute", "Digital", "Dithered",
+            "Vibrant", "Charming", "Sprites", "Soundchip", "Arcade", "Retro", "Tiny", "Blocky", "Lofi", "Pixel"
         ],
         "noun": [
             "Castle", "Dungeon", "Quest", "Hero", "Sprites", "Savepoint", "Cartridge", "Screen", "Forest", "Heart",
-            "Joypad", "Joystick", "Coins", "Soundchip", "Invader", "Grid", "Pixelart", "Trophy", "Boss", "Overworld"
+            "Joypad", "Joystick", "Coins", "Soundchip", "Invader", "Grid", "Pixelart", "Trophy", "Boss", "Overworld",
+            "Console", "Cabinet", "Tabletop", "Blip", "Bleep", "Soundcard", "Controller", "Buttons", "Map", "Key",
+            "Level", "Player", "Npc", "Dungeon", "Village", "Tavern", "Sword", "Shield", "Item", "Inventory"
         ]
     },
     "synthwave": {
         "adj": [
             "Neon", "Retro", "Outrun", "Cyber", "Synth", "Sunset", "Laser", "Digital", "Grid", "Turbo",
-            "Chrome", "Vector", "Infinite", "Speed", "Cosmic", "Cruiser", "Future", "Virtual", "Stellar", "Horizon"
+            "Chrome", "Vector", "Infinite", "Speed", "Cosmic", "Cruiser", "Future", "Virtual", "Stellar", "Horizon",
+            "Sunset", "Cyberpunk", "Retrowave", "Outrun", "Velocity", "Dynamic", "Aesthetic", "Glow", "Hot", "Pink",
+            "Neonblue", "Magenta", "Drive", "Sleek", "Cruising", "Fast", "Hyper", "Vapor", "Vaporwave", "Synth"
         ],
         "noun": [
             "Driver", "Horizon", "Palms", "Highway", "Racer", "Cruiser", "Skyline", "Dreams", "Future", "Overdrive",
-            "Sunset", "Neonlight", "Grid", "Highway", "Dashboard", "Sportsbar", "Laser", "Outrun", "Cassette", "Neon"
+            "Sunset", "Neonlight", "Grid", "Highway", "Dashboard", "Sportsbar", "Laser", "Outrun", "Cassette", "Neon",
+            "Car", "Coupe", "Spoiler", "Underglow", "Tail", "Lights", "Cityline", "Vapor", "Vibe", "Rhythm",
+            "Velocity", "Engine", "Cockpit", "Radio", "Track", "Suns", "Vector", "Palms", "Avenue", "Overdrive"
         ]
     }
+}
+
+# Thematic, brand-free location/time suffix modifiers (20 suffixes per mood!)
+# 1600 base combinations * 21 possibilities (no-suffix + 20 suffixes) = 33,600+ unique titles per mood, 168,000+ total!
+TITLE_SUFFIXES = {
+    "day": [
+        "in Tokyo", "at the Desk", "by the Window", "in the Library", "under the Sun", 
+        "at the Cafe", "in the Loft", "near the Garden", "in the Classroom", "by the River", 
+        "on a Rainy Day", "during Class", "at Sunrise", "with Warm Coffee", "in Kyoto", 
+        "on the Balcony", "during Spring", "in the Attic", "near the Park", "on Sunday"
+    ],
+    "evening": [
+        "at Dusk", "in the Lounge", "by the Fireplace", "in Paris", "at the Bar", 
+        "near the Subway", "on the Avenue", "at Sunset", "in New York", "with Soft Jazz", 
+        "in the Alley", "under the Lantern", "at the Counter", "on the Rooftop", "by the River", 
+        "in Autumn", "with Warm Tea", "during Evening Rain", "on Friday", "in the Bookstore"
+    ],
+    "night": [
+        "at Midnight", "under the Moon", "in the Dark", "by the Sea", "in the Bedroom", 
+        "under the Stars", "in the Slumber", "at Night", "near the Ocean", "in the Nebula", 
+        "in London", "during Thunder", "on the Beach", "in Dreams", "under the Blanket", 
+        "at 3 AM", "in the Clouds", "with Cozy Rain", "in the Void", "near the Lighthouse"
+    ],
+    "pixel": [
+        "in Level 1", "at the Arcade", "in the Dungeon", "on the Screen", "in the Overworld", 
+        "at the Savepoint", "on the Gameboy", "in the Castle", "on the NES", "in the Forest", 
+        "during Play", "at Boss Fight", "in the Tavern", "on Amiga", "on Retro-PC", 
+        "in the Matrix", "on Cartridge", "in 8-Bit", "in Level 2", "on Gamepad"
+    ],
+    "synthwave": [
+        "on the Grid", "at the Horizon", "on the Highway", "in the Outrun", "under Neon", 
+        "on the Dashboard", "in the Future", "at the Sportsbar", "on Turbo", "in Miami", 
+        "at Sunset", "in the Cyber-City", "on Chrome", "at Midnight", "on the Runway", 
+        "in 1988", "by the Palms", "on the Skyline", "in the Void", "on Overdrive"
+    ]
 }
 
 # 2. Audio prompt synthesis parameters for Google Vertex AI Lyria 3 Pro
