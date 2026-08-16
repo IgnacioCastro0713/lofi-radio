@@ -15,9 +15,9 @@ def main():
     print(f"Starting Modular Python Music Generator Worker")
     print(f"=========================================================")
 
-    # Generate 4 daily pixel art images (one for each of the four moods)
-    print("\n--- [Main] Generating 4 Daily AI Pixel Art Mood Images ---")
-    for mood in ["day", "evening", "night", "pixel"]:
+    # Generate 5 daily pixel art images (one for each of the five moods)
+    print("\n--- [Main] Generating 5 Daily AI Pixel Art Mood Images ---")
+    for mood in ["day", "evening", "night", "pixel", "synthwave"]:
         try:
             image_bytes = generator.generate_mood_image(mood)
             if image_bytes:
@@ -27,10 +27,10 @@ def main():
 
     # Generate balanced shuffled blocks of 5 songs per mood to ensure high-variety daily playlists
     total_blocks = (TRACK_COUNT + 4) // 5
-    moods_pool = ["day", "evening", "night", "pixel"]
+    moods_pool = ["day", "evening", "night", "pixel", "synthwave"]
     shuffled_blocks = []
     for i in range(total_blocks):
-        shuffled_blocks.append(moods_pool[i % 4])
+        shuffled_blocks.append(moods_pool[i % 5])
     random.shuffle(shuffled_blocks)
     print(f"[Main] Daily shuffled block moods sequence: {shuffled_blocks}")
 
@@ -56,7 +56,7 @@ def main():
                     duration_seconds = 180.0
 
                 # 3. Upload the MP3 file to GCS folder with metadata
-                file_name, audio_url = gcs.upload_track_audio(audio_bytes, title, mood, duration_seconds)
+                file_name, audio_url, created_at_utc = gcs.upload_track_audio(audio_bytes, title, mood, duration_seconds)
 
                 # 4. Buffer the track metadata in memory
                 track_metadata = {
@@ -66,6 +66,7 @@ def main():
                     "status": "queued",
                     "play_start_time": None,
                     "created_at": datetime.datetime.now(datetime.timezone.utc),
+                    "created_at_utc": created_at_utc,
                     "title": title,
                     "mood": mood,
                     "image_path": f"{file_name.split('/')[0]}/images/{mood}.webp"
@@ -86,7 +87,7 @@ def main():
     except Exception as e:
         print(f"[Main] Generation loop interrupted by unexpected exception: {e}")
 
-    # 5. Assembler Phase: Dynamically rebuilds the contiguous playlist from the last 2 folders
+    # 5. Assembler Phase: Dynamically rebuilds the contiguous playlist from the last 15 folders
     assembler.assemble_contiguous_sequence(generated_tracks)
     print("\n=========================================================")
     print("[Main] Modular Python Worker execution completed.")

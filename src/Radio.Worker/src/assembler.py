@@ -1,15 +1,16 @@
 import datetime
+import random
 import gcs
 import firestore_db
 from config import BUCKET_NAME
 
 def assemble_contiguous_sequence(generated_tracks=None):
     """
-    Scans the GCS bucket to find the last 2 YYYYMMDD date folders, pulls their files,
+    Scans the GCS bucket to find the last 15 YYYYMMDD date folders, pulls their files,
     reads their custom object metadata (title, mood, duration_seconds) directly from GCS,
     rebuilds a contiguous 1 to N playlist sequence, and saves it to Firestore.
     """
-    print("\n=== [Assembler] Rebuilding Playlist from Last 2 Folders ===")
+    print("\n=== [Assembler] Rebuilding Playlist from Last 15 Folders ===")
     
     try:
         # 1. List GCS blobs and identify YYYYMMDD folders
@@ -34,20 +35,20 @@ def assemble_contiguous_sequence(generated_tracks=None):
             print("[Assembler] No valid date folders found in GCS bucket. Skipping.")
             return
             
-        # Select the last 2 folders
-        folders_to_keep = sorted_folders[-2:]
-        print(f"[Assembler] Selecting the last 2 folders: {folders_to_keep}")
+        # Select the last 15 folders
+        folders_to_keep = sorted_folders[-15:]
+        print(f"[Assembler] Selecting the last 15 folders: {folders_to_keep}")
         
-        # Sort folders descending so newest folders are listed first (e.g. today's first, yesterday's second)
-        folders_to_keep_sorted = sorted(folders_to_keep, reverse=True)
-        
-        # 2. Collect blobs from these 2 folders
+        # 2. Collect blobs from these 15 folders
         blobs_to_keep = []
-        for folder in folders_to_keep_sorted:
-            blobs_in_folder = sorted(folder_blobs[folder], key=lambda b: b.name)
-            blobs_to_keep.extend(blobs_in_folder)
+        for folder in folders_to_keep:
+            blobs_to_keep.extend(folder_blobs[folder])
             
-        print(f"[Assembler] Total files collected from last 2 folders: {len(blobs_to_keep)}")
+        print(f"[Assembler] Total files collected from last 15 folders: {len(blobs_to_keep)}")
+        
+        # Perform a global, randomized shuffle of all 15 days of tracks to maximize variety and randomness
+        random.shuffle(blobs_to_keep)
+        print("[Assembler] Shuffled all collected tracks globally across all 15 folders successfully!")
         
         if not blobs_to_keep:
             print("[Assembler] No files found in selected folders. Skipping.")
@@ -64,6 +65,7 @@ def assemble_contiguous_sequence(generated_tracks=None):
             mood = metadata.get("mood")
             duration_str = metadata.get("duration_seconds")
             image_path = metadata.get("image_path")
+            created_at_utc = metadata.get("created_at_utc")
             
             # Fallback if metadata is missing (e.g., manually uploaded files)
             if not title:
@@ -79,8 +81,13 @@ def assemble_contiguous_sequence(generated_tracks=None):
             except ValueError:
                 duration_seconds = 180.0
                 
-            # Use GCS blob creation time as the timestamp
+            # Keep original high-precision created_at from GCS blob time_created
             created_at = blob.time_created or datetime.datetime.now(datetime.timezone.utc)
+            
+            # Extract or fallback for the new string property created_at_utc
+            if not created_at_utc:
+                created_at_utc = created_at.strftime("%Y-%m-%d")
+                
             audio_url = f"https://storage.cloud.google.com/{BUCKET_NAME}/{file_name}"
             
             tracks_to_save.append({
@@ -88,6 +95,7 @@ def assemble_contiguous_sequence(generated_tracks=None):
                 "audio_url": audio_url,
                 "duration_seconds": duration_seconds,
                 "created_at": created_at,
+                "created_at_utc": created_at_utc,
                 "title": title,
                 "mood": mood,
                 "image_path": image_path

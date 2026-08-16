@@ -22,12 +22,15 @@ def upload_track_audio(audio_bytes, title, mood, duration_seconds):
     blob = bucket.blob(file_name)
     
     # Set custom object metadata
+    # Format Example: "2026-08-15" (YYYY-MM-dd UTC date string)
+    created_at_utc = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d")
     image_path = f"{current_date}/images/{mood}.webp"
     blob.metadata = {
         "title": title,
         "mood": mood,
         "duration_seconds": str(duration_seconds),
-        "image_path": image_path
+        "image_path": image_path,
+        "created_at_utc": created_at_utc
     }
     
     blob.upload_from_string(audio_bytes, content_type="audio/mp3")
@@ -35,7 +38,7 @@ def upload_track_audio(audio_bytes, title, mood, duration_seconds):
     print(f"[GCS] Uploaded successfully to bucket with metadata: {file_name}")
     audio_url = f"https://storage.cloud.google.com/{BUCKET_NAME}/{file_name}"
     
-    return file_name, audio_url
+    return file_name, audio_url, created_at_utc
 
 def list_bucket_blobs():
     """

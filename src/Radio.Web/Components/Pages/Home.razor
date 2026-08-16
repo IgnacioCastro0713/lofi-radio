@@ -183,6 +183,74 @@
                          <text x="50" y="215" font-family="'Courier New', monospace" font-size="8" fill="#151b18" font-weight="bold">8-BIT SYSTEM</text>
                      </svg>
                 }
+                else if (CurrentState?.Track?.Mood?.ToLower() == "synthwave")
+                {
+                     <!-- Synthwave SVG (1980s Infinite Outrun Laser Grid) -->
+                     <svg class="pixel-scene" viewBox="0 0 400 240">
+                         <!-- Cyber Twilight Sunset Sky -->
+                         <defs>
+                             <linearGradient id="synthwaveSky" x1="0" y1="0" x2="0" y2="1">
+                                 <stop offset="0%" stop-color="#120525" />
+                                 <stop offset="40%" stop-color="#3c0a52" />
+                                 <stop offset="75%" stop-color="#8c117b" />
+                                 <stop offset="100%" stop-color="#f02473" />
+                             </linearGradient>
+                         </defs>
+                         <rect width="400" height="240" fill="url(#synthwaveSky)" />
+                         
+                         <!-- Glowing Vector Grid Sun setting -->
+                         <circle cx="200" cy="110" r="32" fill="#ff7f00" class="neon-sun" />
+                         <rect x="160" y="92" width="80" height="3" fill="#3c0a52" />
+                         <rect x="160" y="100" width="80" height="4" fill="#3c0a52" />
+                         <rect x="160" y="112" width="80" height="5" fill="#3c0a52" />
+                         <rect x="160" y="126" width="80" height="7" fill="#3c0a52" />
+                         
+                         <!-- Perspective neon lines moving dynamically! -->
+                         <g stroke="#00f0ff" stroke-width="1.5" opacity="0.6">
+                             <line x1="200" y1="130" x2="-50" y2="240" />
+                             <line x1="200" y1="130" x2="50" y2="240" />
+                             <line x1="200" y1="130" x2="150" y2="240" />
+                             <line x1="200" y1="130" x2="250" y2="240" />
+                             <line x1="200" y1="130" x2="350" y2="240" />
+                             <line x1="200" y1="130" x2="450" y2="240" />
+                         </g>
+                         
+                         <!-- Horizontal moving perspective lines (with an animation) -->
+                         <g class="grid-horizontal-lines" stroke="#ff007f" stroke-width="1.5" opacity="0.5">
+                             <line x1="0" y1="140" x2="400" y2="140" class="grid-line line1" />
+                             <line x1="0" y1="155" x2="400" y2="155" class="grid-line line2" />
+                             <line x1="0" y1="175" x2="400" y2="175" class="grid-line line3" />
+                             <line x1="0" y1="200" x2="400" y2="200" class="grid-line line4" />
+                             <line x1="0" y1="230" x2="400" y2="230" class="grid-line line5" />
+                         </g>
+
+                         <!-- Horizon bar -->
+                         <rect x="0" y="129" width="400" height="3" fill="#00f0ff" opacity="0.8" />
+                         
+                         <!-- Cyber city outline silhouettes on the sides of the horizon -->
+                         <polygon points="0,130 15,100 25,105 35,90 50,110 65,115 80,130" fill="#120525" />
+                         <polygon points="320,130 340,115 355,95 370,110 385,100 400,130" fill="#120525" />
+                         
+                         <!-- Outrun Sports Car Silhouette cruising in the center of the grid -->
+                         <g class="outrun-car">
+                             <!-- Spoiler and body back -->
+                             <rect x="180" y="194" width="40" height="6" fill="#05020a" />
+                             <polygon points="176,194 180,194 180,200 176,198" fill="#05020a" />
+                             <polygon points="224,194 220,194 220,200 224,198" fill="#05020a" />
+                             
+                             <!-- Wheels with cyan underglow -->
+                             <circle cx="184" cy="208" r="5" fill="#020104" />
+                             <circle cx="216" cy="208" r="5" fill="#020104" />
+                             <ellipse cx="184" cy="211" rx="8" ry="2" fill="#00f0ff" opacity="0.6" class="neon-underglow" />
+                             <ellipse cx="216" cy="211" rx="8" ry="2" fill="#00f0ff" opacity="0.6" class="neon-underglow" />
+                             
+                             <!-- Car cabin and spoiler lights (magenta) -->
+                             <rect x="188" y="196" width="24" height="8" fill="#0b0314" />
+                             <rect x="182" y="195" width="4" height="2" fill="#ff007f" class="car-light" />
+                             <rect x="214" y="195" width="4" height="2" fill="#ff007f" class="car-light" />
+                         </g>
+                     </svg>
+                }
                 else
                 {
                      <!-- Day SVG (Focus Cozy Desk - Default) -->
@@ -235,6 +303,7 @@
                         @if (CurrentState?.Track?.Mood?.ToLower() == "day") { <text>🌅</text> }
                         else if (CurrentState?.Track?.Mood?.ToLower() == "evening") { <text>🌇</text> }
                         else if (CurrentState?.Track?.Mood?.ToLower() == "night") { <text>🌌</text> }
+                        else if (CurrentState?.Track?.Mood?.ToLower() == "synthwave") { <text>🏎️</text> }
                         else { <text>👾</text> }
                     </span>
                     <span class="tagline-text @(CurrentState?.Track?.Mood?.ToLower())">
@@ -251,7 +320,13 @@
                     <div class="bar-content">
                         <!-- Left Section: Track Title and listeners status -->
                         <div class="bar-left">
-                            <div class="bar-song-title">@CurrentState!.Track!.Title</div>
+                            <div class="bar-song-title-wrapper">
+                                <div class="bar-song-title">@CurrentState!.Track!.Title</div>
+                                @if (CurrentState.Track.CreatedAt.UtcDateTime.Date == DateTime.UtcNow.Date)
+                                {
+                                    <span class="new-badge">NEW</span>
+                                }
+                            </div>
                             <div class="bar-song-sub">128kbps MP3 Live</div>
                         </div>
 
@@ -543,6 +618,7 @@
             "evening" => "CHILL COFFEE",
             "night" => "NIGHT GLOW",
             "pixel" => "RETRO PIXEL",
+            "synthwave" => "OUTRUN VIBES",
             _ => "LOFI VIBES"
         };
     }

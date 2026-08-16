@@ -183,6 +183,7 @@
 .tagline-text.evening { color: #ff7f50; text-shadow: 0 0 5px rgba(255, 127, 80, 0.5); }
 .tagline-text.night { color: #b17aff; text-shadow: 0 0 5px rgba(177, 122, 255, 0.5); }
 .tagline-text.pixel { color: #00ff7f; text-shadow: 0 0 5px rgba(0, 255, 127, 0.5); }
+.tagline-text.synthwave { color: #ff00ff; text-shadow: 0 0 8px rgba(255, 0, 255, 0.8), 0 0 15px rgba(0, 240, 255, 0.6); }
 
 /* Integrated Translucent Bottom Player Bar */
 .integrated-player-bar {
@@ -231,6 +232,28 @@
     white-space: nowrap;
     letter-spacing: 0.5px;
     text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    flex-shrink: 1;
+}
+
+.bar-song-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 100%;
+}
+
+.new-badge {
+    background-color: #ff007f; /* Cyber neon pink */
+    color: #ffffff;
+    font-size: 0.55rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', Courier, monospace;
+    letter-spacing: 1px;
+    box-shadow: 0 0 8px rgba(255, 0, 127, 0.7);
+    flex-shrink: 0;
 }
 
 .bar-song-sub {
@@ -445,6 +468,50 @@
     0% { transform: translateY(0); }
     50% { transform: translateY(-6px); }
     100% { transform: translateY(0); }
+}
+
+/* 6. Synthwave Neon Outrun Fallback SVG Animations */
+@keyframes neonSunPulse {
+    0% { filter: drop-shadow(0 0 2px #ff00ff) drop-shadow(0 0 5px #ff7f00); }
+    50% { filter: drop-shadow(0 0 8px #ff00ff) drop-shadow(0 0 15px #ff007f); }
+    100% { filter: drop-shadow(0 0 2px #ff00ff) drop-shadow(0 0 5px #ff7f00); }
+}
+
+@keyframes outrunGridScroll {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(15px); }
+}
+
+@keyframes carLightFlicker {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; filter: drop-shadow(0 0 3px #ff007f); }
+}
+
+.neon-sun {
+    animation: neonSunPulse 4s infinite ease-in-out;
+}
+
+.grid-horizontal-lines {
+    transform-origin: 200px 130px;
+}
+
+.grid-line {
+    animation: outrunGridScroll 1.5s infinite linear;
+}
+
+/* Delay the lines to make a continuous movement illusion */
+.line1 { animation-delay: 0s; }
+.line2 { animation-delay: 0.3s; }
+.line3 { animation-delay: 0.6s; }
+.line4 { animation-delay: 0.9s; }
+.line5 { animation-delay: 1.2s; }
+
+.car-light {
+    animation: carLightFlicker 0.2s infinite alternate;
+}
+
+.neon-underglow {
+    filter: blur(2px);
 }
 
 /* Visualizer (Equalizer) - pinned absolutely on top right */
