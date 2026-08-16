@@ -79,20 +79,27 @@ To completely eliminate synchronization anomalies and erratic track-jumping caus
 
 ---
 
-## 🎨 3. The Symmetrical 5-in-5 Dynamic Block Mix (Option B)
+## 🎨 3. The Symmetrical 5-in-5 Dynamic Block Mix & Global Shuffling
 
-The Python Worker generates a symmetrical and balanced daily buffer of **a dynamic number of tracks** in the database (controlled by the `TRACK_COUNT` environment variable, with sequence indexes from **`1` to `TRACK_COUNT`**, e.g., 40 tracks).
+The Python Worker generates a symmetrical and balanced daily buffer of **a dynamic number of tracks** in the database (controlled by the `TRACK_COUNT` environment variable, e.g., 30 tracks).
 
-To guarantee a diverse listening experience, tracks are grouped into **mini-blocks of 5 consecutive songs of the same mood** (~12.5 minutes of total immersion per style) before cycling to the next genre. The mix sequence is mathematically calculated in Python by the Worker using the formula:
+To guarantee an immersive listening experience, tracks are grouped into **mini-blocks of 5 consecutive songs of the same mood** (~12.5 minutes of total immersion per style) before cycling to the next genre. The mix sequence is mathematically calculated in Python by the Worker using the formula:
 
-$$\text{idx} = \left(\frac{\text{nextSeq} - 1}{5}\right) \pmod 4$$
+$$\text{idx} = \left(\frac{\text{nextSeq} - 1}{5}\right) \pmod 5$$
 
 | Sequence Range (Up to TRACK_COUNT) | Resulting Mood | Musical Genre Description | Visual Label on Cassette |
 | :--- | :--- | :--- | :--- |
-| **Tracks 1 - 5, 21 - 25, 41 - 45, etc.** | 🌅 **`"day"`** | Focus Lofi (Warm electric pianos, clean guitars, vinyl crackle) | `🌅 DAY FOCUS` |
-| **Tracks 6 - 10, 26 - 30, 46 - 50, etc.** | 🌇 **`"evening"`** | Jazzhop Lofi (Smooth saxophones, jazz hollow-body guitars, cozy fireplace) | `🌇 CHILL COFFEE` |
-| **Tracks 11 - 15, 31 - 35, 51 - 55, etc.** | 🌌 **`"night"`** | Sleep Lofi (Reverbed pianos, ambient pads, gentle rain soundscapes) | `🌌 NIGHT GLOW` |
-| **Tracks 16 - 20, 36 - 40, 56 - 60, etc.** | 👾 **`"pixel"`** | Chiptune Lofi (Playful retro NES/Gameboy bleeps, 8-bit square-waves) | `👾 RETRO PIXEL` |
+| **Tracks 1 - 5, 26 - 30, etc.** | 🌅 **`"day"`** | Focus Lofi (Warm electric pianos, clean acoustic guitars, rain textures) | `🌅 DAY FOCUS` |
+| **Tracks 6 - 10, etc.** | 🌇 **`"evening"`** | Jazzhop Lofi (Smooth saxophones, jazz hollow-body guitars, cozy fireplace) | `🌇 CHILL COFFEE` |
+| **Tracks 11 - 15, etc.** | 🌌 **`"night"`** | Sleep Lofi (Reverbed ambient pads, celesta bells, gentle rain soundscapes) | `🌌 NIGHT GLOW` |
+| **Tracks 16 - 20, etc.** | 👾 **`"pixel"`** | Chiptune Lofi (Playful retro game-console bleeps, 8-bit square-waves) | `👾 RETRO PIXEL` |
+| **Tracks 21 - 25, etc.** | 🏎️ **`"synthwave"`** | Outrun Retrowave (Retro-futuristic analog leads, gated reverbed snares, arpeggiated bass) | `🏎️ OUTRUN VIBES` |
+
+### 💡 The 15-Day Global Shuffling Engine
+Rather than presenting the tracks in predictable daily blocks, the Python Assembler executes a **Global Shuffling Algorithm** across all historical data:
+1.  **Massive 15-Day Window:** The Assembler scans the GCS bucket to retrieve all audio assets and metadata from the **last 15 daily folders** (yielding a massive pool of **450 unique tracks**).
+2.  **Global Randomized Shuffle:** It compiles all 450 tracks into a single list and shuffles them globally (`random.shuffle()`), completely breaking the chronological and mood barriers.
+3.  **Unified C# Sequence Mapping:** It assigns a contiguous sequence index from `1` to `N` (450) and saves it to Firestore. This provides **over 22 hours of continuous, non-repeating globally randomized music** while keeping C#'s strict database sequence contracts 100% intact!
 
 ### 💡 Architectural Decision: The 30-Track Limit & Google Token Expiration
 
@@ -100,12 +107,8 @@ The default `TRACK_COUNT` is configured to **`30`** tracks. This is an explicit,
 
 *   **The Cause:** In GCP, serverless containers running Cloud Run Jobs authenticate keylessly via ADC (Application Default Credentials). The Google GenAI SDK (`genai.Client`) caches the initial OAuth2 access token in memory at startup. In GCP, these transient tokens have a strict, non-refreshable lifetime of **exactly 30 minutes** in many security postures.
 *   **The Problem with 40+ Tracks:** Generating each track takes approximately **53 seconds** (composing audio, parsing duration, and uploading). Generating 35+ tracks exceeds the 30-minute window, resulting in an automatic `401 UNAUTHENTICATED` or `ACCESS_TOKEN_EXPIRED` API rejection on subsequent generations.
-*   **Proposed Engineering Solutions:**
-    1.  **Periodic Re-instantiation:** Re-create the `ai_client` object every 15-20 tracks to force the SDK to pull a fresh OAuth2 token from the GCP Metadata Server.
-    2.  **Explicit Credentials Refresh:** Import `google.auth.transport.requests` and call `ai_client.credentials.refresh(Request())` periodically inside the loop.
-    3.  **Extended Lifetime Policy:** Have a GCP Administrator extend the organizational maximum credential lifetime constraint (`constraints/iam.allowServiceAccountCredentialLifetimeExtension`) to up to 12 hours.
 *   **Our Decision (Why we chose not to "fix" it):**
-    We intentionally decided **not to implement** these token refreshing bypasses. At 30 tracks, the radio completes its run in **26 minutes** (comfortably under the 30-minute limit). Because GCS retains the previous day's tracks, the assembler unifies **60 total songs**, providing **nearly 3 hours of continuous, non-repeating dynamic music daily**. This is the absolute "sweet spot" of the platform: it keeps the codebase lean and elegant, avoids unnecessary API token costs, remains 100% stable under standard GCP security limits, and delivers an incredibly rich listening experience!
+    We intentionally decided **not to implement** token refreshing bypasses. At 30 tracks, the radio completes its run in **26 minutes** (comfortably under the 30-minute limit). Because GCS retains the previous **25 days of tracks**, the assembler unifies **450 total songs**, providing **nearly 23 hours of continuous, globally shuffled, non-repeating dynamic music daily**. This is the absolute "sweet spot" of the platform: it keeps the codebase lean and elegant, avoids unnecessary API token costs, remains 100% stable under standard GCP security limits, and delivers an incredibly rich listening experience!
 
 ---
 
@@ -148,7 +151,7 @@ The GCP ecosystem is configured with airtight security following the **Principle
 | **Cloud Run Service**| `lofi-web-service-dev` | Auto-scalable down to 0 instances when idle | Hosts the Interactive Blazor Web App in .NET 10 |
 | **Cloud Run Job** | `lofi-generator-job-dev`| **Timeout: 120 minutes (7200s)**, Task Count: 1 | Executes the sequential daily track purge and generation (dynamic length configured via `TRACK_COUNT`, e.g., 40 tracks) |
 | **Cloud Scheduler** | `trigger-lofi-generator-job-dev`| **Schedule: `"0 6 * * 1-5"`** (Mon-Fri at 6:00 AM UTC / 1:00 AM GMT-5) | `roles/run.invoker` (Invokes the Cloud Run Job) |
-| **GCS Bucket** | `lofi-radio-lofi-audio-dev`| **Lifecycle Rule: Delete objects older than 5 days** | Secure private storage of `.mp3` and `.webp` audio/visual assets |
+| **GCS Bucket** | `lofi-radio-lofi-audio-dev`| **Lifecycle Rule: Delete objects older than 25 days** | Secure private storage of `.mp3` and `.webp` audio/visual assets |
 | **Firestore NoSQL** | `radio_tracks` | Unified track metadata collection | Indexed Firestore database |
 
 ---
@@ -165,10 +168,10 @@ All generative costs are managed under Vertex AI's standard billing rates. By ut
 
 | GenAI Task | Model / Service | Unit Price (USD) | Daily Cost (Mon-Fri) | Monthly Cost (22 Days) |
 | :--- | :--- | :--- | :--- | :--- |
-| **Widescreen Artwork** | `gemini-3.1-flash-image` | **~$0.0155** / image | **$0.062** (4 images) | **$1.36** (88 images) |
+| **Widescreen Artwork** | `gemini-3.1-flash-image` | **~$0.0155** / image | **$0.0775** (5 images) | **$1.70** (110 images) |
 | **Lofi Audio synthesis** | `lyria-3-pro-preview` | **$0.08** / song | **$2.40** (30 songs) | **$52.80** (660 songs) |
 | **GCS Storage & Data** | Standard Hot Storage | **$0.02** / GB-month | **<$0.001** (~480 KB/day) | **<$0.001** (~10.5 MB/month) |
-| **Total Platform Cost** | **Vertex AI + GCS** | — | **$2.46 USD** | **$54.16 USD** |
+| **Total Platform Cost** | **Vertex AI + GCS** | — | **$2.48 USD** | **$54.50 USD** |
 
 ### 🧠 Billing Safeguards & Efficiencies
 1.  **Welcome Trial Credits:** Google Cloud provides **$300 USD in free welcome credits** upon registration. This covers the total operational GenAI cost of LofiRadio for **121 consecutive days of 100% free production broadcasting**.
@@ -183,7 +186,9 @@ The Blazor interface is optimized to deliver a cinematic, high-fidelity retro pl
 *   **Widescreen Cinematic Interface (Desktop)**: Edge-to-edge layout where the widescreen pixel art background fits perfectly, removing any unnecessary margins, headers, or footers.
 *   **YouTube Music-Style Console (Mobile/Portrait)**: Responsive mobile media query triggers on portrait devices, centering the pixel art as a gorgeous 1:1 rounded square album cover. It renders the player controls as a compact, touch-friendly, dark bottom console, completely avoiding scroll overflows and keeping buttons comfortable at thumb-level.
 *   **Custom Vector Branding (`favicon.svg`)**: Features a custom-designed, pixel-perfect vector cassette tape radio icon with crisp-edges rendering, completely optimized down to a lightweight 225 KB.
-*   **Double-Layer Fallbacks**: If a GCS image fails to load or hasn't been generated yet, a smooth opacity transition hides the error and renders beautiful, animated vector SVGs (`day`, `evening`, `night`, `pixel`) beneath the image layer.
+*   **Double-Layer Fallbacks**: If a GCS image fails to load or hasn't been generated yet, a smooth opacity transition hides the error and renders beautiful, animated vector SVGs (`day`, `evening`, `night`, `pixel`, `synthwave`) beneath the image layer. The **`synthwave`** fallback scene features an infinite, interactive 3D perspective scrolling laser grid sunset with a cruising sports car silhouette!
+*   **Uncontrolled Timeline Decoupling**: To completely eliminate micro-stuttering and jumping caused by SignalR WebSocket latency, the progress bar and current/total time labels are **fully decoupled from Blazor's render loops**. JavaScript has 100% exclusive, direct DOM write ownership of these elements, achieving ultra-smooth, native 60 FPS live playhead progress.
+*   **Glowing Neon-Pink "NEW" Badge**: Tracks generated during the active daily run (today's UTC date) automatically display a glowing, retro-futuristic, cyber-pink `"NEW"` badge next to the song title, letting listeners know they are listening to the freshest AI compositions.
 *   **High-Contrast Live Badge**: The top-left badge has a dark translucent backdrop (`rgba(15, 10, 25, 0.85)`), text-shadows, and blur, making it perfectly readable against any light background.
 *   **Interactive Volume Slider**: The volume control on the right remains **100% interactive and slidable**, allowing listeners to adjust, mute, or unmute their music easily.
 
