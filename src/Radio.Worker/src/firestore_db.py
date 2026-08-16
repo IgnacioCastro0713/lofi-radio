@@ -4,20 +4,22 @@ tracks_ref = db.collection("radio_tracks")
 
 def wipe_tracks_collection():
     """
-    Wipes all existing documents inside the 'radio_tracks' collection using batch deletes.
+    Wipes all existing documents inside the 'radio_tracks' collection using BulkWriter.
+    Optimized for high-throughput parallel asynchronous deletions.
     """
-    print("[Firestore] Wiping existing Firestore collection 'radio_tracks'...")
+    print("[Firestore] Wiping existing Firestore collection 'radio_tracks' using BulkWriter...")
     try:
         all_current_docs = list(tracks_ref.list_documents())
         if not all_current_docs:
             print("[Firestore] Collection was already empty.")
             return
             
-        batch = db.batch()
+        bulk_writer = db.bulk_writer()
         for doc in all_current_docs:
-            batch.delete(doc)
-        batch.commit()
-        print("[Firestore] Collection wiped successfully.")
+            bulk_writer.delete(doc)
+            
+        bulk_writer.close()
+        print("[Firestore] Collection wiped successfully via BulkWriter.")
     except Exception as e:
         print(f"[Firestore] Error wiping collection: {e}")
         raise e
