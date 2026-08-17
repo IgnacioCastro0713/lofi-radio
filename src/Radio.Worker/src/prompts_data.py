@@ -478,7 +478,12 @@ VISUAL_ELEMENTS = {
             "a retro neon sports car cruising steadily",
             "a sleek wireframe sports cruiser silhouette",
             "a futuristic cyber sports car driving towards the horizon",
-            "a classic 80s luxury coupe silhouette driving on a grid road"
+            "a classic 80s luxury coupe silhouette driving on a grid road",
+            "a futuristic cybernetic hoverbike with hot pink glowing trails",
+            "a sleek retro-futuristic starfighter spaceship cruising through space",
+            "a high-speed neon lightcycle leaving a vibrant laser blue trail",
+            "a retro-futuristic flying hovercar cruising through glowing city canyons",
+            "an epic cyber-cruiser starship gliding smoothly above the grid"
         ],
         "suns": [
             "a massive glowing pink and orange neon grid sun",
@@ -497,37 +502,47 @@ VISUAL_ELEMENTS = {
     }
 }
 
-# 4. Randomized Visual prompt templates for Gemini 3.1 Image Generation (4 distinct perspectives/styles per mood!)
+# 4. Randomized Visual prompt templates for Gemini 3.1 Image Generation (6 distinct perspectives/styles per mood!)
 VISUAL_TEMPLATES = {
     "day": [
         "detailed 16-bit lofi hip hop style pixel art of a cozy room workspace, outside {view}, on the desk {obj}, in the room {amb}, {palette}, 16:9 widescreen format",
         "aesthetic 16-bit lofi pixel art illustration of a quiet sunny study room, on the desk we see {obj}. Outside the window is {view}, while inside the room {amb}. {palette}, 16:9 widescreen format",
         "charming 16-bit retro lofi room interior pixel art: {amb}. On the wooden desk sits {obj}, looking out of the cozy window to see {view}. {palette}, 16:9 widescreen format",
-        "relaxing lofi workspace scene in beautiful 16-bit pixel art style, {palette}. A warm room featuring {amb}, with {obj} on the desk. The window view shows {view}, 16:9 widescreen format"
+        "relaxing lofi workspace scene in beautiful 16-bit pixel art style, {palette}. A warm room featuring {amb}, with {obj} on the desk. The window view shows {view}, 16:9 widescreen format",
+        "comfy 16-bit lofi-vibe pixel art illustration of a cozy room window seat, {palette}. Outside we see {view}, while on the side cushion lies {obj}, surrounded by a {amb} setting, 16:9 widescreen format",
+        "peaceful 16-bit retro pixel art of a sunlit lofi bedroom corner, featuring {amb}. Resting on the shelf is {obj}, with a large glass door looking out onto {view}. Color palette: {palette}, 16:9 widescreen format"
     ],
     "evening": [
         "detailed 16-bit lofi jazzhop style pixel art of a cozy coffee shop window, outside {view}, on the table {obj}, {amb}, warm cozy lighting, 16:9 widescreen format",
         "aesthetic 16-bit jazzhop cafe window seat in warm pixel art. Outside is {view}, while on the table sits {obj}. In the background, there are {amb}. Warm cozy lighting, 16:9 widescreen format",
         "charming retro 16-bit cafe interior pixel art scene. Cozy coffee shop vibes with {amb}. On the wooden counter is {obj}, looking out the window at {view}. 16:9 widescreen format",
-        "relaxing evening coffee shop pixel art illustration, warm amber glow. A table featuring {obj}, surrounded by {amb}, with a lovely glass window view of {view}, 16:9 widescreen format"
+        "relaxing evening coffee shop pixel art illustration, warm amber glow. A table featuring {obj}, surrounded by {amb}, with a lovely glass window view of {view}, 16:9 widescreen format",
+        "cozy 16-bit evening cafe window pixel art. Outdoors {view} can be seen, and {obj} sits on a small round table. The ambient atmosphere has {amb}, colored in deep warm nostalgic tones, 16:9 widescreen format",
+        "retro 16-bit lo-fi pixel art of a tranquil coffee house bar table. On the wooden surface rests {obj}, with a clear view of {view} through the glass. In the room we see {amb}, with long shadows and golden hour lighting, 16:9 widescreen format"
     ],
     "night": [
         "detailed 16-bit lofi sleep style pixel art of a cozy dark bedroom window looking out at {sky}, {light}, {amb}, relaxing cozy dark aesthetic, 16:9 widescreen format",
         "aesthetic 16-bit sleep-lofi midnight bedroom interior, dark cozy pixel art. Looking out of the wide window to see {sky}. The room is lit softly by {light}, creating {amb}, 16:9 widescreen format",
         "charming 16-bit dark retro bedroom pixel art, relaxing nocturnal vibes. Softly illuminated by {light}, showing {amb}. The window overlooks {sky}, 16:9 widescreen format",
-        "relaxing night bedroom scene in beautiful 16-bit pixel art, cozy dark aesthetic. A bedroom featuring {amb}, lit by {light}. Through the window is a starry view of {sky}, 16:9 widescreen format"
+        "relaxing night bedroom scene in beautiful 16-bit pixel art, cozy dark aesthetic. A bedroom featuring {amb}, lit by {light}. Through the window is a starry view of {sky}, 16:9 widescreen format",
+        "midnight lofi study room 16-bit pixel art, calm nocturnal aesthetic. The room features {amb}, lit by {light}. Through the open window we look out at {sky}, cozy chill dark colors, 16:9 widescreen format",
+        "serene 16-bit pixel art of a quiet dark bedroom at 3 AM. A sleepy atmosphere featuring {amb}. Illuminated by the gentle glow of {light}, with the window overlooking {sky}, 16:9 widescreen format"
     ],
     "pixel": [
         "detailed 16-bit chiptune retro arcade style pixel art of {console}, the screen displays {screen}, set against {bg}, classic 8-bit gaming aesthetic, 16:9 widescreen format",
         "aesthetic 16-bit retro game setup in pixel art style. Up close on {console} where {screen}. Set against a beautiful backdrop of {bg}, 80s nostalgic gaming vibes, 16:9 widescreen format",
         "charming 80s gamer room corner in 16-bit pixel art. Centered on {console} with {screen}, surrounded by {bg}, classic retro-arcade nostalgic style, 16:9 widescreen format",
-        "nostalgic chiptune-inspired 16-bit pixel art scene. Featuring {console} displaying {screen}, set against {bg}, vibrant retro-gaming color palette, 16:9 widescreen format"
+        "nostalgic chiptune-inspired 16-bit pixel art scene. Featuring {console} displaying {screen}, set against {bg}, vibrant retro-gaming color palette, 16:9 widescreen format",
+        "close-up shot of {console} on a retro gaming cabinet in 16-bit pixel art. The display screen is running {screen}, set against {bg}, classic retro nostalgia, 16:9 widescreen format",
+        "detailed 16-bit retro arcade scene. Centered on {console} where {screen}, surrounded by {bg}, glowing CRT screen scanlines, vintage game aesthetic, 16:9 widescreen format"
     ],
     "synthwave": [
         "detailed 16-bit retro-futuristic outrun synthwave style pixel art of {vehicle} driving towards {sun}, set against {bg}, vibrant purple and hot pink color palette, aesthetic 1980s retrowave vibes, 16:9 widescreen format",
         "aesthetic 1980s outrun style 16-bit pixel art illustration. Featuring {vehicle} cruising steadily towards {sun}, surrounded by {bg}. Vibrant hot pink, neon blue, and purple color scheme, 16:9 widescreen format",
         "charming retro-futuristic retrowave pixel art scene. An epic 16-bit view of {vehicle} driving on a highway towards {sun}, set against {bg}. Glowing neon wires, outrun aesthetics, 16:9 widescreen format",
-        "cinematic synthwave highway in beautiful 16-bit pixel art, 80s retrowave vibes. {vehicle} driving into the sunset of {sun}, surrounded by the cosmic landscape of {bg}, 16:9 widescreen format"
+        "cinematic synthwave highway in beautiful 16-bit pixel art, 80s retrowave vibes. {vehicle} driving into the sunset of {sun}, surrounded by the cosmic landscape of {bg}, 16:9 widescreen format",
+        "epic 16-bit outrun retrowave scene of {vehicle} zooming down a wireframe neon boulevard towards {sun}. Background elements include {bg}, hot neon pink and cyan blue cyberpunk theme, 16:9 widescreen format",
+        "sci-fi 16-bit retro-futuristic pixel art. A majestic view of {vehicle} flying towards the massive {sun}, passing by {bg}, glowing lasers and grids, intense 1980s synthwave color palette, 16:9 widescreen format"
     ]
 }
 
