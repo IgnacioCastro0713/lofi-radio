@@ -158,7 +158,7 @@ The GCP ecosystem is configured with airtight security following the **Principle
 
 ## 💰 6. Financial Billing & Cost Breakdown (USD)
 
-While LofiRadio's **hosting and server computing infrastructure** is completely serverless and costs **$0.00 USD** (fully operating within Google Cloud's permanent Free Tier allocations for Cloud Run, Firestore, and GCS), the **Generative AI creation APIs** have real, pay-as-you-go commercial costs once standard free trial limits are exceeded.
+While LofiRadio's **hosting and server compute infrastructure** (Cloud Run, Firestore) is fully serverless and costs **$0.00 USD** within Google Cloud's permanent Free Tier allocations, two categories carry real, usage-driven costs: the **Generative AI creation APIs** (fixed, predictable, scales with `TRACK_COUNT`) and **GCS network egress** (variable, scales with listening hours × concurrent listeners — see below).
 
 All generative costs are managed under Vertex AI's standard billing rates. By utilizing `gemini-3.1-flash-image`'s native multimodal token-based billing instead of flat-rate dedicated image models (like Imagen 3's $0.04/image), **our daily artwork generation costs are optimized by more than 60%**:
 
@@ -171,12 +171,35 @@ All generative costs are managed under Vertex AI's standard billing rates. By ut
 | **Widescreen Artwork** | `gemini-3.1-flash-image` | **~$0.0155** / image | **$0.0775** (5 images) | **$1.70** (110 images) |
 | **Lofi Audio synthesis** | `lyria-3-pro-preview` | **$0.08** / song | **$2.40** (30 songs) | **$52.80** (660 songs) |
 | **GCS Storage & Data** | Standard Hot Storage | **$0.02** / GB-month | **<$0.001** (~480 KB/day) | **<$0.001** (~10.5 MB/month) |
-| **Total Platform Cost** | **Vertex AI + GCS** | — | **$2.48 USD** | **$54.50 USD** |
+| **GCS Network Egress** | Standard Egress | **$0.12** / GB | *variable — see egress estimate below* | *variable — see egress estimate below* |
+| **Total Fixed GenAI + Storage Cost** | **Vertex AI + GCS Storage** | — | **$2.48 USD** | **$54.50 USD** |
+
+Egress is billed separately because, unlike GenAI generation and storage, it scales with **listener count and listening hours**, not with `TRACK_COUNT` — see the estimate below to size it for your expected audience.
+
+### 📡 GCS Network Egress Estimate (8h vs 24h Listening Sessions)
+
+Since audio streams directly from GCS to each listener's browser (not through a CDN), egress is billed per GB actually downloaded and scales with **listening hours × concurrent listeners**. Access is restricted by IAP to authorized users only, keeping this volume naturally bounded. The formula used:
+
+| Step | Formula | Notes |
+| :--- | :--- | :--- |
+| **1. Tracks played** | `tracks_played = (listening_hours * 60) / avg_track_duration_min` | `avg_track_duration_min` pulled from the live bucket, not assumed |
+| **2. Data transferred** | `GB_decimal = (avg_track_size_MiB * tracks_played) / 1000` | `/1000` (not `/1024`) to match Google's decimal GB billing unit |
+| **3. Cost** | `Cost_USD = GB_decimal * listeners * $0.12` | Standard GCS egress-to-internet rate; verify current pricing |
+
+`avg_track_size_MiB` and `avg_track_duration_min` should be pulled from the live bucket (e.g. `gsutil du -a gs://<bucket>/**/*.mp3`) rather than assumed. Applying the formula with this repo's own averages (2.5 min/track, Section 3) and a typical ~128 kbps AI-generated MP3 (~2.3 MiB/track — **placeholder, confirm with a real `gsutil du` on the bucket**), **per listener**:
+
+| Scenario | Tracks/Day | GB/Day | Cost/Day | Cost/Month (30d) |
+| :--- | :--- | :--- | :--- | :--- |
+| **8h listening session** | 192 | ~0.44 GB | ~$0.053 | ~$1.58 |
+| **24h listening session** | 576 | ~1.32 GB | ~$0.158 | ~$4.75 |
+
+Multiply by the number of IAP-authorized listeners for the real total (e.g. 5 listeners streaming 24/7 ≈ **$23.75/month**).
 
 ### 🧠 Billing Safeguards & Efficiencies
 1.  **Welcome Trial Credits:** Google Cloud provides **$300 USD in free welcome credits** upon registration. This covers the total operational GenAI cost of LofiRadio for **121 consecutive days of 100% free production broadcasting**.
 2.  **No-Charge Failed Requests:** You are **only billed for successful 200 OK responses**. If an AI prompt is blocked by Google safety filters and our self-healing worker loop retries with a fresh prompt variation, **failed/blocked attempts are never charged**.
-3.  **In-Memory WebP Compression:** Moving from raw PNGs to Pillow-compressed `.webp` files (reduced from ~1.3MB to ~120KB) keeps GCS storage and regional network egress costs completely zeroed under the standard free tiers.
+3.  **In-Memory WebP Compression:** Moving from raw PNGs to Pillow-compressed `.webp` files (reduced from ~1.3MB to ~120KB) keeps GCS storage costs negligible under the standard free tiers.
+4.  **IAP Access Gating:** Because Identity-Aware Proxy restricts the web app to authorized users only (Section 5), egress volume is naturally capped by a small, known audience rather than unbounded public traffic.
 
 ---
 
