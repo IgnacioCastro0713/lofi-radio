@@ -5,7 +5,7 @@ import io
 import time
 from mutagen.mp3 import MP3
 
-from config import PROJECT_ID, BUCKET_NAME, TRACK_COUNT, ai_client
+from config import PROJECT_ID, BUCKET_NAME, TRACK_COUNT
 import generator
 import gcs
 import assembler
