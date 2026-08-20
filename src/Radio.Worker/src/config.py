@@ -23,9 +23,15 @@ print(f"[Config] Daily track generation target: {TRACK_COUNT}")
 db = firestore.Client(project=PROJECT_ID)
 storage_client = storage.Client(project=PROJECT_ID)
 
-# Initialize the Google GenAI Client in Vertex AI mode keylessly (ADC)
-ai_client = genai.Client(
-    vertexai=True,
-    project=PROJECT_ID,
-    location="global"
-)
+def get_ai_client():
+    """
+    Returns a fresh Google GenAI Client in Vertex AI mode keylessly (ADC).
+    Instantiating a new client ensures OAuth2 credentials/access tokens are
+    refreshed from the environment/metadata server rather than being cached statically.
+    """
+    return genai.Client(
+        vertexai=True,
+        project=PROJECT_ID,
+        location="global"
+    )
+
