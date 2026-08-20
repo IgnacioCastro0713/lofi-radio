@@ -4,7 +4,8 @@ import time
 import base64
 from PIL import Image
 from google.genai import types
-from config import ai_client, MUSIC_MODEL, IMAGE_MODEL
+import config
+from config import MUSIC_MODEL, IMAGE_MODEL
 from prompts_data import TITLE_WORDS, TITLE_SUFFIXES, AUDIO_TEMPOS, AUDIO_GENRES, AUDIO_ELEMENTS, VISUAL_ELEMENTS, VISUAL_TEMPLATES, AUDIO_TEMPLATES
 
 def determine_mood(next_seq, shuffled_blocks):
@@ -90,7 +91,8 @@ def generate_single_track(next_seq, shuffled_blocks):
 
         for attempt in range(max_network_retries):
             try:
-                interaction = ai_client.interactions.create(
+                client = config.get_ai_client()
+                interaction = client.interactions.create(
                     model=MUSIC_MODEL,
                     input=prompt
                 )
@@ -209,7 +211,8 @@ def generate_mood_image(mood):
     )
     
     try:
-        response = ai_client.models.generate_content(
+        client = config.get_ai_client()
+        response = client.models.generate_content(
             model=IMAGE_MODEL,
             contents=prompt,
             config=types.GenerateContentConfig(
