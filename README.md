@@ -237,8 +237,8 @@ dotnet test
 To populate your Firestore database with the new symmetrical daily tracks and verify Mutagen's duration parser:
 ```powershell
 # 1. Configure your local environment variables
-$env:GCP_PROJECT_ID="plxs-lofi-radio"
-$env:GCS_BUCKET_NAME="plxs-lofi-radio-lofi-audio-dev"
+$env:GCP_PROJECT_ID="lofi-radio"
+$env:GCS_BUCKET_NAME="lofi-radio-lofi-audio-dev"
 
 # 2. Run the Worker (Task 0 will automatically clear GCS and Firestore before starting)
 python src/Radio.Worker/src/main.py
