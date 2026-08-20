@@ -41,3 +41,5 @@ TestResults/
 artifacts/
 
 .csproj.user
+__pycache__/
+*.pyc

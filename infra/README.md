@@ -20,6 +20,7 @@ Before running `terraform apply`, you must ensure that your Google Cloud Project
 | **IAM API** | `iam.googleapis.com` | Provisioning dedicated secure Service Accounts (`sa-web` and `sa-worker`). |
 | **IAM Credentials API** | `iamcredentials.googleapis.com` | Required for programmatic self-signing of GCS URLs (IAM `signBlob` API) under serverless ADC. |
 | **Resource Manager API** | `cloudresourcemanager.googleapis.com` | Managing IAM Policy Bindings and service account roles with least privilege. |
+| **Identity-Aware Proxy API** | `iap.googleapis.com` | Gating the web app behind Google login (`roles/iap.httpsResourceAccessor`) instead of public access. Enabled automatically by Terraform. |
 
 ---
 
@@ -39,6 +40,7 @@ gcloud services enable \
   iam.googleapis.com \
   iamcredentials.googleapis.com \
   cloudresourcemanager.googleapis.com \
+  iap.googleapis.com \
   --project=YOUR_GCP_PROJECT_ID
 ```
 
