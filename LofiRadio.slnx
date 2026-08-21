@@ -12,7 +12,6 @@
   <Folder Name="/infra/environments/prod/">
     <File Path="infra/environments/prod/main.tf" />
     <File Path="infra/environments/prod/variables.tf" />
-    <File Path="infra/environments/prod/terraform.tfvars" />
     <File Path="infra/environments/prod/terraform.tfvars.example" />
   </Folder>
   <Folder Name="/infra/modules/" />

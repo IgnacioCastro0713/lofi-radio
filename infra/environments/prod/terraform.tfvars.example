@@ -15,3 +15,6 @@ track_count = 30
 # AI models for music and image generator
 music_model = "lyria-3-pro-preview"
 image_model = "gemini-3.1-flash-image"
+
+# IAM members granted access via IAP (roles/iap.httpsResourceAccessor)
+iap_authorized_domains = ["domain:<domain.com>"]

@@ -34,4 +34,3 @@ def get_ai_client():
         project=PROJECT_ID,
         location="global"
     )
-

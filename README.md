@@ -1,12 +1,10 @@
-# 📻 LofiRadio 24/7 - Exact Time-Synchronized Streaming & AI Music Generator 👾🌅🌇🌌
+# 📻 LofiRadio - Time-Synchronized AI Music Generator 👾🌅🌇🌌
 
 Welcome to **LofiRadio**, an automated, global time-synchronized 24/7 Lofi radio station. The platform is built using **.NET 10 Clean Architecture (Blazor Server)** on the Frontend/API, and an automated modular music generator in **Python 3.11** powered by **Google DeepMind Vertex AI Lyria 3 Pro** and **Gemini 3.1** artificial intelligence.
 
 The entire web hosting and database infrastructure is designed under a **$0.00 USD Cost Serverless** paradigm (leveraging Google Cloud free tiers), while GenAI API generation costs are kept to an optimized minimum (see the [Financial Section](#-6-financial-billing--cost-breakdown-usd) for full details).
 
-<p align="center">
-  <img src="./{F9A93164-865D-4CE6-9C25-F32EAA2BE673}.png" alt="LofiRadio Retro Widescreen Player Interface" width="90%" />
-</p>
+![LofiRadio Retro Widescreen Player Interface](player-interface.png)
 
 ---
 
@@ -34,10 +32,12 @@ graph TD
     end
 
     %% Client Entry Points
-    subgraph Clients ["Global Listeners"]
+    subgraph Clients ["Authorized Listeners"]
         UserA["🇨🇱 Listener Chile (Browser)"]
         UserB["🇯🇵 Listener Japan (Browser)"]
     end
+
+    IAP["🔐 Identity-Aware Proxy (Google Login Gate)"]
 
     %% Worker Flows (Daily Job)
     Scheduler -->|Triggers once daily| Worker
@@ -51,8 +51,9 @@ graph TD
     GCS -->|Lifecycle Rule: Autocleans files older than 24h| GCS
 
     %% Web App Flows
-    UserA -->|Visits Web App| WebApp
-    UserB -->|Visits Web App| WebApp
+    UserA -->|Visits Web App| IAP
+    UserB -->|Visits Web App| IAP
+    IAP -->|Authenticated & Authorized only| WebApp
     WebApp -->|Queries State in Transaction| Firestore
     WebApp -->|Generates Secure Signed URL| WebApp
     WebApp -->|HTTP 302 Redirect| UserA
@@ -126,7 +127,7 @@ The `src/Radio.Worker/src/main.py` script is heavily hardened to **ensure that t
 
 ## 🔒 5. IAM Permissions, Roles & Cloud Configuration Matrix
 
-The GCP ecosystem is configured with airtight security following the **Principle of Least Privilege** using Terraform.
+The GCP ecosystem is configured with airtight security following the **Principle of Least Privilege** using Terraform. The web app is not public: **Identity-Aware Proxy (IAP)** gates every request behind Google login, and only IAM members listed in `iap_authorized_domains` (users, groups, or domains) are granted `roles/iap.httpsResourceAccessor` to reach it.
 
 ```
                                   [🔒 Google Cloud IAM]
@@ -140,6 +141,12 @@ The GCP ecosystem is configured with airtight security following the **Principle
   - roles/iam.serviceAccountTokenCreator (URL Signer)     - roles/aiplatform.user (Call Lyria Pro API)
   - GCS: roles/storage.objectViewer (Stream audio)        - roles/bigquery.jobUser (Data Ingestion)
                                                           - GCS: roles/storage.objectUser (Cleanup/Create MP3s)
+
+                         [🔐 Identity-Aware Proxy]
+                                    |
+                    roles/iap.httpsResourceAccessor
+                                    |
+                 Authorized end-users (per `iap_authorized_domains`)
 ```
 
 ### 📋 Cloud Resource Specifications
@@ -148,7 +155,8 @@ The GCP ecosystem is configured with airtight security following the **Principle
 | :--- | :--- | :--- | :--- |
 | **Web SA** | `lofi-web-sa-dev` | Exclusive identity for the Web App | `roles/datastore.user` (Firestore), `roles/storage.objectViewer` (GCS), `roles/iam.serviceAccountTokenCreator` (URL Signer) |
 | **Worker SA**| `lofi-worker-sa-dev`| Exclusive identity for the Python Worker | `roles/datastore.user`, `roles/aiplatform.user` (Vertex AI), `roles/bigquery.jobUser`, **`roles/storage.objectUser`** (List, Create, and Delete objects in GCS) |
-| **Cloud Run Service**| `lofi-web-service-dev` | Auto-scalable down to 0 instances when idle | Hosts the Interactive Blazor Web App in .NET 10 |
+| **Cloud Run Service**| `lofi-web-service-dev` | Auto-scalable down to 0 instances when idle, `INGRESS_TRAFFIC_ALL` fronted by IAP | Hosts the Interactive Blazor Web App in .NET 10 |
+| **Identity-Aware Proxy** | `iap.googleapis.com` | Gates the web app behind Google login instead of `allUsers` public access | `roles/iap.httpsResourceAccessor` granted to `iap_authorized_domains`; IAP's service agent holds `roles/run.invoker` to forward authenticated requests |
 | **Cloud Run Job** | `lofi-generator-job-dev`| **Timeout: 120 minutes (7200s)**, Task Count: 1 | Executes the sequential daily track purge and generation (dynamic length configured via `TRACK_COUNT`, e.g., 40 tracks) |
 | **Cloud Scheduler** | `trigger-lofi-generator-job-dev`| **Schedule: `"0 6 * * 1-5"`** (Mon-Fri at 6:00 AM UTC / 1:00 AM GMT-5) | `roles/run.invoker` (Invokes the Cloud Run Job) |
 | **GCS Bucket** | `lofi-radio-lofi-audio-dev`| **Lifecycle Rule: Delete objects older than 25 days** | Secure private storage of `.mp3` and `.webp` audio/visual assets |
@@ -243,6 +251,3 @@ To compile and launch the Blazor Web application on your local machine:
 dotnet run --project src/Radio.Web --urls=http://localhost:5162
 ```
 Now open your favorite browser and navigate to: **`http://localhost:5162`**. Press Play, turn up the volume, and enjoy the magic of live automated infinite lofi!
-
----
-*LofiRadio is a free, open-source software project for personal enjoyment and distributed real-time systems learning. Keep Coding & Chill!* 🎧👾🌅🌇🌌🚀

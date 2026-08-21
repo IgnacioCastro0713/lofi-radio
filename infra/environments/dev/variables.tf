@@ -32,3 +32,9 @@ variable "image_model" {
   description = "The Gemini image generation model name (DEV)."
   default     = "gemini-3.1-flash-image"
 }
+
+variable "iap_authorized_domains" {
+  type        = list(string)
+  description = "IAM members granted roles/iap.httpsResourceAccessor for the IAP-gated site (DEV)."
+  default     = []
+}

@@ -14,3 +14,9 @@ variable "image_tag" {
   description = "The docker image tag to deploy (PROD)."
   default     = "latest"
 }
+
+variable "iap_authorized_domains" {
+  type        = list(string)
+  description = "IAM members granted roles/iap.httpsResourceAccessor for the IAP-gated site (PROD)."
+  default     = []
+}

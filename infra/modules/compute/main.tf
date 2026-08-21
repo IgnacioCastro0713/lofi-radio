@@ -1,8 +1,22 @@
+# Project number needed for the IAP service agent's invoker binding.
+data "google_project" "current" {
+  project_id = var.project_id
+}
+
+# Required for the IAP IAM binding below; enable once so `apply` doesn't fail on a fresh project.
+resource "google_project_service" "iap" {
+  project            = var.project_id
+  service            = "iap.googleapis.com"
+  disable_on_destroy = false
+}
+
 # 1. Cloud Run Service for the Blazor Web App / API
 resource "google_cloud_run_v2_service" "lofi_web" {
-  name     = "lofi-web-service-${var.environment}"
-  location = var.region
-  ingress  = "INGRESS_TRAFFIC_ALL"
+  provider    = google-beta
+  name        = "lofi-web-service-${var.environment}"
+  location    = var.region
+  ingress     = "INGRESS_TRAFFIC_ALL"
+  iap_enabled = length(var.iap_authorized_domains) > 0 ? true : false
 
   template {
     service_account  = var.web_sa_email
@@ -45,10 +59,35 @@ resource "google_cloud_run_v2_service" "lofi_web" {
   }
 }
 
-# Make the Cloud Run Web App publicly accessible (Requires roles/run.invoker for public HTTP traffic)
-resource "google_cloud_run_v2_service_iam_member" "public_access" {
-  name     = google_cloud_run_v2_service.lofi_web.name
+# IAP now gates access instead of allUsers: only members below reach lofi_web.
+resource "google_iap_web_cloud_run_service_iam_binding" "iap_access" {
+  count                  = length(var.iap_authorized_domains) > 0 ? 1 : 0
+  provider               = google-beta
+  project                = var.project_id
+  location               = google_cloud_run_v2_service.lofi_web.location
+  cloud_run_service_name = google_cloud_run_v2_service.lofi_web.name
+  role                   = "roles/iap.httpsResourceAccessor"
+  members                = var.iap_authorized_domains
+
+  depends_on = [google_project_service.iap]
+}
+
+# IAP's service agent needs run.invoker to forward authenticated requests to the service.
+resource "google_cloud_run_v2_service_iam_member" "iap_invoker" {
+  count    = length(var.iap_authorized_domains) > 0 ? 1 : 0
+  project  = var.project_id
   location = google_cloud_run_v2_service.lofi_web.location
+  name     = google_cloud_run_v2_service.lofi_web.name
+  role     = "roles/run.invoker"
+  member   = "serviceAccount:service-${data.google_project.current.number}@gcp-sa-iap.iam.gserviceaccount.com"
+}
+
+# Public access allowed when IAP is disabled.
+resource "google_cloud_run_v2_service_iam_member" "public_access" {
+  count    = length(var.iap_authorized_domains) == 0 ? 1 : 0
+  project  = var.project_id
+  location = google_cloud_run_v2_service.lofi_web.location
+  name     = google_cloud_run_v2_service.lofi_web.name
   role     = "roles/run.invoker"
   member   = "allUsers"
 }
@@ -59,9 +98,9 @@ resource "google_cloud_run_v2_job" "lofi_worker" {
   location = var.region
 
   template {
-    task_count  = 1
+    task_count = 1
     template {
-      max_retries     = 0 # Disable automatic retries to save CPU, billing, and Vertex API quota if a sequential run fails!
+      max_retries     = 0       # Disable automatic retries to save CPU, billing, and Vertex API quota if a sequential run fails!
       timeout         = "7200s" # 2 hours (120 minutes) max life to ensure 100 tracks generate successfully under any GCR/Vertex latency!
       service_account = var.worker_sa_email
 

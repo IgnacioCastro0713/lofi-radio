@@ -1,9 +1,13 @@
 terraform {
-  required_version = ">= 1.5.0"
+  required_version = ">= 1.0"
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "~> 5.0"
+      version = ">= 5.0"
+    }
+    google-beta = {
+      source  = "hashicorp/google-beta"
+      version = ">= 5.0"
     }
   }
   backend "gcs" {
@@ -17,6 +21,11 @@ provider "google" {
   region  = var.region
 }
 
+provider "google-beta" {
+  project = var.project_id
+  region  = var.region
+}
+
 locals {
   environment = "dev"
 }
@@ -24,9 +33,9 @@ locals {
 # 1. Firestore Database - Provisions native Google Cloud Firestore database
 resource "google_firestore_database" "database" {
   project     = var.project_id
-  name                = "(default)"
-  location_id         = var.region
-  type                = "FIRESTORE_NATIVE"
+  name        = "(default)"
+  location_id = var.region
+  type        = "FIRESTORE_NATIVE"
 }
 
 # 2. IAM Module - Creates dedicated Service Accounts and grants Roles for DEV
@@ -48,17 +57,18 @@ module "storage" {
 
 # 4. Compute Module - Deploys Cloud Run Service & Job using serverless native Firestore
 module "compute" {
-  source          = "../../modules/compute"
-  project_id      = var.project_id
-  region          = var.region
-  environment     = local.environment
-  image_tag       = var.image_tag
-  worker_sa_email = module.iam.worker_sa_email
-  web_sa_email    = module.iam.web_sa_email
-  bucket_name     = module.storage.bucket_name
-  track_count     = var.track_count
-  music_model     = var.music_model
-  image_model     = var.image_model
+  source                 = "../../modules/compute"
+  project_id             = var.project_id
+  region                 = var.region
+  environment            = local.environment
+  image_tag              = var.image_tag
+  worker_sa_email        = module.iam.worker_sa_email
+  web_sa_email           = module.iam.web_sa_email
+  bucket_name            = module.storage.bucket_name
+  track_count            = var.track_count
+  music_model            = var.music_model
+  image_model            = var.image_model
+  iap_authorized_domains = var.iap_authorized_domains
 
   depends_on = [google_firestore_database.database, module.storage]
 }
