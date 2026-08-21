@@ -16,7 +16,7 @@ resource "google_cloud_run_v2_service" "lofi_web" {
   name        = "lofi-web-service-${var.environment}"
   location    = var.region
   ingress     = "INGRESS_TRAFFIC_ALL"
-  iap_enabled = true
+  iap_enabled = length(var.iap_authorized_domains) > 0 ? true : false
 
   template {
     service_account  = var.web_sa_email
@@ -61,23 +61,35 @@ resource "google_cloud_run_v2_service" "lofi_web" {
 
 # IAP now gates access instead of allUsers: only members below reach lofi_web.
 resource "google_iap_web_cloud_run_service_iam_binding" "iap_access" {
+  count                  = length(var.iap_authorized_domains) > 0 ? 1 : 0
   provider               = google-beta
   project                = var.project_id
   location               = google_cloud_run_v2_service.lofi_web.location
   cloud_run_service_name = google_cloud_run_v2_service.lofi_web.name
   role                   = "roles/iap.httpsResourceAccessor"
-  members                 = var.iap_authorized_domains
+  members                = var.iap_authorized_domains
 
   depends_on = [google_project_service.iap]
 }
 
 # IAP's service agent needs run.invoker to forward authenticated requests to the service.
 resource "google_cloud_run_v2_service_iam_member" "iap_invoker" {
+  count    = length(var.iap_authorized_domains) > 0 ? 1 : 0
   project  = var.project_id
   location = google_cloud_run_v2_service.lofi_web.location
   name     = google_cloud_run_v2_service.lofi_web.name
   role     = "roles/run.invoker"
   member   = "serviceAccount:service-${data.google_project.current.number}@gcp-sa-iap.iam.gserviceaccount.com"
+}
+
+# Public access allowed when IAP is disabled.
+resource "google_cloud_run_v2_service_iam_member" "public_access" {
+  count    = length(var.iap_authorized_domains) == 0 ? 1 : 0
+  project  = var.project_id
+  location = google_cloud_run_v2_service.lofi_web.location
+  name     = google_cloud_run_v2_service.lofi_web.name
+  role     = "roles/run.invoker"
+  member   = "allUsers"
 }
 
 # 2. Cloud Run Job for the Music Generator Worker

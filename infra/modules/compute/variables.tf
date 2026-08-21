@@ -55,4 +55,5 @@ variable "image_model" {
 variable "iap_authorized_domains" {
   type        = list(string)
   description = "IAM members granted roles/iap.httpsResourceAccessor (e.g. \"domain:example.com\", \"user:me@example.com\")."
+  default     = []
 }

@@ -36,4 +36,5 @@ variable "image_model" {
 variable "iap_authorized_domains" {
   type        = list(string)
   description = "IAM members granted roles/iap.httpsResourceAccessor for the IAP-gated site (DEV)."
+  default     = []
 }

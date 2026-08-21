@@ -18,4 +18,5 @@ variable "image_tag" {
 variable "iap_authorized_domains" {
   type        = list(string)
   description = "IAM members granted roles/iap.httpsResourceAccessor for the IAP-gated site (PROD)."
+  default     = []
 }
