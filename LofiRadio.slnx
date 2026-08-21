@@ -60,6 +60,7 @@
     <File Path="src/Radio.Worker/src/gcs.py" />
     <File Path="src/Radio.Worker/src/generator.py" />
     <File Path="src/Radio.Worker/src/main.py" />
+    <File Path="src/Radio.Worker/src/prompts_data.json" />
     <File Path="src/Radio.Worker/src/prompts_data.py" />
   </Folder>
   <Folder Name="/test/">
