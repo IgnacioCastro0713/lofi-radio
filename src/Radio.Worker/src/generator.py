@@ -77,6 +77,7 @@ def generate_single_track(next_seq, shuffled_blocks):
             title = generate_title(mood)
             
         prompt = get_prompt_for_mood(mood, title)
+        print(f"[Generator] [AUDIO PROMPT]: {prompt}")
 
         if prompt_attempt == 0:
             print(f"[Generator] Generating track {next_seq} ('{title}' - [{mood}]) with {MUSIC_MODEL}...")
@@ -207,8 +208,8 @@ def generate_mood_image(mood):
     and then programmatically converted to WebP in memory to guarantee lightweight transmission.
     """
     prompt = generate_dynamic_image_prompt(mood)
-    print(f"[Generator] Generating daily pixel art image for mood '{mood}' using {IMAGE_MODEL}..."
-    )
+    print(f"[Generator] Generating daily pixel art image for mood '{mood}' using {IMAGE_MODEL}...")
+    print(f"[Generator] [IMAGE PROMPT]: {prompt}")
     
     try:
         client = config.get_ai_client()
