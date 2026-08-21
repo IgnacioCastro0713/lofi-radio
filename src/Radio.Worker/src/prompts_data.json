@@ -865,7 +865,10 @@
                 "an open notebook with a pixelated pen",
                 "a nostalgic floppy disk on a wooden coaster",
                 "a retro pixelated desk calendar and vintage pencil holder",
-                "a miniature retro pixel globe on a wooden shelf"
+                "a miniature retro pixel globe on a wooden shelf",
+                "a retro transparent grape-purple Gameboy Color",
+                "a modular synthesizer patch bay with tiny colored cables",
+                "a cozy glass terrarium with a tiny glowing pixel mushroom"
             ],
             "window_views": [
                 "soft warm morning sun shining over distant pixelated hills",
@@ -873,7 +876,10 @@
                 "a lush green pixel garden through the clean glass",
                 "distant wind turbines on a nostalgic countryside hill",
                 "gorgeous soft mountain silhouettes under a clear morning sky",
-                "a peaceful suburban street with tiny pixel cars passing"
+                "a peaceful suburban street with tiny pixel cars passing",
+                "a quiet Tokyo street corner in spring with soft cherry blossom petals drifting",
+                "a cinematic train passing over a bridge in a pastel valley",
+                "a cozy rainy harbor with small fishing boats docked"
             ],
             "ambience": [
                 "a cute pixelated cat sleeping curled up on a soft pillow",
@@ -881,14 +887,20 @@
                 "cozy warm fairy lights hanging softly near the curtain",
                 "a retro desk lamp giving a soft golden glow",
                 "shelves with tiny pixelated houseplants and retro cassettes",
-                "a soft vintage curtain blowing gently in a morning breeze"
+                "a soft vintage curtain blowing gently in a morning breeze",
+                "a lazy golden retriever sleeping on a soft rug",
+                "a hanging macramé plant pot with long cascading vines",
+                "warm golden dust motes dancing in the sunbeams"
             ],
             "palettes": [
                 "soft pastel color scheme, highly aesthetic",
                 "warm earth tones, cozy nostalgic 16-bit color grading",
                 "gorgeous retro-chic aesthetic, clean pixel coloring",
                 "aesthetic light sepia tones, warm nostalgic morning lighting",
-                "vibrant warm yellow and soft mint green 16-bit pixel shading"
+                "vibrant warm yellow and soft mint green 16-bit pixel shading",
+                "warm honey-gold and moss green, highly cozy",
+                "soft peach and dusty lavender blue, retro aesthetic",
+                "vibrant 90s anime aesthetic color grading"
             ]
         },
         "evening": {
@@ -898,7 +910,10 @@
                 "cozy brick alleyway under a golden evening glow",
                 "passing classic retro streetcars under a purple twilight sky",
                 "distant suspension bridge outlines under a brilliant orange sunset",
-                "a cozy rainy cafe street under beautiful glowing street lamps"
+                "a cozy rainy cafe street under beautiful glowing street lamps",
+                "a moody autumn sunset over quiet Parisian rooftops",
+                "glowing ramen shop signs reflecting on wet asphalt streets",
+                "a peaceful lake house pier under an amber dusk sky"
             ],
             "table_objects": [
                 "a steaming porcelain mug of hot cocoa on the counter",
@@ -906,7 +921,10 @@
                 "a small vintage transistor radio with a warm glowing dial",
                 "a cozy glass jar of cookies on a wooden table",
                 "a retro typewriter with a sheet of paper on the table",
-                "a cozy porcelain tea set on a beautiful retro tablecloth"
+                "a cozy porcelain tea set on a beautiful retro tablecloth",
+                "a warm cup of matcha tea with a tiny leaf latte art",
+                "a small stack of vintage retro sci-fi novels",
+                "a glowing smart lamp casting a soft warm peach light"
             ],
             "ambience": [
                 "hanging ivy vines framing the wooden window",
@@ -914,7 +932,10 @@
                 "shelves filled with pixelated retro books in the background",
                 "a cozy warm glowing fireplace reflecting in the room",
                 "glowing neon signs from nearby shops reflecting on the table",
-                "a retro wooden coat rack with a hanging scarf"
+                "a retro wooden coat rack with a hanging scarf",
+                "a custom mechanical keyboard with a coiled aviator cable",
+                "a classic acoustic guitar resting against a brick wall",
+                "warm string lights reflecting on the window glass"
             ]
         },
         "night": {
@@ -923,7 +944,10 @@
                 "twinkling constellations over a dark pixelated landscape",
                 "soft shooting stars falling in a deep midnight sky",
                 "a full glowing lunar moon with passing pixelated dark clouds",
-                "a gorgeous cosmic aurora borealis in a deep night sky"
+                "a gorgeous cosmic aurora borealis in a deep night sky",
+                "a swirling galactic cosmic cloud in deep violet and indigo",
+                "a quiet meteor shower passing over a silhouetted pine forest",
+                "a massive glowing ringed gas giant rising behind dark clouds"
             ],
             "light_sources": [
                 "a retro computer monitor glowing softly with a galaxy screensaver",
@@ -931,14 +955,20 @@
                 "warm fairy lights draped beautifully over the bedframe",
                 "soft neon blue and purple city lights bleeding through the window blinds",
                 "a glowing plasma ball giving an aesthetic violet hum",
-                "a small retro bedside lamp with a warm, soft peach lampshade"
+                "a small retro bedside lamp with a warm, soft peach lampshade",
+                "a retro nixie-tube clock showing 2:00 AM with a warm orange glow",
+                "a soft fiber-optic color-changing nightlight",
+                "a projection of rotating starry constellations on the bedroom ceiling"
             ],
             "ambience": [
                 "a cute cat curled up sleeping peacefully near the keyboard",
                 "soft blue and violet room shadows, vaporwave lighting",
                 "cozy dark bedroom aesthetic, highly relaxing atmosphere",
                 "a cozy warm blanket draped softly on a rocking chair",
-                "glowing digital clock numbers showing midnight in the dark"
+                "glowing digital clock numbers showing midnight in the dark",
+                "a sleepy kitten curled up inside a half-open desk drawer",
+                "a cup of chamomile tea releasing thin wisps of steam",
+                "lofi anime bedroom shadows with gentle blue moonlight"
             ]
         },
         "pixel": {
@@ -947,21 +977,30 @@
                 "a vintage 80s arcade cabinet with a colorful joystick",
                 "a nostalgic tabletop CRT TV with retro controllers next to it",
                 "a classic 16-bit home console connected to a small television",
-                "a retro arcade zone booth with multiple glowing cabinet screens"
+                "a retro arcade zone booth with multiple glowing cabinet screens",
+                "a transparent grape-purple N64 console on a wooden floor",
+                "a vintage classic Macintosh computer running a bright green terminal",
+                "a retro handheld game station with custom pastel keycaps"
             ],
             "screen_content": [
                 "a glowing green screen showing a classic 8-bit alien-shooter game",
                 "a pixelated cosmic screen with tiny flying starships",
                 "a classic retro 2D platformer game with pixelated blocks and coins",
                 "a retro 16-bit RPG game screen with text dialog and tiny characters",
-                "a pixelated racing game showing a cute red car on a grid highway"
+                "a pixelated racing game showing a cute red car on a grid highway",
+                "a cozy isometric farm game with pixelated crops and a tiny windmill",
+                "a gorgeous 16-bit cybernetic city skyline with neon billboards",
+                "a retro side-scroller game with a tiny hero near a pixelated waterfall"
             ],
             "backgrounds": [
                 "a cosmic nebula with sparkling pixel stars and galaxies",
                 "a retro gaming bedroom with grid synthwave posters",
                 "a classic retro laser grid background, 80s nostalgic aesthetic",
                 "a futuristic cyber-city background with glowing pixelated towers",
-                "a starry retro arcade room with floating neon polygon details"
+                "a starry retro arcade room with floating neon polygon details",
+                "a bedroom covered in retro pixel-art posters and action figures",
+                "a cozy futuristic grid space station lounge",
+                "a glowing retro tech workbench with soldering tools and schematics"
             ]
         },
         "synthwave": {
@@ -975,21 +1014,30 @@
                 "a sleek retro-futuristic starfighter spaceship cruising through space",
                 "a high-speed neon lightcycle leaving a vibrant laser blue trail",
                 "a retro-futuristic flying hovercar cruising through glowing city canyons",
-                "an epic cyber-cruiser starship gliding smoothly above the grid"
+                "an epic cyber-cruiser starship gliding smoothly above the grid",
+                "a futuristic hovercraft yacht gliding over a neon pink ocean",
+                "a classic custom lowrider cruising on a glowing grid boulevard",
+                "a sleek cyberpunk high-speed monorail train passing by in the background"
             ],
             "suns": [
                 "a massive glowing pink and orange neon grid sun",
                 "a giant retro vector sun setting on the horizon",
                 "a bright glowing synthwave sun with horizontal slice bars",
                 "a giant half-grid sun with orange and magenta neon horizontal lines",
-                "a retro vector sun casting a vibrant purple and orange glow"
+                "a retro vector sun casting a vibrant purple and orange glow",
+                "a giant neon sunset with vaporwave wireframe mountains cutting through it",
+                "a digital wireframe sphere reflecting pink lasers",
+                "a retro-futuristic double-sun system over a magenta horizon"
             ],
             "backgrounds": [
                 "a beautiful infinite pink and purple wireframe laser grid",
                 "a retro-futuristic purple twilight skyline with tall neon towers",
                 "a cosmic outrun highway lined with glowing neon palm trees",
                 "an infinite outrun landscape with retro-futuristic grid grids",
-                "a starry retrowave galaxy lined with wireframe mountains and grids"
+                "a starry retrowave galaxy lined with wireframe mountains and grids",
+                "a futuristic cyber-canyon with towering holographic advertisements",
+                "an infinite desert of purple sand dunes and glowing laser pyramids",
+                "a retro space-dock overlooking a neon wireframe nebula"
             ]
         }
     },
@@ -1000,7 +1048,9 @@
             "charming 16-bit retro lofi room interior pixel art: {amb}. On the wooden desk sits {obj}, looking out of the cozy window to see {view}. {palette}, 16:9 widescreen format",
             "relaxing lofi workspace scene in beautiful 16-bit pixel art style, {palette}. A warm room featuring {amb}, with {obj} on the desk. The window view shows {view}, 16:9 widescreen format",
             "comfy 16-bit lofi-vibe pixel art illustration of a cozy room window seat, {palette}. Outside we see {view}, while on the side cushion lies {obj}, surrounded by a {amb} setting, 16:9 widescreen format",
-            "peaceful 16-bit retro pixel art of a sunlit lofi bedroom corner, featuring {amb}. Resting on the shelf is {obj}, with a large glass door looking out onto {view}. Color palette: {palette}, 16:9 widescreen format"
+            "peaceful 16-bit retro pixel art of a sunlit lofi bedroom corner, featuring {amb}. Resting on the shelf is {obj}, with a large glass door looking out onto {view}. Color palette: {palette}, 16:9 widescreen format",
+            "cinematic 16-bit pixel art of a tranquil sunlit apartment loft, {palette}, featuring a serene desk with {obj}, overlooking a beautiful outdoor view of {view}, with {amb} creating a cozy feeling, 16:9 aspect ratio",
+            "retro-styled 16-bit illustration of an aesthetic lofi interior under morning sunbeams, {palette}, showing {amb}. On the table sits {obj}, with the background window framing {view}, 16:9 widescreen"
         ],
         "evening": [
             "detailed 16-bit lofi jazzhop style pixel art of a cozy coffee shop window, outside {view}, on the table {obj}, {amb}, warm cozy lighting, 16:9 widescreen format",
@@ -1008,7 +1058,9 @@
             "charming retro 16-bit cafe interior pixel art scene. Cozy coffee shop vibes with {amb}. On the wooden counter is {obj}, looking out the window at {view}. 16:9 widescreen format",
             "relaxing evening coffee shop pixel art illustration, warm amber glow. A table featuring {obj}, surrounded by {amb}, with a lovely glass window view of {view}, 16:9 widescreen format",
             "cozy 16-bit evening cafe window pixel art. Outdoors {view} can be seen, and {obj} sits on a small round table. The ambient atmosphere has {amb}, colored in deep warm nostalgic tones, 16:9 widescreen format",
-            "retro 16-bit lo-fi pixel art of a tranquil coffee house bar table. On the wooden surface rests {obj}, with a clear view of {view} through the glass. In the room we see {amb}, with long shadows and golden hour lighting, 16:9 widescreen format"
+            "retro 16-bit lo-fi pixel art of a tranquil coffee house bar table. On the wooden surface rests {obj}, with a clear view of {view} through the glass. In the room we see {amb}, with long shadows and golden hour lighting, 16:9 widescreen format",
+            "beautiful 16-bit pixel art scene of an aesthetic jazz cafe during golden hour, cozy twilight colors, where we see {amb}. On the counter sits {obj}, looking through the large glass window at {view}, 16:9 widescreen",
+            "moody 16-bit lofi illustration of a quiet rooftop terrace or balcony at dusk. The table is adorned with {obj}, surrounded by a cozy {amb} atmosphere, looking out to {view}, 16:9 widescreen"
         ],
         "night": [
             "detailed 16-bit lofi sleep style pixel art of a cozy dark bedroom window looking out at {sky}, {light}, {amb}, relaxing cozy dark aesthetic, 16:9 widescreen format",
@@ -1016,7 +1068,9 @@
             "charming 16-bit dark retro bedroom pixel art, relaxing nocturnal vibes. Softly illuminated by {light}, showing {amb}. The window overlooks {sky}, 16:9 widescreen format",
             "relaxing night bedroom scene in beautiful 16-bit pixel art, cozy dark aesthetic. A bedroom featuring {amb}, lit by {light}. Through the window is a starry view of {sky}, 16:9 widescreen format",
             "midnight lofi study room 16-bit pixel art, calm nocturnal aesthetic. The room features {amb}, lit by {light}. Through the open window we look out at {sky}, cozy chill dark colors, 16:9 widescreen format",
-            "serene 16-bit pixel art of a quiet dark bedroom at 3 AM. A sleepy atmosphere featuring {amb}. Illuminated by the gentle glow of {light}, with the window overlooking {sky}, 16:9 widescreen format"
+            "serene 16-bit pixel art of a quiet dark bedroom at 3 AM. A sleepy atmosphere featuring {amb}. Illuminated by the gentle glow of {light}, with the window overlooking {sky}, 16:9 widescreen format",
+            "serene 16-bit midnight bedroom pixel art, cozy dark vaporwave color scheme. The space is illuminated by {light}, casting soft shadows, with a cute {amb}. The large glass window reveals {sky}, 16:9 widescreen",
+            "cinematic 16-bit lofi bedroom scene at night, cold blue moonlight and warm cozy indoor contrast. Featuring {amb}, lit beautifully by {light}, while looking out to the starry view of {sky}, 16:9 aspect ratio"
         ],
         "pixel": [
             "detailed 16-bit chiptune retro arcade style pixel art of {console}, the screen displays {screen}, set against {bg}, classic 8-bit gaming aesthetic, 16:9 widescreen format",
@@ -1024,7 +1078,9 @@
             "charming 80s gamer room corner in 16-bit pixel art. Centered on {console} with {screen}, surrounded by {bg}, classic retro-arcade nostalgic style, 16:9 widescreen format",
             "nostalgic chiptune-inspired 16-bit pixel art scene. Featuring {console} displaying {screen}, set against {bg}, vibrant retro-gaming color palette, 16:9 widescreen format",
             "close-up shot of {console} on a retro gaming cabinet in 16-bit pixel art. The display screen is running {screen}, set against {bg}, classic retro nostalgia, 16:9 widescreen format",
-            "detailed 16-bit retro arcade scene. Centered on {console} where {screen}, surrounded by {bg}, glowing CRT screen scanlines, vintage game aesthetic, 16:9 widescreen format"
+            "detailed 16-bit retro arcade scene. Centered on {console} where {screen}, surrounded by {bg}, glowing CRT screen scanlines, vintage game aesthetic, 16:9 widescreen format",
+            "gorgeous 16-bit retro arcade room corner pixel art, glowing CRT monitor scanlines, centered on {console} running {screen}, set against {bg}, nostalgic gamer aesthetic, 16:9 widescreen",
+            "aesthetic 16-bit pixel art of a vintage home console setup, nostalgic gaming room vibes. The tabletop features {console} which is running {screen}, backed by a cozy scenery of {bg}, 16:9 widescreen"
         ],
         "synthwave": [
             "detailed 16-bit retro-futuristic outrun synthwave style pixel art of {vehicle} driving towards {sun}, set against {bg}, vibrant purple and hot pink color palette, aesthetic 1980s retrowave vibes, 16:9 widescreen format",
@@ -1032,7 +1088,9 @@
             "charming retro-futuristic retrowave pixel art scene. An epic 16-bit view of {vehicle} driving on a highway towards {sun}, set against {bg}. Glowing neon wires, outrun aesthetics, 16:9 widescreen format",
             "cinematic synthwave highway in beautiful 16-bit pixel art, 80s retrowave vibes. {vehicle} driving into the sunset of {sun}, surrounded by the cosmic landscape of {bg}, 16:9 widescreen format",
             "epic 16-bit outrun retrowave scene of {vehicle} zooming down a wireframe neon boulevard towards {sun}. Background elements include {bg}, hot neon pink and cyan blue cyberpunk theme, 16:9 widescreen format",
-            "sci-fi 16-bit retro-futuristic pixel art. A majestic view of {vehicle} flying towards the massive {sun}, passing by {bg}, glowing lasers and grids, intense 1980s synthwave color palette, 16:9 widescreen format"
+            "sci-fi 16-bit retro-futuristic pixel art. A majestic view of {vehicle} flying towards the massive {sun}, passing by {bg}, glowing lasers and grids, intense 1980s synthwave color palette, 16:9 widescreen format",
+            "cinematic 16-bit outrun retrowave scene of {vehicle} driving on a futuristic endless grid road towards a massive {sun}, with a background of {bg}, vibrant magenta and electric cyan colors, 16:9 widescreen",
+            "aesthetic 80s retro-futuristic synthwave vector art of {vehicle} parked near the neon grid shoreline overlooking the immense {sun}, set against a beautiful cosmic sky of {bg}, 16:9 aspect ratio"
         ]
     },
     "AUDIO_TEMPLATES": [
