@@ -505,14 +505,14 @@
             "on the Screen",
             "in the Overworld",
             "at the Savepoint",
-            "on the Gameboy",
+            "on the Handheld",
             "in the Castle",
-            "on the NES",
+            "on the 8-Bit Console",
             "in the Forest",
             "during Play",
             "at Boss Fight",
             "in the Tavern",
-            "on Amiga",
+            "on Retro-Workstation",
             "on Retro-PC",
             "in the Matrix",
             "on Cartridge",
@@ -543,140 +543,188 @@
             "on Overdrive"
         ]
     },
-    "AUDIO_TEMPOS": [
-        "slow-paced 70 BPM",
-        "relaxed 73 BPM",
-        "laid-back 76 BPM",
-        "mellow 79 BPM",
-        "cozy 82 BPM",
-        "chill 85 BPM",
-        "grooving 88 BPM"
-    ],
+    "AUDIO_TEMPOS": {
+        "day": [
+            "relaxed 74 BPM",
+            "laid-back 77 BPM",
+            "focused 80 BPM",
+            "cozy 82 BPM",
+            "chill 85 BPM"
+        ],
+        "evening": [
+            "slow-paced 68 BPM",
+            "mellow 72 BPM",
+            "laid-back 75 BPM",
+            "smooth 78 BPM",
+            "chill 82 BPM"
+        ],
+        "night": [
+            "ultra-slow 58 BPM",
+            "peaceful 62 BPM",
+            "dreamy 65 BPM",
+            "soothing 68 BPM",
+            "mellow 70 BPM"
+        ],
+        "pixel": [
+            "laid-back 75 BPM",
+            "nostalgic 80 BPM",
+            "playful 84 BPM",
+            "grooving 88 BPM",
+            "retro 92 BPM"
+        ],
+        "synthwave": [
+            "chillwave 88 BPM",
+            "cruising 94 BPM",
+            "steady 98 BPM",
+            "driving 102 BPM",
+            "upbeat 106 BPM"
+        ]
+    },
     "AUDIO_GENRES": {
         "day": [
             {
-                "genre": "relaxing, peaceful, and highly focused day lofi hip hop track",
-                "theme": "cozy theme"
+                "genre": "warm and focused daytime lofi hip hop track with organic instrumentation",
+                "theme": "cozy daytime study theme"
             },
             {
-                "genre": "calming, warm, and soothing focused daytime lofi beat",
+                "genre": "sunlit daytime lofi beat with acoustic warmth and gentle swing",
                 "theme": "peaceful study theme"
             },
             {
-                "genre": "gentle, serene, and deeply relaxing focused day lofi track",
+                "genre": "serene focused day lofi track with smooth analog tone",
                 "theme": "calm workspace theme"
             },
             {
-                "genre": "cozy, peaceful, and mellow focused afternoon lofi hip hop vibe",
+                "genre": "mellow afternoon lofi hip hop groove with vintage tape warmth",
                 "theme": "focused studying theme"
+            },
+            {
+                "genre": "crisp morning lofi beat with bright vintage electric keys and subtle swing",
+                "theme": "morning coffee theme"
             }
         ],
         "evening": [
             {
-                "genre": "warm, relaxing, and soulful evening jazzhop lofi track",
-                "theme": "cozy theme"
+                "genre": "soulful evening jazzhop lofi track with smooth swing and vintage character",
+                "theme": "cozy twilight theme"
             },
             {
-                "genre": "soothing, mellow, and deeply relaxing evening jazzhop lofi beat",
-                "theme": "chill coffee shop theme"
+                "genre": "soothing dusk coffee shop jazzhop beat with warm hollow-body guitars",
+                "theme": "chill cafe theme"
             },
             {
-                "genre": "gentle, cozy, and relaxing twilight jazzhop lofi track",
+                "genre": "mellow twilight lounge jazz lofi track with muted horns and vinyl dust",
                 "theme": "relaxed evening theme"
             },
             {
-                "genre": "peaceful, warm, and calming evening lounge jazzhop lofi soundscape",
+                "genre": "warm sunset jazzhop lofi soundscape with rich electric piano cadences",
                 "theme": "soulful sunset theme"
+            },
+            {
+                "genre": "rainy evening jazzhop groove with soft brush drums and smoky chords",
+                "theme": "rainy dusk theme"
             }
         ],
         "night": [
             {
-                "genre": "ultra-mellow, dreamy, and peaceful night sleep lofi track",
-                "theme": "cozy theme"
+                "genre": "dreamy nocturnal ambient lofi track with deep sub-bass and spacey reverb",
+                "theme": "midnight slumber theme"
             },
             {
-                "genre": "deeply relaxing, calm, and soothing bedtime sleep lofi track",
+                "genre": "ultra-mellow bedtime sleep lofi track with slow-evolving warm pads",
                 "theme": "dreamy night theme"
             },
             {
-                "genre": "gentle, quiet, and serene midnight sleep lofi soundscape",
-                "theme": "peaceful slumber theme"
+                "genre": "quiet midnight sleep lofi soundscape with gentle cassette tape flutter",
+                "theme": "peaceful sleep theme"
             },
             {
-                "genre": "soothing, warm, and highly relaxing late-night sleep lofi beat",
+                "genre": "calm late-night sleep lofi beat with soft organic heartbeat percussion",
                 "theme": "calm sleeping theme"
+            },
+            {
+                "genre": "ethereal 3 AM lofi ambient soundscape with celesta bells and ocean swells",
+                "theme": "deep rest theme"
             }
         ],
         "pixel": [
             {
-                "genre": "cozy, relaxing, and highly nostalgic 8-bit chiptune pixel lofi track",
+                "genre": "nostalgic 8-bit chiptune pixel lofi track with FM synthesis and dusty sampler crunch",
                 "theme": "retro game theme"
             },
             {
-                "genre": "gentle, calming, and nostalgic 16-bit soundchip retro lofi beat",
-                "theme": "vintage pixelated game theme"
+                "genre": "16-bit soundchip retro lofi beat with authentic pulse-wave leads and triangle bass",
+                "theme": "vintage pixel game theme"
             },
             {
-                "genre": "peaceful, relaxing, and playful 8-bit pulse-wave pixel lofi track",
+                "genre": "playful 8-bit square-wave pixel lofi track with relaxed 12-bit swing drums",
                 "theme": "retro console theme"
             },
             {
-                "genre": "soothing, nostalgic, and deeply relaxing chiptune-inspired pixel lofi vibe",
+                "genre": "soothing handheld-console inspired pixel lofi groove with warm low-pass filters",
                 "theme": "cozy arcade theme"
+            },
+            {
+                "genre": "vintage 16-bit RPG soundtrack lofi beat with FM bells and bitcrushed percussion",
+                "theme": "retro quest theme"
             }
         ],
         "synthwave": [
             {
-                "genre": "driving, nostalgic, and retro-futuristic synthwave retrowave track",
-                "theme": "cyber theme"
+                "genre": "driving 1980s retro-futuristic synthwave track with lush polyphonic synths and rolling bass",
+                "theme": "cyber outrun theme"
             },
             {
-                "genre": "soaring, nostalgic, and cinematic outrun synthwave track",
+                "genre": "cinematic outrun retrowave track with soaring analog leads and gated reverb snare",
                 "theme": "retro-futuristic cyber theme"
             },
             {
-                "genre": "upbeat, melodic, and 1980s inspired retrowave synthwave track",
-                "theme": "neon outrun theme"
+                "genre": "melodic neon synthwave cruise track with vintage analog chorus pads and punchy kick",
+                "theme": "neon highway theme"
             },
             {
-                "genre": "driving, epic, and highly nostalgic retro-electronic synthwave track",
+                "genre": "energetic retro-electronic synthwave groove with analog synthesizer arpeggios and 80s drum machines",
                 "theme": "cyberpunk dreams theme"
+            },
+            {
+                "genre": "atmospheric night-drive synthwave track with retro FM plucks and sidechained bassline",
+                "theme": "night cruise theme"
             }
         ]
     },
     "AUDIO_ELEMENTS": {
         "day": {
             "instruments": [
-                "warm electric piano and soft fingerstyle acoustic guitar",
-                "mellow vintage electric keys and clean retro electric guitar riffs",
-                "organic acoustic kalimba arpeggios, warm vintage electric keys, and a clean electric bass",
-                "cozy vintage reed organ chords, clean electric guitar, and soft synthesized bells",
-                "warm retro organ chords, soothing acoustic slide guitar, and a subtle electric piano",
-                "smooth electric piano, light steel-string acoustic guitar, and soft vibraphone notes",
-                "vintage acoustic piano keys, smooth nylon string guitar chords, and soft synthesized bells",
-                "warm vintage tine electric piano chords, gentle acoustic guitar pluckings, and a soft bassline",
-                "soothing acoustic harp arpeggios, clean electric guitar harmonies, and vintage keys",
-                "soft vintage upright piano melodies, clean fingerstyle acoustic guitar, and warm pads"
+                "warm vintage tine electric piano with gentle stereo tremolo and fingerstyle acoustic guitar",
+                "vintage reed electric piano keys with subtle analog chorus and clean retro electric guitar riffs",
+                "organic acoustic kalimba arpeggios, warm vintage electric piano, and a round electric bass",
+                "vintage reed organ chords, muted electric guitar stabs, and soft synthesized bells",
+                "warm retro drawbar organ, fingerpicked acoustic guitar, and soft vibraphone melodies",
+                "smooth electric piano with tape saturation, light steel-string acoustic guitar, and chime notes",
+                "felted acoustic upright piano keys, nylon-string guitar chords, and mellow analog bells",
+                "vintage tine electric piano, melodic acoustic guitar pluckings, and a warm vintage soul-style bassline",
+                "soft acoustic harp arpeggios, clean jazz-guitar chords, and warm electric piano voicings",
+                "gentle upright piano recorded with ribbon microphones, acoustic guitar, and warm analog synth pads"
             ],
             "beats": [
-                "dusty lofi boom-bap drums with a gentle kick and soft snare",
-                "relaxed lofi hip hop swing beats with a warm crackling rimshot",
-                "laid-back organic acoustic percussion and a very soft kick-snare pattern",
-                "chill down-tempo lofi drum loop with heavily filtered hi-hats",
-                "soft shuffle drums and a warm, steady bassline",
-                "mellow dusty low-pass filtered kick and a crisp woodblock snare hit",
-                "gentle 12-bit sampler lofi boom-bap rhythm with laid-back swing",
-                "soft low-fidelity acoustic drum kit beats with filtered shaker hats"
+                "dusty lofi boom-bap drums with hardware sampler vinyl simulator compression and soft snare",
+                "relaxed lofi hip hop swing beats with a warm crackling rimshot and lazy unquantized hi-hats",
+                "laid-back organic acoustic percussion, shaker loops, and a warm low-passed kick drum",
+                "chill down-tempo drum loop processed through vintage cassette tape with soft filtered hats",
+                "soft shuffle brush drums, gentle rim clicks, and a steady upright bass groove",
+                "mellow low-pass filtered kick, crisp woodblock snare hit, and subtle sidechain compression",
+                "gentle vintage 12-bit hardware sampler lofi boom-bap rhythm with laid-back swing timing",
+                "soft acoustic drum kit beats with filtered shaker hats and round, uncompressed kicks"
             ],
             "textures": [
-                "soft vinyl crackle and distant morning birds singing",
-                "cozy coffee shop background room-tone with faint chatter and cup clinks",
-                "gentle morning breeze rustling through open windows",
-                "subtle analog tape hiss and the warm sound of distant morning rain",
-                "soft wind chimes and warm analog record dust noise",
-                "faint analog clock ticking and soft outdoor wind rustle",
-                "cozy fireplace crackle and gentle keyboard typing sounds",
-                "warm vintage record dust crackle and soft window-tapping rain"
+                "warm vinyl crackle with subtle analog tape wow and flutter and distant morning birds",
+                "cozy coffee shop room tone with faint cup clinks and gentle window rain",
+                "soft morning breeze rustling through open windows with gentle wind chimes",
+                "subtle cassette tape hiss and the warm sound of distant spring rain showers",
+                "soft wind chimes, gentle paper rustling, and warm analog turntable dust noise",
+                "faint ticking clock, sunny window ambiance, and subtle mechanical keyboard clicks",
+                "gentle winter snowfall silence outside the window with faint indoor fireplace warmth",
+                "warm autumn leaves rustling in the breeze with delicate vinyl record dust noise"
             ],
             "harmonies": [
                 "in a warm major-seventh progression",
@@ -689,36 +737,36 @@
         },
         "evening": {
             "instruments": [
-                "jazzy electric guitar chords and a smooth soulful saxophone lead",
-                "warm hollow-body jazz guitar and a mellow muted trumpet melody",
-                "relaxed jazz-hop piano chords and a soft, warm acoustic double bass",
-                "cozy jazz piano, a warm breathy tenor saxophone, and a light vibraphone",
-                "mellow retro electric keys, a clean jazz hollow-body guitar, and a soft flute lead",
-                "warm retro drawbar organ chords, smooth jazzy guitar riffs, and a mellow contrabass",
-                "smoky vintage grand piano keys, mellow hollow-body jazz guitar, and a warm saxophone",
-                "relaxed jazz-hop electric keys, clean jazz-guitar pluckings, and a soft upright bass",
-                "warm electric drawbar organ swells, smooth muted trumpet melodies, and a mellow jazz guitar",
-                "soft vintage upright piano chords, a warm breathing flute lead, and a light contrabass"
+                "jazzy hollow-body guitar chords, a breathy tenor saxophone lead, and warm vintage electric piano",
+                "warm hollow-body archtop jazz guitar and a mellow Harmon-muted trumpet melody",
+                "relaxed jazz-hop piano chords, a warm acoustic double bass, and soft vibraphone",
+                "cozy jazz upright piano, a warm alto saxophone lead, and mellow electric keys",
+                "mellow retro electric keys with subtle tremolo, clean archtop jazz guitar, and soft flute lead",
+                "warm Hammond organ swells, smooth fingerstyle jazz guitar riffs, and an acoustic contrabass",
+                "smoky vintage grand piano keys with plate reverb, jazz guitar, and warm saxophone harmonies",
+                "relaxed jazz-hop electric keys, clean octaved jazz guitar runs, and a deep upright bass",
+                "warm drawbar organ chords, smooth muted trumpet melodies, and a mellow hollow-body guitar",
+                "felt-dampened piano chords, warm breathing flute melodies, and a resonant double bass"
             ],
             "beats": [
-                "slow-paced jazzy lofi snare and brush drums",
-                "relaxed dusty hip hop drum swing with a warm rimshot",
-                "mellow organic rimshots, laid-back snare beats, and a swinging ride cymbal",
-                "chill jazzy boom-bap rhythm with heavily filtered, soft percussion",
-                "smooth swing snare and brush drums with a warm, driving jazz beat",
-                "dusty swing-hop snare, soft acoustic kicks, and a mellow ride cymbal",
-                "mellow low-passed jazz-hop drum kit loops with organic woodblock hits",
-                "soft 12-bit filtered jazz brush drums and an organic rimshot rhythm"
+                "slow-paced jazzy lofi snare with delicate brush sweeps and swinging ride cymbals",
+                "relaxed dusty hip hop drum swing with a warm wooden rimshot and hardware sampler vinyl compression",
+                "mellow organic rimshots, laid-back snare ghost notes, and a swinging ride cymbal groove",
+                "chill jazzy boom-bap rhythm with low-pass filtered drums and subtle sidechain ducking",
+                "smooth swing brush drums with a warm, driving acoustic jazz rhythm",
+                "dusty swing-hop snare, soft acoustic kicks, and a mellow sizzle ride cymbal",
+                "mellow low-passed jazz-hop drum kit loops with organic woodblock and shaker hits",
+                "soft 12-bit filtered jazz brush drums with an organic rimshot rhythm and analog warmth"
             ],
             "textures": [
-                "a soft crackling fireplace in the background",
-                "gentle evening rain tapping on a glass window",
-                "warm, dusty vinyl record noise and faint street ambiance",
-                "cozy evening cafe room-tone and a distant city hum",
-                "analog tape saturation and soft wind rustling in the twilight",
-                "distant street jazz musicians, warm vinyl dust, and faint traffic hum",
-                "soft coffee shop espresso steam and gentle evening rain soundscapes",
-                "warm analog tape warble and cozy twilight room ambiance"
+                "warm fireplace crackle with distant evening rainfall on cobblestone streets",
+                "gentle evening rain tapping on glass with distant city traffic ambiance",
+                "warm dusty vinyl record noise with subtle tape saturation and faint cafe chatter",
+                "cozy twilight room tone, espresso machine steam, and distant city hum",
+                "analog tape saturation, gentle tape warble, and twilight wind through autumn leaves",
+                "distant street musicians, warm vinyl dust, and faint evening metro train rumbles",
+                "soft coffee shop steam, rain on cafe awnings, and warm analog record crackle",
+                "cozy winter dusk ambiance with crackling hearth and soft wind against the windowpane"
             ],
             "harmonies": [
                 "in a jazzy minor-ninth chord progression",
@@ -731,36 +779,36 @@
         },
         "night": {
             "instruments": [
-                "soft reverbed piano and slow ambient synthesizer pads",
-                "ultra-mellow vintage electric keys and a warm, breathing sub-bass",
-                "dreamy celesta bells and gentle sweeping ambient textures",
-                "soft, distant electric piano chords and slow-evolving spacey pads",
-                "mellow glockenspiel notes, a very soft acoustic nylon guitar, and deep synth pads",
-                "slow-moving reverbed vintage electric keys, soft ambient wave-like synths, and a deep bass hum",
-                "dreamy reverbed upright piano keys, warm sleeping ambient pads, and slow synth swells",
-                "soft nylon-string acoustic guitar arpeggios, distant celestial keys, and slow-moving deep sub pads",
-                "mellow glass-like synthesized bells, slow-evolving warm pads, and a deep, breathing synth bass",
-                "slow-paced reverbed electric keys, gentle ambient soundscape swells, and an organic deep bassline"
+                "soft reverbed piano with long decay, slow ambient synthesizer pads, and warm sub-bass",
+                "ultra-mellow vintage electric keys with heavy chorus and a deep breathing analog synth sub-bass",
+                "dreamy celesta bells, sweeping ambient textures, and slow-evolving analog pad swells",
+                "distant vintage electric piano chords drenched in space reverb and slow-evolving ambient drones",
+                "mellow glockenspiel notes, soft acoustic nylon guitar arpeggios, and deep analog synth pads",
+                "slow-moving reverbed electric keys, gentle wave-like analog synths, and a warm sub-bass hum",
+                "dreamy upright piano with felt muting, warm sleep ambient pads, and slow modular synth swells",
+                "soft nylon-string guitar pluckings, distant celestial bells, and deep sweeping sub pads",
+                "mellow glass-like bells, slow-evolving warm vintage analog synth pads, and a deep breathing analog sub-bass",
+                "slow-paced electric keys with stereo delay, gentle ambient swells, and an organic deep bassline"
             ],
             "beats": [
-                "extremely slow-paced lofi brush beats",
-                "minimalist dusty kick and soft rimshot",
-                "a very gentle, laid-back low-pass filtered drum track",
-                "soft, slow-tempo organic heartbeat-like percussion",
-                "no heavy drums, just an ultra-slow, breathing ambient synth pulse",
-                "slow low-passed organic kick and soft brush snare tapping",
-                "dusty, slow-tempo rimshot beat with low-pass filtered shaker hats",
-                "very soft down-tempo organic sampler drums with faint, warm cymbals"
+                "extremely slow-paced lofi brush beats with heavy low-pass filtering and soft tape delay",
+                "minimalist dusty kick, ultra-soft rimshot, and subtle sidechain compression",
+                "gentle laid-back low-pass filtered drum groove with round kicks and soft shaker hats",
+                "soft slow-tempo organic heartbeat-like kick percussion and gentle vinyl hiss",
+                "no heavy drums, just an ultra-slow breathing ambient synth pulse and subtle sub-bass thump",
+                "slow low-passed organic kick, soft brush snare tapping, and gentle room reverb",
+                "dusty slow-tempo rimshot beat with heavily filtered tape-saturated percussion",
+                "very soft down-tempo organic sampler drums with faint, warm ride cymbals"
             ],
             "textures": [
-                "a gentle, steady rain falling on a quiet neon-lit city street",
-                "soft, rhythmic waves lapping on a quiet night beach",
-                "warm analog tape hiss and a cozy room ambiance",
-                "gentle midnight crickets and a soft, warm summer breeze",
-                "distant thunder claps and steady, soothing rain soundscapes",
-                "faint bedroom wind chime, warm tape hiss, and slow wind sweeps",
-                "soft nocturnal crickets, warm analog record dust, and soothing sea waves",
-                "gentle ocean wave swells and a warm cassette tape warble"
+                "gentle steady rain falling on quiet neon-lit city streets with distant thunder",
+                "soft rhythmic ocean waves lapping on a quiet nighttime beach with distant foghorn",
+                "warm analog cassette tape hiss with slow tape flutter and cozy bedroom room tone",
+                "gentle midnight crickets, a soft summer night breeze, and distant wind chimes",
+                "distant rolling thunder claps and soothing window rain soundscapes",
+                "faint bedroom wind chime, warm reel-to-reel tape hiss, and slow atmospheric wind sweeps",
+                "nocturnal crickets, warm analog record dust, and soothing distant sea tide",
+                "gentle winter night blizzard winds muffled outside a warm cozy window"
             ],
             "harmonies": [
                 "in a slow-moving, heavily reverbed minor-seventh progression",
@@ -774,35 +822,35 @@
         "pixel": {
             "instruments": [
                 "vintage 8-bit square-wave leads and nostalgic retro game-console triangle-wave bass",
-                "playful 16-bit FM-synthesis chords and retro handheld console square-wave melodies",
-                "warm retro game-console synth arpeggios and nostalgic 8-bit pulse-wave chords",
-                "pixelated sound chip square-wave melodies and a soft vintage synthesizer lead",
-                "soft 8-bit pulse-wave chiptune leads, retro chord progressions, and a vintage game-synth pad",
+                "playful 16-bit FM-synthesis electric keys and retro handheld console square-wave melodies",
+                "warm retro game-console synth arpeggios, nostalgic 8-bit pulse-wave chords, and chip bass",
+                "pixelated soundchip square-wave melodies, soft FM bell arpeggios, and vintage synth leads",
+                "soft 8-bit pulse-wave chiptune leads, retro chord voicings, and a vintage game-synth pad",
                 "nostalgic 16-bit soundcard piano chords, playful square-wave arpeggios, and low-passed retro bass",
-                "vintage 8-bit pulse-wave melodies, playful square-wave arpeggiators, and a warm triangle-wave bass",
-                "nostalgic 16-bit FM-synthesis electric keys, playful chiptune arpeggios, and a retro low-passed bass",
+                "vintage 8-bit pulse-wave melodies, playful square-wave arpeggiators, and a warm triangle bass",
+                "nostalgic 16-bit FM-synthesis electric keys, playful chiptune arpeggios, and retro bassline",
                 "playful 8-bit square-wave chord progressions, retro game-sound leads, and triangle-wave bass",
                 "nostalgic game-console synthesized keys, soft 16-bit soundcard chords, and low-passed chip bass"
             ],
             "beats": [
-                "relaxing lofi hip hop drum beats with a dusty 12-bit crunch",
-                "mellow dusty organic chip-drums and soft retro game-console noise",
-                "laid-back organic chiptune-inspired snare swing with a retro kick",
-                "chill down-tempo 12-bit sampler drums with soft, bit-crushed hi-hats",
-                "retro 8-bit arcade-style drum machine rhythm, low-passed and relaxed",
-                "mellow bit-crushed chip-drums, soft retro kicks, and a relaxed 8-bit rhythm",
-                "chill down-tempo 16-bit drum sampler beats with filtered, pixelated percussion",
-                "gentle dusty 8-bit soundchip drums with organic rimshots and soft, retro swing"
+                "relaxing lofi hip hop drum beats with dusty 12-bit sampler crunch and bitcrushed hats",
+                "mellow dusty organic chip-drums, soft retro console white-noise snares, and relaxed kicks",
+                "laid-back organic chiptune-inspired snare swing with a retro bitcrushed kick pattern",
+                "chill down-tempo 12-bit sampler drums with soft bitcrushed hi-hats and warm compression",
+                "retro 8-bit arcade-style drum machine rhythm, low-passed and relaxed with lofi swing",
+                "mellow bit-crushed chip-drums, soft retro kicks, and a relaxed unquantized 8-bit groove",
+                "chill down-tempo 16-bit drum sampler beats with filtered pixelated percussion",
+                "gentle dusty 8-bit soundchip drums with organic rimshots and soft retro swing"
             ],
             "textures": [
-                "playful retro game start bleeps and soft pixelated sound effects",
-                "warm retro game-room room-tone and soft analog console noise",
-                "cozy low-fidelity 8-bit sound-effects and gentle static",
-                "faint sounds of an old CRT television humming and retro arcade ambiance",
-                "vintage 8-bit game pause sounds and warm cassette tape warble",
-                "playful 8-bit power-up sounds, warm retro game-room hum, and soft static",
-                "faint vintage CRT monitor humming and soft, nostalgic pixelated wind sweeps",
-                "retro arcade room background hum and cozy game-console soundcard static"
+                "playful retro game start bleeps, soft coin collect chimes, and pixelated sound effects",
+                "warm retro game-room room tone, soft analog console hum, and CRT monitor static",
+                "cozy low-fidelity 8-bit sound effects, game pause chimes, and gentle cassette tape hiss",
+                "faint sounds of an old CRT television humming and retro arcade background ambiance",
+                "vintage 8-bit game level-up sounds and warm cassette tape warble",
+                "playful 8-bit power-up soundscapes, warm retro game-room hum, and soft static",
+                "faint vintage CRT monitor high-frequency hum and nostalgic pixelated wind sweeps",
+                "retro arcade room background hum, button clicks, and cozy game-console soundcard static"
             ],
             "harmonies": [
                 "in a playful, retro minor key",
@@ -815,25 +863,25 @@
         },
         "synthwave": {
             "instruments": [
-                "nostalgic 1980s analog synthesizer leads, warm retro-futuristic pads, and a rolling arpeggiated synth bassline",
-                "vintage retrowave key chords, soaring synthesizer solos, and a driving synthwave running bassline",
-                "dreamy outrun synthesizer pads, retro FM-synthesis leads, and a pumping electronic bassline",
+                "vintage analog polyphonic synth chords with lush stereo chorus with lush stereo chorus and rolling arpeggiated bassline",
+                "warm polyphonic analog synthesizer pads, soaring retro lead synths, and driving synthwave bass",
+                "dreamy outrun synthesizer pads, retro vintage 80s FM-synthesis leads, and a pumping sidechained bassline",
                 "warm analog polyphonic synth chords, melodic retro lead synthesizers, and an upbeat synthwave bassline",
-                "cinematic outrun synthesizer swells, melodic retro key arpeggios, and a steady retro-futuristic synth bassline",
-                "vintage 1980s analog synthesizer pluckings, warm outrun pads, and a rolling arpeggiated electronic bass",
+                "cinematic outrun synthesizer swells, melodic retro key arpeggios, and a steady analog synth bassline",
+                "vintage 1980s analog synthesizer plucks, warm outrun pads, and a rolling arpeggiated electronic bass",
                 "melodic retro lead synthesizers, warm polyphonic analog synth chords, and a pumping retrowave bassline",
                 "cinematic outrun synthesizer sweeps, nostalgic polyphonic key progressions, and a steady running bass",
                 "warm analog 80s synthesizer chords, retro-futuristic leads, and a rolling arpeggiated electronic bassline",
                 "nostalgic polyphonic synth arpeggios, warm outrun synthesizer swells, and a pumping retrowave bass"
             ],
             "beats": [
-                "powerful retro drum machines with classic gated reverb snares and steady, driving 4-on-the-floor kicks",
-                "nostalgic 80s electronic down-tempo beats with thick gated reverb snares and steady hi-hats",
+                "powerful vintage 80s digital drum machines with classic gated reverb snares and steady 4-on-the-floor kicks",
+                "nostalgic 80s electronic down-tempo beats with thick gated reverb snares and crisp vintage drum machine hi-hats",
                 "chill synthwave drum patterns featuring heavy gated snares and an upbeat driving kick pattern",
-                "retro drum machine patterns with loud, distinct gated snare hits and a driving electronic kick beat",
+                "retro drum machine patterns with loud classic 80s drum machine gated snare hits and a driving electronic kick beat",
                 "driving retro drum machines featuring powerful gated reverb snare hits and a steady electronic kick rhythm",
                 "nostalgic 80s drum loops with loud gated snares, tight hi-hats, and a driving electronic kick",
-                "chill down-tempo synthwave drum kit beats with distinctive, loud gated reverb snares",
+                "chill down-tempo synthwave drum kit beats with distinctive loud gated reverb snares and sidechain pumping",
                 "retro electronic drum machines with powerful gated snares and an upbeat driving kick beat"
             ],
             "textures": [
@@ -866,7 +914,7 @@
                 "a nostalgic floppy disk on a wooden coaster",
                 "a retro pixelated desk calendar and vintage pencil holder",
                 "a miniature retro pixel globe on a wooden shelf",
-                "a retro transparent grape-purple Gameboy Color",
+                "a retro transparent grape-purple handheld game console",
                 "a modular synthesizer patch bay with tiny colored cables",
                 "a cozy glass terrarium with a tiny glowing pixel mushroom"
             ],
@@ -879,7 +927,10 @@
                 "a peaceful suburban street with tiny pixel cars passing",
                 "a quiet Tokyo street corner in spring with soft cherry blossom petals drifting",
                 "a cinematic train passing over a bridge in a pastel valley",
-                "a cozy rainy harbor with small fishing boats docked"
+                "a cozy rainy harbor with small fishing boats docked",
+                "a quiet winter snowfall softly dusting the balcony railing and distant rooftops",
+                "golden autumn leaves drifting past the window in a gentle afternoon breeze",
+                "a summer golden-hour haze over distant pixelated skyscrapers"
             ],
             "ambience": [
                 "a cute pixelated cat sleeping curled up on a soft pillow",
@@ -889,7 +940,7 @@
                 "shelves with tiny pixelated houseplants and retro cassettes",
                 "a soft vintage curtain blowing gently in a morning breeze",
                 "a lazy golden retriever sleeping on a soft rug",
-                "a hanging macramé plant pot with long cascading vines",
+                "a hanging macrame plant pot with long cascading vines",
                 "warm golden dust motes dancing in the sunbeams"
             ],
             "palettes": [
@@ -913,7 +964,10 @@
                 "a cozy rainy cafe street under beautiful glowing street lamps",
                 "a moody autumn sunset over quiet Parisian rooftops",
                 "glowing ramen shop signs reflecting on wet asphalt streets",
-                "a peaceful lake house pier under an amber dusk sky"
+                "a peaceful lake house pier under an amber dusk sky",
+                "gentle evening snow flurries glowing under amber streetlights",
+                "autumn rain washing over cobblestone streets with neon reflections",
+                "a warm summer sunset casting long golden shadows over quiet canal boats"
             ],
             "table_objects": [
                 "a steaming porcelain mug of hot cocoa on the counter",
@@ -947,7 +1001,10 @@
                 "a gorgeous cosmic aurora borealis in a deep night sky",
                 "a swirling galactic cosmic cloud in deep violet and indigo",
                 "a quiet meteor shower passing over a silhouetted pine forest",
-                "a massive glowing ringed gas giant rising behind dark clouds"
+                "a massive glowing ringed gas giant rising behind dark clouds",
+                "a crisp starry winter night with light snow drifting past the glowing moon",
+                "a vivid celestial nebula glowing with violet, cyan, and gold stardust",
+                "a calm midnight ocean horizon reflecting a bright silver full moon"
             ],
             "light_sources": [
                 "a retro computer monitor glowing softly with a galaxy screensaver",
@@ -978,8 +1035,8 @@
                 "a nostalgic tabletop CRT TV with retro controllers next to it",
                 "a classic 16-bit home console connected to a small television",
                 "a retro arcade zone booth with multiple glowing cabinet screens",
-                "a transparent grape-purple N64 console on a wooden floor",
-                "a vintage classic Macintosh computer running a bright green terminal",
+                "a retro transparent grape-purple 64-bit console on a wooden floor",
+                "a vintage classic beige desktop computer running a bright green terminal",
                 "a retro handheld game station with custom pastel keycaps"
             ],
             "screen_content": [
@@ -1045,58 +1102,58 @@
         "day": [
             "detailed 16-bit lofi hip hop style pixel art of a cozy room workspace, outside {view}, on the desk {obj}, in the room {amb}, {palette}, 16:9 widescreen format",
             "aesthetic 16-bit lofi pixel art illustration of a quiet sunny study room, on the desk we see {obj}. Outside the window is {view}, while inside the room {amb}. {palette}, 16:9 widescreen format",
+            "isometric cutaway view in detailed 16-bit pixel art of a cozy sunlit room, showing {amb}. On the desk rests {obj}, with a large sunlit window displaying {view}. {palette}, 16:9 widescreen format",
+            "wide-angle cinematic 16-bit pixel art shot of a tranquil lofi workspace, {palette}. A warm sunlit room featuring {amb}, with {obj} on the desk overlooking {view}, 16:9 widescreen format",
+            "cozy first-person point-of-view 16-bit pixel art sitting at a desk, looking at {obj}, with {amb} around, and a bright open window revealing {view}. {palette}, 16:9 widescreen format",
             "charming 16-bit retro lofi room interior pixel art: {amb}. On the wooden desk sits {obj}, looking out of the cozy window to see {view}. {palette}, 16:9 widescreen format",
-            "relaxing lofi workspace scene in beautiful 16-bit pixel art style, {palette}. A warm room featuring {amb}, with {obj} on the desk. The window view shows {view}, 16:9 widescreen format",
-            "comfy 16-bit lofi-vibe pixel art illustration of a cozy room window seat, {palette}. Outside we see {view}, while on the side cushion lies {obj}, surrounded by a {amb} setting, 16:9 widescreen format",
             "peaceful 16-bit retro pixel art of a sunlit lofi bedroom corner, featuring {amb}. Resting on the shelf is {obj}, with a large glass door looking out onto {view}. Color palette: {palette}, 16:9 widescreen format",
-            "cinematic 16-bit pixel art of a tranquil sunlit apartment loft, {palette}, featuring a serene desk with {obj}, overlooking a beautiful outdoor view of {view}, with {amb} creating a cozy feeling, 16:9 aspect ratio",
-            "retro-styled 16-bit illustration of an aesthetic lofi interior under morning sunbeams, {palette}, showing {amb}. On the table sits {obj}, with the background window framing {view}, 16:9 widescreen"
+            "cinematic 16-bit pixel art of a tranquil sunlit apartment loft, {palette}, featuring a serene desk with {obj}, overlooking a beautiful outdoor view of {view}, with {amb} creating a cozy feeling, 16:9 aspect ratio"
         ],
         "evening": [
             "detailed 16-bit lofi jazzhop style pixel art of a cozy coffee shop window, outside {view}, on the table {obj}, {amb}, warm cozy lighting, 16:9 widescreen format",
-            "aesthetic 16-bit jazzhop cafe window seat in warm pixel art. Outside is {view}, while on the table sits {obj}. In the background, there are {amb}. Warm cozy lighting, 16:9 widescreen format",
+            "isometric view in warm 16-bit pixel art of a cozy jazz cafe interior during golden hour. On the table sits {obj}, with {amb}, overlooking a scenic window view of {view}. 16:9 widescreen format",
+            "wide-angle cinematic 16-bit pixel art illustration of a tranquil twilight coffee shop. On the wooden counter is {obj}, with {amb}, looking out the window at {view}. 16:9 widescreen format",
+            "first-person perspective 16-bit pixel art sitting at a rainy cafe table with {obj}, watching {view} through the glass while {amb}. Warm amber glow, 16:9 widescreen format",
             "charming retro 16-bit cafe interior pixel art scene. Cozy coffee shop vibes with {amb}. On the wooden counter is {obj}, looking out the window at {view}. 16:9 widescreen format",
-            "relaxing evening coffee shop pixel art illustration, warm amber glow. A table featuring {obj}, surrounded by {amb}, with a lovely glass window view of {view}, 16:9 widescreen format",
-            "cozy 16-bit evening cafe window pixel art. Outdoors {view} can be seen, and {obj} sits on a small round table. The ambient atmosphere has {amb}, colored in deep warm nostalgic tones, 16:9 widescreen format",
             "retro 16-bit lo-fi pixel art of a tranquil coffee house bar table. On the wooden surface rests {obj}, with a clear view of {view} through the glass. In the room we see {amb}, with long shadows and golden hour lighting, 16:9 widescreen format",
             "beautiful 16-bit pixel art scene of an aesthetic jazz cafe during golden hour, cozy twilight colors, where we see {amb}. On the counter sits {obj}, looking through the large glass window at {view}, 16:9 widescreen",
             "moody 16-bit lofi illustration of a quiet rooftop terrace or balcony at dusk. The table is adorned with {obj}, surrounded by a cozy {amb} atmosphere, looking out to {view}, 16:9 widescreen"
         ],
         "night": [
             "detailed 16-bit lofi sleep style pixel art of a cozy dark bedroom window looking out at {sky}, {light}, {amb}, relaxing cozy dark aesthetic, 16:9 widescreen format",
+            "isometric cutaway room view in 16-bit dark pixel art of a midnight bedroom, illuminated softly by {light}, with {amb}, looking out of a large glass window at {sky}, 16:9 widescreen format",
+            "wide-angle cinematic 16-bit pixel art of a peaceful nighttime bedroom at 3 AM. A sleepy atmosphere featuring {amb}, softly lit by {light}, with the starry window framing {sky}, 16:9 widescreen format",
+            "cozy first-person POV in 16-bit pixel art tucked in bed looking at {light} across the room, with {amb}, and a wide window opening to {sky}, 16:9 widescreen format",
             "aesthetic 16-bit sleep-lofi midnight bedroom interior, dark cozy pixel art. Looking out of the wide window to see {sky}. The room is lit softly by {light}, creating {amb}, 16:9 widescreen format",
             "charming 16-bit dark retro bedroom pixel art, relaxing nocturnal vibes. Softly illuminated by {light}, showing {amb}. The window overlooks {sky}, 16:9 widescreen format",
-            "relaxing night bedroom scene in beautiful 16-bit pixel art, cozy dark aesthetic. A bedroom featuring {amb}, lit by {light}. Through the window is a starry view of {sky}, 16:9 widescreen format",
-            "midnight lofi study room 16-bit pixel art, calm nocturnal aesthetic. The room features {amb}, lit by {light}. Through the open window we look out at {sky}, cozy chill dark colors, 16:9 widescreen format",
-            "serene 16-bit pixel art of a quiet dark bedroom at 3 AM. A sleepy atmosphere featuring {amb}. Illuminated by the gentle glow of {light}, with the window overlooking {sky}, 16:9 widescreen format",
             "serene 16-bit midnight bedroom pixel art, cozy dark vaporwave color scheme. The space is illuminated by {light}, casting soft shadows, with a cute {amb}. The large glass window reveals {sky}, 16:9 widescreen",
             "cinematic 16-bit lofi bedroom scene at night, cold blue moonlight and warm cozy indoor contrast. Featuring {amb}, lit beautifully by {light}, while looking out to the starry view of {sky}, 16:9 aspect ratio"
         ],
         "pixel": [
             "detailed 16-bit chiptune retro arcade style pixel art of {console}, the screen displays {screen}, set against {bg}, classic 8-bit gaming aesthetic, 16:9 widescreen format",
+            "isometric 16-bit pixel art gaming room corner centered on {console} where {screen}, surrounded by {bg}, retro CRT glow, 16:9 widescreen format",
+            "wide-angle cinematic 16-bit retro arcade scene with glowing scanlines. Centered on {console} running {screen}, set against {bg}, vintage 80s gaming aesthetic, 16:9 widescreen format",
+            "close-up first-person view holding {console} in 16-bit pixel art, with the screen actively running {screen}, set against a cozy backdrop of {bg}, 16:9 widescreen format",
             "aesthetic 16-bit retro game setup in pixel art style. Up close on {console} where {screen}. Set against a beautiful backdrop of {bg}, 80s nostalgic gaming vibes, 16:9 widescreen format",
             "charming 80s gamer room corner in 16-bit pixel art. Centered on {console} with {screen}, surrounded by {bg}, classic retro-arcade nostalgic style, 16:9 widescreen format",
             "nostalgic chiptune-inspired 16-bit pixel art scene. Featuring {console} displaying {screen}, set against {bg}, vibrant retro-gaming color palette, 16:9 widescreen format",
-            "close-up shot of {console} on a retro gaming cabinet in 16-bit pixel art. The display screen is running {screen}, set against {bg}, classic retro nostalgia, 16:9 widescreen format",
-            "detailed 16-bit retro arcade scene. Centered on {console} where {screen}, surrounded by {bg}, glowing CRT screen scanlines, vintage game aesthetic, 16:9 widescreen format",
-            "gorgeous 16-bit retro arcade room corner pixel art, glowing CRT monitor scanlines, centered on {console} running {screen}, set against {bg}, nostalgic gamer aesthetic, 16:9 widescreen",
-            "aesthetic 16-bit pixel art of a vintage home console setup, nostalgic gaming room vibes. The tabletop features {console} which is running {screen}, backed by a cozy scenery of {bg}, 16:9 widescreen"
+            "gorgeous 16-bit retro arcade room corner pixel art, glowing CRT monitor scanlines, centered on {console} running {screen}, set against {bg}, nostalgic gamer aesthetic, 16:9 widescreen"
         ],
         "synthwave": [
             "detailed 16-bit retro-futuristic outrun synthwave style pixel art of {vehicle} driving towards {sun}, set against {bg}, vibrant purple and hot pink color palette, aesthetic 1980s retrowave vibes, 16:9 widescreen format",
+            "dynamic low-angle road-level 16-bit pixel art shot of {vehicle} speeding across the neon grid towards {sun}, with {bg} in the distance, 16:9 widescreen format",
+            "wide-angle cinematic 16-bit retrowave landscape showing {vehicle} cruising on an endless highway towards {sun}, surrounded by {bg}, glowing neon wireframes, 16:9 widescreen format",
+            "retro-futuristic first-person cockpit dashboard view in 16-bit pixel art from {vehicle}, looking through the windshield at {sun} over {bg}, 16:9 widescreen format",
             "aesthetic 1980s outrun style 16-bit pixel art illustration. Featuring {vehicle} cruising steadily towards {sun}, surrounded by {bg}. Vibrant hot pink, neon blue, and purple color scheme, 16:9 widescreen format",
             "charming retro-futuristic retrowave pixel art scene. An epic 16-bit view of {vehicle} driving on a highway towards {sun}, set against {bg}. Glowing neon wires, outrun aesthetics, 16:9 widescreen format",
-            "cinematic synthwave highway in beautiful 16-bit pixel art, 80s retrowave vibes. {vehicle} driving into the sunset of {sun}, surrounded by the cosmic landscape of {bg}, 16:9 widescreen format",
             "epic 16-bit outrun retrowave scene of {vehicle} zooming down a wireframe neon boulevard towards {sun}. Background elements include {bg}, hot neon pink and cyan blue cyberpunk theme, 16:9 widescreen format",
-            "sci-fi 16-bit retro-futuristic pixel art. A majestic view of {vehicle} flying towards the massive {sun}, passing by {bg}, glowing lasers and grids, intense 1980s synthwave color palette, 16:9 widescreen format",
-            "cinematic 16-bit outrun retrowave scene of {vehicle} driving on a futuristic endless grid road towards a massive {sun}, with a background of {bg}, vibrant magenta and electric cyan colors, 16:9 widescreen",
-            "aesthetic 80s retro-futuristic synthwave vector art of {vehicle} parked near the neon grid shoreline overlooking the immense {sun}, set against a beautiful cosmic sky of {bg}, 16:9 aspect ratio"
+            "cinematic 16-bit outrun retrowave scene of {vehicle} driving on a futuristic endless grid road towards a massive {sun}, with a background of {bg}, vibrant magenta and electric cyan colors, 16:9 widescreen"
         ]
     },
     "AUDIO_TEMPLATES": [
         "A {genre_desc} at a {tempo}, {harmonies}. Featuring {instruments}, accompanied by {beats}, and wrapped in {textures}. Purely instrumental, no vocals. Inspired by the {theme_desc}: '{title}'.",
-        "An instrumental {genre_desc} inspired by '{title}'. The soundscape is wrapped in {textures}, driven by {beats} at a {tempo}. Melodically, it features {instruments} playing {harmonies}. No vocals.",
-        "Instrumental {genre_desc} ({tempo}). Featuring {instruments} with a {harmonies} progression. Accompanied by {beats} and deeply textured with {textures}. Inspired by the theme: '{title}'.",
-        "A {tempo} {genre_desc} with cozy '{title}' vibes. Layered with {textures} and {harmonies}. Led by {instruments} and backed by {beats}. Instrumental, no vocals, inspired by the {theme_desc}."
+        "An instrumental {genre_desc} inspired by '{title}'. The soundscape is wrapped in {textures}, driven by {beats} at a {tempo}, and structured {harmonies}. Melodically featuring {instruments}. No vocals.",
+        "Instrumental {genre_desc} ({tempo}), arranged {harmonies}. Featuring {instruments}, accompanied by {beats}, and deeply textured with {textures}. Purely instrumental, no vocals. Inspired by '{title}'.",
+        "A {tempo} {genre_desc} with '{title}' vibes, structured {harmonies}. Led by {instruments}, backed by {beats}, and layered with {textures}. Purely instrumental, no vocals."
     ]
 }

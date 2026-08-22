@@ -36,7 +36,12 @@ def get_prompt_for_mood(mood, title):
     if mood not in AUDIO_ELEMENTS or mood not in AUDIO_GENRES:
         mood = "day"
         
-    tempo = random.choice(AUDIO_TEMPOS)
+    # Support both dict (by mood) and list formats for tempo
+    if isinstance(AUDIO_TEMPOS, dict):
+        tempos = AUDIO_TEMPOS.get(mood, AUDIO_TEMPOS.get("day", ["chill 80 BPM"]))
+        tempo = random.choice(tempos)
+    else:
+        tempo = random.choice(AUDIO_TEMPOS)
     elem = AUDIO_ELEMENTS[mood]
     
     # Randomly select one of the four unique audio prompt template styles
