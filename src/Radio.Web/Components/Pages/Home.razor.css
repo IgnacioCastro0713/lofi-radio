@@ -530,6 +530,39 @@ body.hud-idle .integrated-player-bar {
     transition: fill 0.8s ease;
 }
 
+.bar-volume-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.volume-badge {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: rgba(18, 12, 28, 0.9);
+    color: #ffffff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 8px var(--accent-glow);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    white-space: nowrap;
+    z-index: 20;
+}
+
+.bar-volume-container:hover .volume-badge,
+.volume-badge.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
 .bar-volume-slider {
     width: 70px;
     -webkit-appearance: none;
@@ -595,6 +628,34 @@ body.hud-idle .integrated-player-bar {
 .fullscreen-btn svg {
     width: 17px;
     height: 17px;
+}
+
+/* Minimalist HUD Toast for Keyboard Shortcuts */
+.hud-toast {
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: rgba(14, 9, 22, 0.85);
+    color: #ffffff;
+    padding: 8px 18px;
+    border-radius: 9999px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 12px var(--accent-glow);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1000;
+    transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hud-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }
 
 /* ==========================================================================
@@ -1018,6 +1079,11 @@ body.hud-idle .integrated-player-bar {
 
     .bar-volume-slider {
         width: 110px;
+    }
+
+    /* Disable fullscreen toggle button in mobile mode */
+    .fullscreen-btn {
+        display: none !important;
     }
 }
 

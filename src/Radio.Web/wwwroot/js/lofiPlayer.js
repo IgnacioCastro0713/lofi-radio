@@ -56,10 +56,12 @@ window.lofiPlayer = {
                 this.audio.addEventListener('play', () => {
                     this.dotNetRef.invokeMethodAsync('OnPlaybackStatusChanged', true);
                     this.startSyncTimer(); // Start smooth local UI updates
+                    this.showToast('▶ PLAY');
                 });
                 this.audio.addEventListener('pause', () => {
                     this.dotNetRef.invokeMethodAsync('OnPlaybackStatusChanged', false);
                     this.stopSyncTimer(); // Stop local UI updates to conserve resources
+                    this.showToast('⏸ PAUSE');
                 });
                 this.audio.addEventListener('timeupdate', () => {
                     const currentTime = this.audio.currentTime;
@@ -132,24 +134,30 @@ window.lofiPlayer = {
                         if (playBtn) playBtn.click();
                     } else if (e.key === 'm' || e.key === 'M') {
                         if (this.audio) {
-                            this.setVolume(this.audio.volume > 0 ? 0 : (this.userVolume || 0.5));
+                            const isMuted = this.audio.volume === 0;
+                            const targetVol = isMuted ? (this.userVolume || 0.5) : 0;
+                            this.setVolume(targetVol);
                             const slider = document.querySelector('.bar-volume-slider');
-                            if (slider) slider.value = this.audio.volume;
+                            if (slider) slider.value = targetVol;
+                            this.showToast(targetVol === 0 ? '🔇 MUTED' : `🔊 ${Math.round(targetVol * 100)}%`);
                         }
                     } else if (e.key === 'f' || e.key === 'F') {
                         this.toggleFullscreen();
+                        this.showToast('⛶ FULLSCREEN');
                     } else if (e.key === 'ArrowUp') {
                         e.preventDefault();
                         const newVol = Math.min(1, (this.audio ? this.audio.volume : this.userVolume) + 0.05);
                         this.setVolume(newVol);
                         const slider = document.querySelector('.bar-volume-slider');
                         if (slider) slider.value = newVol;
+                        this.showToast(`🔊 ${Math.round(newVol * 100)}%`);
                     } else if (e.key === 'ArrowDown') {
                         e.preventDefault();
                         const newVol = Math.max(0, (this.audio ? this.audio.volume : this.userVolume) - 0.05);
                         this.setVolume(newVol);
                         const slider = document.querySelector('.bar-volume-slider');
                         if (slider) slider.value = newVol;
+                        this.showToast(`🔉 ${Math.round(newVol * 100)}%`);
                     }
                 });
 
@@ -428,6 +436,15 @@ window.lofiPlayer = {
         if (this.audio) {
             this.audio.volume = value;
         }
+        const badge = document.querySelector('.volume-badge');
+        if (badge) {
+            badge.textContent = `${Math.round(value * 100)}%`;
+            badge.classList.add('show');
+            if (this.volumeBadgeTimeout) clearTimeout(this.volumeBadgeTimeout);
+            this.volumeBadgeTimeout = setTimeout(() => {
+                badge.classList.remove('show');
+            }, 1200);
+        }
     },
 
     getVolume: function () {
@@ -460,6 +477,20 @@ window.lofiPlayer = {
             artworkUrl: artworkUrl
         };
         console.log(`[lofiPlayer] Next track metadata pre-loaded successfully: '${title}'`);
+    },
+
+    toastTimeout: null,
+    volumeBadgeTimeout: null,
+
+    showToast: function (text) {
+        const toast = document.getElementById('lofiHudToast');
+        if (!toast) return;
+        toast.textContent = text;
+        toast.classList.add('show');
+        if (this.toastTimeout) clearTimeout(this.toastTimeout);
+        this.toastTimeout = setTimeout(() => {
+            toast.classList.remove('show');
+        }, 1200);
     },
 
     toggleFullscreen: function () {
