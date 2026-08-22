@@ -56,12 +56,10 @@ window.lofiPlayer = {
                 this.audio.addEventListener('play', () => {
                     this.dotNetRef.invokeMethodAsync('OnPlaybackStatusChanged', true);
                     this.startSyncTimer(); // Start smooth local UI updates
-                    this.showToast('▶ PLAY');
                 });
                 this.audio.addEventListener('pause', () => {
                     this.dotNetRef.invokeMethodAsync('OnPlaybackStatusChanged', false);
                     this.stopSyncTimer(); // Stop local UI updates to conserve resources
-                    this.showToast('⏸ PAUSE');
                 });
                 this.audio.addEventListener('timeupdate', () => {
                     const currentTime = this.audio.currentTime;
@@ -130,8 +128,10 @@ window.lofiPlayer = {
 
                     if (e.code === 'Space') {
                         e.preventDefault();
+                        const willPause = this.audio && !this.audio.paused;
                         const playBtn = document.querySelector('.bar-play-btn, .bottom-play-btn');
                         if (playBtn) playBtn.click();
+                        this.showToast(willPause ? '⏸ PAUSE' : '▶ PLAY');
                     } else if (e.key === 'm' || e.key === 'M') {
                         if (this.audio) {
                             const isMuted = this.audio.volume === 0;
