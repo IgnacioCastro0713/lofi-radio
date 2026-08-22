@@ -7,6 +7,11 @@ window.lofiPlayer = {
     fadeDuration: 5,       // Duration of the fade-out effect in seconds
     fadeInDuration: 3,     // Duration of the fade-in effect in seconds
     lastUpdateTime: 0,     // Timestamp for SignalR network throttling
+    audioCtx: null,        // Web Audio API context for visualizer
+    analyser: null,
+    sourceNode: null,
+    animFrameId: null,
+    freqData: null,
 
     init: function (dotNetReference) {
         this.dotNetRef = dotNetReference;
@@ -116,6 +121,60 @@ window.lofiPlayer = {
                     }
                 });
 
+                // Global Keyboard Shortcuts (Space: Play/Pause, M: Mute, F: Fullscreen, Arrows: Volume)
+                window.addEventListener('keydown', (e) => {
+                    // Ignore when user is focusing an input, textarea or button
+                    if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
+
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                        const playBtn = document.querySelector('.bar-play-btn, .bottom-play-btn');
+                        if (playBtn) playBtn.click();
+                    } else if (e.key === 'm' || e.key === 'M') {
+                        if (this.audio) {
+                            this.setVolume(this.audio.volume > 0 ? 0 : (this.userVolume || 0.5));
+                            const slider = document.querySelector('.bar-volume-slider');
+                            if (slider) slider.value = this.audio.volume;
+                        }
+                    } else if (e.key === 'f' || e.key === 'F') {
+                        this.toggleFullscreen();
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        const newVol = Math.min(1, (this.audio ? this.audio.volume : this.userVolume) + 0.05);
+                        this.setVolume(newVol);
+                        const slider = document.querySelector('.bar-volume-slider');
+                        if (slider) slider.value = newVol;
+                    } else if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        const newVol = Math.max(0, (this.audio ? this.audio.volume : this.userVolume) - 0.05);
+                        this.setVolume(newVol);
+                        const slider = document.querySelector('.bar-volume-slider');
+                        if (slider) slider.value = newVol;
+                    }
+                });
+
+                // Zen Mode: Auto-hide HUD on idle during playback (15 seconds)
+                let idleTimeout = null;
+                const resetIdle = () => {
+                    document.body.classList.remove('hud-idle');
+                    if (idleTimeout) clearTimeout(idleTimeout);
+                    if (this.audio && !this.audio.paused) {
+                        idleTimeout = setTimeout(() => {
+                            document.body.classList.add('hud-idle');
+                        }, 15000);
+                    }
+                };
+
+                ['mousemove', 'mousedown', 'keydown', 'touchstart'].forEach(evt => {
+                    window.addEventListener(evt, resetIdle, { passive: true });
+                });
+
+                this.audio.addEventListener('play', resetIdle);
+                this.audio.addEventListener('pause', () => {
+                    document.body.classList.remove('hud-idle');
+                    if (idleTimeout) clearTimeout(idleTimeout);
+                });
+
             } else {
                 console.error("Failed to find nativeLofiAudio element on screen!");
             }
@@ -125,6 +184,8 @@ window.lofiPlayer = {
 
     startSyncTimer: function () {
         this.stopSyncTimer();
+        this.initAudioContext();
+        this.startVisualizer();
         this.syncInterval = setInterval(() => {
             if (this.audio && !this.audio.paused) {
                 const currentTime = this.audio.currentTime;
@@ -138,6 +199,71 @@ window.lofiPlayer = {
         if (this.syncInterval) {
             clearInterval(this.syncInterval);
             this.syncInterval = null;
+        }
+        this.stopVisualizer();
+    },
+
+    initAudioContext: function () {
+        if (!this.audioCtx && this.audio) {
+            try {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioContextClass) {
+                    this.audioCtx = new AudioContextClass();
+                    this.analyser = this.audioCtx.createAnalyser();
+                    this.analyser.fftSize = 64;
+                    this.analyser.smoothingTimeConstant = 0.8;
+                    this.freqData = new Uint8Array(this.analyser.frequencyBinCount);
+                    this.sourceNode = this.audioCtx.createMediaElementSource(this.audio);
+                    this.sourceNode.connect(this.analyser);
+                    this.analyser.connect(this.audioCtx.destination);
+                }
+            } catch (e) {
+                // ponytail: Web Audio API may fail on CORS or restricted envs; add anim-fallback class
+                console.warn("[lofiPlayer] Web Audio API init skipped or restricted:", e);
+                const sw = document.querySelector('.sound-wave');
+                if (sw) sw.classList.add('anim-fallback');
+            }
+        }
+        if (this.audioCtx && this.audioCtx.state === 'suspended') {
+            this.audioCtx.resume().catch(() => {});
+        }
+    },
+
+    startVisualizer: function () {
+        this.stopVisualizer();
+        const bars = document.querySelectorAll('.sound-wave span');
+        if (!bars || bars.length === 0 || !this.analyser) {
+            const sw = document.querySelector('.sound-wave');
+            if (sw) sw.classList.add('anim-fallback');
+            return;
+        }
+
+        const loop = () => {
+            if (this.audio && !this.audio.paused) {
+                this.analyser.getByteFrequencyData(this.freqData);
+                // Map low-mid frequency bands across the 4 visualizer bars
+                const bands = [this.freqData[1] || 0, this.freqData[3] || 0, this.freqData[6] || 0, this.freqData[9] || 0];
+                for (let i = 0; i < bars.length; i++) {
+                    const val = bands[i] / 255; // 0.0 to 1.0
+                    const height = Math.max(3, Math.round(val * 12));
+                    bars[i].style.height = `${height}px`;
+                }
+                this.animFrameId = requestAnimationFrame(loop);
+            } else {
+                this.stopVisualizer();
+            }
+        };
+        this.animFrameId = requestAnimationFrame(loop);
+    },
+
+    stopVisualizer: function () {
+        if (this.animFrameId) {
+            cancelAnimationFrame(this.animFrameId);
+            this.animFrameId = null;
+        }
+        const bars = document.querySelectorAll('.sound-wave span');
+        if (bars) {
+            bars.forEach(b => b.style.height = '');
         }
     },
 
@@ -172,6 +298,13 @@ window.lofiPlayer = {
             const rightScale = 0.8 + (0.9 * p);
             leftRoll.style.transform = `scale(${leftScale})`;
             rightRoll.style.transform = `scale(${rightScale})`;
+        }
+
+        // 4. Check if title overflows container to enable slow marquee on hover
+        const titleEl = document.querySelector('.bar-song-title');
+        if (titleEl) {
+            const hasEllipsis = titleEl.scrollWidth > titleEl.clientWidth;
+            titleEl.classList.toggle('overflows', hasEllipsis);
         }
     },
 
@@ -327,5 +460,19 @@ window.lofiPlayer = {
             artworkUrl: artworkUrl
         };
         console.log(`[lofiPlayer] Next track metadata pre-loaded successfully: '${title}'`);
+    },
+
+    toggleFullscreen: function () {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {
+                console.warn(`Error attempting to enable fullscreen: ${err.message}`);
+            });
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(err => {
+                    console.warn(`Error attempting to exit fullscreen: ${err.message}`);
+                });
+            }
+        }
     }
 };
