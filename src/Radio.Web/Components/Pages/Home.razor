@@ -297,20 +297,6 @@
                     <img class="ai-generated-scene" src="@GetMoodImageUrl(CurrentState.Track)" alt="AI Pixel Art" style="opacity: 0; transition: opacity 0.5s;" onload="this.style.opacity=1;" onerror="this.style.display='none';" />
                 }
 
-                <!-- Top Right Ambient Mood Tagline -->
-                <div class="hero-tagline">
-                    <span class="tagline-icon">
-                        @if (CurrentState?.Track?.Mood?.ToLower() == "day") { <text>🌅</text> }
-                        else if (CurrentState?.Track?.Mood?.ToLower() == "evening") { <text>🌇</text> }
-                        else if (CurrentState?.Track?.Mood?.ToLower() == "night") { <text>🌌</text> }
-                        else if (CurrentState?.Track?.Mood?.ToLower() == "synthwave") { <text>🏎️</text> }
-                        else { <text>👾</text> }
-                    </span>
-                    <span class="tagline-text @(CurrentState?.Track?.Mood?.ToLower())">
-                        @GetMoodLabel(CurrentState?.Track?.Mood)
-                    </span>
-                </div>
-
             </div>
 
             <!-- Sleek Translucent Integrated Bottom Player Bar -->
@@ -683,20 +669,6 @@
             "pixel" => "8/16-Bit Chiptune",
             "synthwave" => "Outrun Retrowave",
             _ => "Lo-Fi Beats"
-        };
-    }
-
-    private static string GetMoodLabel(string? mood)
-    {
-        if (string.IsNullOrEmpty(mood)) return "LOFI VIBES";
-        return mood.ToLower() switch
-        {
-            "day" => "DAY FOCUS",
-            "evening" => "CHILL COFFEE",
-            "night" => "NIGHT GLOW",
-            "pixel" => "RETRO PIXEL",
-            "synthwave" => "OUTRUN VIBES",
-            _ => "LOFI VIBES"
         };
     }
 

@@ -195,42 +195,6 @@
     font-family: 'Courier New', Courier, monospace;
 }
 
-.hero-tagline {
-    position: absolute;
-    top: 20px;
-    right: 24px;
-    z-index: 9;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(18, 12, 28, 0.7);
-    padding: 0.35rem 0.85rem;
-    border-radius: 9999px;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-    transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-.tagline-icon {
-    font-size: 0.95rem;
-    line-height: 1;
-}
-
-.tagline-text {
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-}
-
-.tagline-text.day { color: #00f0ff; text-shadow: 0 0 8px rgba(0, 240, 255, 0.4); }
-.tagline-text.evening { color: #ff7f50; text-shadow: 0 0 8px rgba(255, 127, 80, 0.4); }
-.tagline-text.night { color: #b17aff; text-shadow: 0 0 8px rgba(177, 122, 255, 0.4); }
-.tagline-text.pixel { color: #00ff7f; text-shadow: 0 0 8px rgba(0, 255, 127, 0.4); }
-.tagline-text.synthwave { color: #ff00ff; text-shadow: 0 0 8px rgba(255, 0, 255, 0.6); }
-
 /* Integrated Floating Island Player Bar */
 .integrated-player-bar {
     position: absolute;
