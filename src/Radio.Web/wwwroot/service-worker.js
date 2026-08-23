@@ -1,7 +1,10 @@
-const CACHE_NAME = "lofi-radio-cache-v5";
+const CACHE_NAME = "lofi-radio-cache-v7";
 const ASSETS_TO_CACHE = [
     "/app.css",
     "/favicon.svg",
+    "/favicon.png",
+    "/icon-192.png",
+    "/manifest.json",
     "/js/lofiPlayer.js"
 ];
 
