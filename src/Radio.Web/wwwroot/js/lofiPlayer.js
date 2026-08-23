@@ -68,6 +68,7 @@ window.lofiPlayer = {
                     if (this.dotNetRef) {
                         this.dotNetRef.invokeMethodAsync('OnFullscreenChanged', isFullscreen);
                     }
+                    this.showToast(isFullscreen ? '⛶ FULLSCREEN' : '⛶ EXIT FULLSCREEN');
                 });
                 this.audio.addEventListener('timeupdate', () => {
                     const currentTime = this.audio.currentTime;
@@ -167,7 +168,6 @@ window.lofiPlayer = {
                         }
                     } else if (e.key === 'f' || e.key === 'F') {
                         this.toggleFullscreen();
-                        this.showToast('⛶ FULLSCREEN');
                     } else if (e.key === 'ArrowUp') {
                         e.preventDefault();
                         const newVol = Math.min(1, (this.audio ? this.audio.volume : this.userVolume) + 0.05);
