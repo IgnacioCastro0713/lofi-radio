@@ -20,9 +20,61 @@
 
             <!-- Pixel Art Viewport Container (fills the background) -->
             <div class="pixel-art-viewport">
-                <div class="live-badge @(IsPlaying ? "playing" : "")">
-                    <span class="live-dot"></span>
-                    @(IsPlaying ? "LIVE STREAMING" : "STREAM SYNCED")
+                <div class="top-nav-bar">
+                    <div class="live-badge @(IsPlaying ? "playing" : "")">
+                        <span class="live-dot"></span>
+                        @(IsPlaying ? "LIVE STREAMING" : "STREAM SYNCED")
+                    </div>
+
+                    <div class="shortcuts-wrapper">
+                        <button class="shortcuts-btn @(_showShortcutsMenu ? "active" : "")" @onclick="ToggleShortcutsMenu" title="Keyboard Shortcuts (?)">
+                            <svg viewBox="0 0 24 24" width="16" height="16">
+                                <path fill="currentColor" d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/>
+                            </svg>
+                            <span class="shortcuts-key">?</span>
+                        </button>
+
+                        @if (_showShortcutsMenu)
+                        {
+                            <div class="shortcuts-dropdown" @onclick:stopPropagation="true">
+                                <div class="dropdown-header">
+                                    <div class="dropdown-title-group">
+                                        <svg viewBox="0 0 24 24" class="dropdown-icon">
+                                            <path fill="currentColor" d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/>
+                                        </svg>
+                                        <span>Shortcuts</span>
+                                    </div>
+                                    <button class="dropdown-close-btn" @onclick="ToggleShortcutsMenu" title="Close">✕</button>
+                                </div>
+                                <div class="dropdown-list">
+                                    <div class="dropdown-item">
+                                        <span class="dropdown-label">Play / Pause</span>
+                                        <kbd>Space</kbd>
+                                    </div>
+                                    <div class="dropdown-item">
+                                        <span class="dropdown-label">Mute / Unmute</span>
+                                        <kbd>M</kbd>
+                                    </div>
+                                    <div class="dropdown-item">
+                                        <span class="dropdown-label">Volume Up</span>
+                                        <kbd>▲</kbd>
+                                    </div>
+                                    <div class="dropdown-item">
+                                        <span class="dropdown-label">Volume Down</span>
+                                        <kbd>▼</kbd>
+                                    </div>
+                                    <div class="dropdown-item">
+                                        <span class="dropdown-label">Fullscreen</span>
+                                        <kbd>F</kbd>
+                                    </div>
+                                    <div class="dropdown-item">
+                                        <span class="dropdown-label">Help Menu</span>
+                                        <div class="dropdown-keys"><kbd>?</kbd> <span class="key-sep">/</span> <kbd>H</kbd></div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
                 </div>
                 
                 @if (CurrentState?.Track?.Mood?.ToLower() == "evening")
@@ -384,9 +436,18 @@
                                 <input type="range" class="bar-volume-slider" min="0" max="1" step="0.01" 
                                        value="@Volume" @oninput="OnVolumeChange" />
                             </div>
-                            <button class="fullscreen-btn" @onclick="ToggleFullscreen" title="Toggle Fullscreen" type="button">
+                            <button class="fullscreen-btn" @onclick="ToggleFullscreen" title="@(IsFullscreen ? "Exit Fullscreen (F)" : "Enter Fullscreen (F)")" type="button">
                                 <svg viewBox="0 0 24 24">
-                                    <path fill="currentColor" d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                                    @if (IsFullscreen)
+                                    {
+                                         <!-- Exit Fullscreen (Collapse arrows) -->
+                                         <path fill="currentColor" d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>
+                                    }
+                                    else
+                                    {
+                                         <!-- Enter Fullscreen (Expand arrows) -->
+                                         <path fill="currentColor" d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                                    }
                                 </svg>
                             </button>
                         </div>
@@ -423,8 +484,31 @@
 
     private int _clickCount = 0;
     private bool _showSecretInfo = false;
+    private bool _showShortcutsMenu = false;
     private DateTime _lastClickTime = DateTime.MinValue;
     private int _clientTimezoneOffsetMinutes = 0;
+
+    private void ToggleShortcutsMenu()
+    {
+        _showShortcutsMenu = !_showShortcutsMenu;
+    }
+
+    [JSInvokable]
+    public void ToggleShortcutsModalFromJs()
+    {
+        _showShortcutsMenu = !_showShortcutsMenu;
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void CloseShortcutsMenuFromJs()
+    {
+        if (_showShortcutsMenu)
+        {
+            _showShortcutsMenu = false;
+            StateHasChanged();
+        }
+    }
 
     private void HandleTitleClick()
     {
@@ -446,6 +530,7 @@
 
     public StreamStateDto? CurrentState { get; set; }
     public bool IsPlaying { get; set; }
+    public bool IsFullscreen { get; set; }
     public double Volume { get; set; } = 0.5;
     public double CurrentTime { get; set; }
     public double Duration { get; set; }
@@ -571,6 +656,13 @@
     public virtual void OnPlaybackStatusChanged(bool playing)
     {
         IsPlaying = playing;
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void OnFullscreenChanged(bool isFullscreen)
+    {
+        IsFullscreen = isFullscreen;
         StateHasChanged();
     }
 

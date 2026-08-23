@@ -61,6 +61,14 @@ window.lofiPlayer = {
                     this.dotNetRef.invokeMethodAsync('OnPlaybackStatusChanged', false);
                     this.stopSyncTimer(); // Stop local UI updates to conserve resources
                 });
+
+                // Listen for native Fullscreen mode changes (F key, button click, ESC)
+                document.addEventListener('fullscreenchange', () => {
+                    const isFullscreen = !!document.fullscreenElement;
+                    if (this.dotNetRef) {
+                        this.dotNetRef.invokeMethodAsync('OnFullscreenChanged', isFullscreen);
+                    }
+                });
                 this.audio.addEventListener('timeupdate', () => {
                     const currentTime = this.audio.currentTime;
                     const duration = this.audio.duration;
@@ -119,14 +127,30 @@ window.lofiPlayer = {
                     if (playBtn) {
                         this.unlock();
                     }
+                    // Auto-close shortcuts dropdown on outside click
+                    if (!e.target.closest('.shortcuts-wrapper')) {
+                        if (this.dotNetRef) {
+                            this.dotNetRef.invokeMethodAsync('CloseShortcutsMenuFromJs');
+                        }
+                    }
                 });
 
-                // Global Keyboard Shortcuts (Space: Play/Pause, M: Mute, F: Fullscreen, Arrows: Volume)
+                // Global Keyboard Shortcuts (Space: Play/Pause, M: Mute, F: Fullscreen, Arrows: Volume, ?: Shortcuts Help)
                 window.addEventListener('keydown', (e) => {
                     // Ignore when user is focusing an input, textarea or button
                     if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
 
-                    if (e.code === 'Space') {
+                    if (e.key === '?' || e.key === 'h' || e.key === 'H') {
+                        e.preventDefault();
+                        if (this.dotNetRef) {
+                            this.dotNetRef.invokeMethodAsync('ToggleShortcutsModalFromJs');
+                        }
+                    } else if (e.key === 'Escape') {
+                        const dropdown = document.querySelector('.shortcuts-dropdown');
+                        if (dropdown && this.dotNetRef) {
+                            this.dotNetRef.invokeMethodAsync('ToggleShortcutsModalFromJs');
+                        }
+                    } else if (e.code === 'Space') {
                         e.preventDefault();
                         const willPause = this.audio && !this.audio.paused;
                         const playBtn = document.querySelector('.bar-play-btn, .bottom-play-btn');
@@ -169,6 +193,10 @@ window.lofiPlayer = {
                     if (this.audio && !this.audio.paused) {
                         idleTimeout = setTimeout(() => {
                             document.body.classList.add('hud-idle');
+                            // Auto-close open shortcuts dropdown when HUD fades out
+                            if (this.dotNetRef) {
+                                this.dotNetRef.invokeMethodAsync('CloseShortcutsMenuFromJs');
+                            }
                         }, 15000);
                     }
                 };

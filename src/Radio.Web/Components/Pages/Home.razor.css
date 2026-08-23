@@ -98,28 +98,214 @@
     --accent-island-glow: rgba(255, 0, 127, 0.18);
 }
 
-/* Widescreen Live Badge (pinned absolutely on top left) */
-.live-badge {
+/* Widescreen Live Badge & Shortcuts Top Bar */
+.top-nav-bar {
     position: absolute;
     top: 20px;
     left: 24px;
+    right: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     z-index: 9;
+    pointer-events: none; /* children enable pointer-events */
+}
+
+.live-badge {
+    position: static; /* position handled by .top-nav-bar */
+    z-index: 9;
+    pointer-events: auto;
     margin-bottom: 0;
     display: inline-flex;
     align-items: center;
-    background: rgba(18, 12, 28, 0.7);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 69, 102, 0.35);
-    color: #ff5e7e;
+    background: linear-gradient(135deg, rgba(255, 69, 102, 0.24) 0%, rgba(255, 69, 102, 0.06) 100%), rgba(14, 9, 24, 0.45);
+    backdrop-filter: blur(24px) saturate(190%) contrast(105%);
+    -webkit-backdrop-filter: blur(24px) saturate(190%) contrast(105%);
+    border: 1px solid rgba(255, 94, 126, 0.4);
+    color: #ff6b8b;
     padding: 0.35rem 0.85rem;
     border-radius: 9999px;
     font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 0 12px rgba(255, 69, 102, 0.15);
+    text-shadow: 0 0 8px rgba(255, 69, 102, 0.6);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 0 16px rgba(255, 69, 102, 0.25);
     transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* Modern Minimalist Keyboard Shortcuts Button & Dropdown Wrapper */
+.shortcuts-wrapper {
+    position: relative;
+    pointer-events: auto;
+}
+
+.shortcuts-btn {
+    pointer-events: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.03) 100%), rgba(14, 9, 24, 0.45);
+    backdrop-filter: blur(24px) saturate(190%) contrast(105%);
+    -webkit-backdrop-filter: blur(24px) saturate(190%) contrast(105%);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    color: rgba(255, 255, 255, 0.9);
+    padding: 0.32rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.shortcuts-btn:hover,
+.shortcuts-btn.active {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.06) 100%), rgba(20, 14, 32, 0.6);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.35);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.5), 0 0 14px var(--accent-glow);
+}
+
+.shortcuts-btn:active {
+    transform: translateY(0);
+}
+
+.shortcuts-key {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 0.68rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #ffffff;
+}
+
+/* Glassmorphism Shortcuts Dropdown Menu (Anchored Top-Right) */
+.shortcuts-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 280px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.03) 100%), rgba(14, 9, 24, 0.45);
+    backdrop-filter: blur(24px) saturate(190%) contrast(105%);
+    -webkit-backdrop-filter: blur(24px) saturate(190%) contrast(105%);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 18px;
+    padding: 14px 16px;
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.35), inset 0 0 16px rgba(255, 255, 255, 0.04), 0 0 24px var(--accent-glow);
+    color: #ffffff;
+    z-index: 100;
+    animation: dropDownSlide 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-sizing: border-box;
+}
+
+@keyframes dropDownSlide {
+    from { transform: translateY(-8px) scale(0.96); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.dropdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.dropdown-title-group {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.4px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.dropdown-icon {
+    width: 15px;
+    height: 15px;
+    color: var(--accent);
+}
+
+.dropdown-close-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.7);
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.dropdown-close-btn:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.dropdown-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 10px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: background 0.15s ease;
+}
+
+.dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.dropdown-label {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.dropdown-item kbd,
+.dropdown-keys kbd {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.35);
+    border-radius: 5px;
+    padding: 2px 7px;
+    font-size: 0.68rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-weight: 700;
+    color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.dropdown-keys {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.key-sep {
+    font-size: 0.68rem;
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .live-badge.playing .live-dot {
@@ -203,10 +389,10 @@
     transform: translateX(-50%);
     width: calc(100% - 48px);
     max-width: 820px;
-    background: rgba(16, 11, 26, 0.78);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(14, 9, 24, 0.45);
+    backdrop-filter: blur(24px) saturate(190%) contrast(105%);
+    -webkit-backdrop-filter: blur(24px) saturate(190%) contrast(105%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 24px;
     padding: 10px 20px;
     display: flex;
@@ -214,19 +400,22 @@
     justify-content: center;
     z-index: 10;
     box-sizing: border-box;
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 40px var(--accent-island-glow), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.35), inset 0 0 16px rgba(255, 255, 255, 0.03), 0 0 40px var(--accent-island-glow);
     transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s ease, box-shadow 0.8s ease;
 }
 
 /* Zen Mode HUD Auto-Hide */
 body.hud-idle .integrated-player-bar,
+body.hud-idle .top-nav-bar,
 body.hud-idle .live-badge,
+body.hud-idle .shortcuts-btn,
 body.hud-idle .hero-tagline {
     opacity: 0;
     pointer-events: none;
-    transform: translateY(8px);
 }
+body.hud-idle .top-nav-bar,
 body.hud-idle .live-badge,
+body.hud-idle .shortcuts-btn,
 body.hud-idle .hero-tagline {
     transform: translateY(-8px);
 }
@@ -235,7 +424,9 @@ body.hud-idle .integrated-player-bar {
 }
 
 .integrated-player-bar:hover,
+.top-nav-bar:hover,
 .live-badge:hover,
+.shortcuts-btn:hover,
 .hero-tagline:hover {
     opacity: 1 !important;
     pointer-events: auto !important;
@@ -936,17 +1127,10 @@ body.hud-idle .integrated-player-bar {
     }
 
     /* Floating badges positioned precisely in the top-left and top-right corners of the rounded album art cover */
-    .live-badge {
-        top: 16px; /* Stuck beautifully 16px from top edge of cover art */
-        left: 16px; /* Stuck beautifully 16px from left edge of cover art */
-        background: rgba(9, 5, 17, 0.85);
-        border-color: #ff4566;
-    }
-
-    .hero-tagline {
-        top: 16px; /* Stuck beautifully 16px from top edge of cover art */
-        right: 16px; /* Stuck beautifully 16px from right edge of cover art */
-        background: rgba(9, 5, 17, 0.85);
+    .top-nav-bar {
+        top: 14px;
+        left: 14px;
+        right: 14px;
     }
 
     /* Bottom Section: Compact, lower dark console pushed towards the thumb level */
