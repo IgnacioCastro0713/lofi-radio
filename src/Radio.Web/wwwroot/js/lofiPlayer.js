@@ -68,7 +68,6 @@ window.lofiPlayer = {
                     if (this.dotNetRef) {
                         this.dotNetRef.invokeMethodAsync('OnFullscreenChanged', isFullscreen);
                     }
-                    this.showToast(isFullscreen ? '⛶ FULLSCREEN' : '⛶ EXIT FULLSCREEN');
                 });
                 this.audio.addEventListener('timeupdate', () => {
                     const currentTime = this.audio.currentTime;
@@ -167,6 +166,8 @@ window.lofiPlayer = {
                             this.showToast(targetVol === 0 ? '🔇 MUTED' : `🔊 ${Math.round(targetVol * 100)}%`);
                         }
                     } else if (e.key === 'f' || e.key === 'F') {
+                        const willBeFullscreen = !document.fullscreenElement;
+                        this.showToast(willBeFullscreen ? '⛶ FULLSCREEN' : '⛶ EXIT FULLSCREEN');
                         this.toggleFullscreen();
                     } else if (e.key === 'ArrowUp') {
                         e.preventDefault();
