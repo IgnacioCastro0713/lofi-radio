@@ -199,7 +199,10 @@ def generate_dynamic_image_prompt(mood):
         vars_dict = {
             "vehicle": random.choice(elem["vehicles"]),
             "sun": random.choice(elem["suns"]),
-            "bg": random.choice(elem["backgrounds"])
+            "bg": random.choice(elem["backgrounds"]),
+            "scene": random.choice(elem["scenes"]),
+            "objects": random.choice(elem["objects"]),
+            "ambience": random.choice(elem["ambience"])
         }
     else:
         return "detailed 16-bit lofi style pixel art, 16:9 widescreen format"

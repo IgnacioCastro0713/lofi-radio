@@ -1052,10 +1052,12 @@
             "backgrounds": [
                 "a cosmic nebula with sparkling pixel stars and galaxies",
                 "a retro gaming bedroom with grid synthwave posters",
-                "a classic retro laser grid background, 80s nostalgic aesthetic",
+                "a cozy winter wooden cabin with a warm fireplace and snow falling outside the window",
                 "a futuristic cyber-city background with glowing pixelated towers",
-                "a starry retro arcade room with floating neon polygon details",
+                "a rainy Tokyo retro gaming cafe with glowing CRT screens and neon signs outside",
                 "a bedroom covered in retro pixel-art posters and action figures",
+                "a cozy autumn room with warm golden sunlight and falling maple leaves outside",
+                "a sunny seaside beach arcade shack with palm trees and pixelated ocean waves",
                 "a cozy futuristic grid space station lounge",
                 "a glowing retro tech workbench with soldering tools and schematics"
             ]
@@ -1090,11 +1092,41 @@
                 "a beautiful infinite pink and purple wireframe laser grid",
                 "a retro-futuristic purple twilight skyline with tall neon towers",
                 "a cosmic outrun highway lined with glowing neon palm trees",
-                "an infinite outrun landscape with retro-futuristic grid grids",
+                "an infinite outrun landscape with retro-futuristic grid horizons",
                 "a starry retrowave galaxy lined with wireframe mountains and grids",
                 "a futuristic cyber-canyon with towering holographic advertisements",
                 "an infinite desert of purple sand dunes and glowing laser pyramids",
                 "a retro space-dock overlooking a neon wireframe nebula"
+            ],
+            "scenes": [
+                "a futuristic skyscraper rooftop terrace overlooking flying neon traffic",
+                "a cozy retro neon music studio filled with vintage analog synthesizers",
+                "a rainy midnight diner counter with glowing purple neon signs outside",
+                "a neon-lit beach boardwalk lined with glowing palm tree silhouettes",
+                "a cozy cyberpunk loft apartment with floor-to-ceiling panoramic windows",
+                "a retro arcade bar balcony overlooking a glowing retrowave metropolis",
+                "a quiet futuristic highway service station under a massive vector moon",
+                "a high-tech train lounge car gazing out at endless wireframe landscapes"
+            ],
+            "objects": [
+                "a glowing analog synthesizer rack with pulsing LED level meters",
+                "a pair of glowing neon aviator sunglasses next to a retro cassette tape",
+                "a steaming futuristic neon cocktail glass on a glossy black counter",
+                "a retro chrome boombox with glowing spectrum analyzer lights",
+                "a customized cybernetic helmet resting on a leather seat",
+                "a glowing holographic turntable spinning a laser-etched disc",
+                "a retro vector display terminal rendering wireframe wireframes",
+                "a vintage keytar synthesizer plugged into a glowing amplifier"
+            ],
+            "ambience": [
+                "soft rain glistening on neon signs and purple puddles",
+                "holographic neon palm trees swaying in an electric evening breeze",
+                "laser light beams cutting through light atmospheric haze",
+                "vibrant neon billboards reflecting off sleek wet surfaces",
+                "glowing cyan and magenta ambient backlighting filling the room",
+                "distant flying cars leaving subtle light streaks across the dark sky",
+                "pulsing purple neon strip lighting along the floorboards",
+                "soft scanlines and chromatic aberration glowing across the scene"
             ]
         }
     },
@@ -1140,14 +1172,14 @@
             "gorgeous 16-bit retro arcade room corner pixel art, glowing CRT monitor scanlines, centered on {console} running {screen}, set against {bg}, nostalgic gamer aesthetic, 16:9 widescreen"
         ],
         "synthwave": [
-            "detailed 16-bit retro-futuristic outrun synthwave style pixel art of {vehicle} driving towards {sun}, set against {bg}, vibrant purple and hot pink color palette, aesthetic 1980s retrowave vibes, 16:9 widescreen format",
-            "dynamic low-angle road-level 16-bit pixel art shot of {vehicle} speeding across the neon grid towards {sun}, with {bg} in the distance, 16:9 widescreen format",
+            "detailed 16-bit retro-futuristic outrun synthwave pixel art of {vehicle} driving towards {sun}, set against {bg}, vibrant purple and hot pink color palette, aesthetic 1980s retrowave vibes, 16:9 widescreen format",
             "wide-angle cinematic 16-bit retrowave landscape showing {vehicle} cruising on an endless highway towards {sun}, surrounded by {bg}, glowing neon wireframes, 16:9 widescreen format",
-            "retro-futuristic first-person cockpit dashboard view in 16-bit pixel art from {vehicle}, looking through the windshield at {sun} over {bg}, 16:9 widescreen format",
-            "aesthetic 1980s outrun style 16-bit pixel art illustration. Featuring {vehicle} cruising steadily towards {sun}, surrounded by {bg}. Vibrant hot pink, neon blue, and purple color scheme, 16:9 widescreen format",
-            "charming retro-futuristic retrowave pixel art scene. An epic 16-bit view of {vehicle} driving on a highway towards {sun}, set against {bg}. Glowing neon wires, outrun aesthetics, 16:9 widescreen format",
-            "epic 16-bit outrun retrowave scene of {vehicle} zooming down a wireframe neon boulevard towards {sun}. Background elements include {bg}, hot neon pink and cyan blue cyberpunk theme, 16:9 widescreen format",
-            "cinematic 16-bit outrun retrowave scene of {vehicle} driving on a futuristic endless grid road towards a massive {sun}, with a background of {bg}, vibrant magenta and electric cyan colors, 16:9 widescreen"
+            "isometric 16-bit pixel art of {scene}, featuring {objects}, surrounded by {ambience}, overlooking {bg}, 16:9 widescreen format",
+            "cinematic 16-bit cyberpunk interior pixel art of {scene}, on the counter rests {objects}, with large glass windows showing {bg} under {sun}, {ambience}, 16:9 widescreen",
+            "retro-futuristic first-person cockpit dashboard view in 16-bit pixel art from {vehicle}, looking through the windshield at {sun} over {bg}, with {objects} on the dash, 16:9 widescreen format",
+            "cozy 16-bit retrowave balcony scene pixel art: {scene}, where we see {objects}, {ambience}, overlooking a panoramic view of {bg} with {sun}, 16:9 widescreen format",
+            "dynamic low-angle road-level 16-bit pixel art shot of {vehicle} speeding across the neon grid towards {sun}, with {bg} in the distance and {ambience}, 16:9 widescreen format",
+            "aesthetic 16-bit synthwave interior pixel art of {scene}, lit by {ambience}, displaying {objects}, with an open terrace looking towards {sun} and {bg}, 16:9 widescreen format"
         ]
     },
     "AUDIO_TEMPLATES": [

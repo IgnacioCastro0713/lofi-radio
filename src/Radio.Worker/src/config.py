@@ -6,7 +6,7 @@ import google.genai as genai
 # Load and validate configuration
 PROJECT_ID = os.getenv("GCP_PROJECT_ID")
 BUCKET_NAME = os.getenv("GCS_BUCKET_NAME")
-TRACK_COUNT = int(os.getenv("TRACK_COUNT", "40"))
+TRACK_COUNT = int(os.getenv("TRACK_COUNT", "25"))
 MUSIC_MODEL = os.getenv("MUSIC_MODEL", "lyria-3-pro-preview")
 IMAGE_MODEL = os.getenv("IMAGE_MODEL", "gemini-3.1-flash-image")
 
