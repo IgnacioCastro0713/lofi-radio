@@ -344,7 +344,8 @@
                                 }
                                 else
                                 {
-                                    <text>128kbps MP3 Live</text>
+                                    <span class="stream-status-indicator @(IsPlaying ? "active" : "")"></span>
+                                    <text>128 kbps • @GetMoodGenreLabel(CurrentState.Track.Mood)</text>
                                 }
                             </div>
                         </div>
@@ -669,6 +670,20 @@
         
         // Secure proxy streaming - routes the private GCS request securely through our authorized Web container!
         return $"/api/stream/audio/{track.FileName}";
+    }
+
+    private static string GetMoodGenreLabel(string? mood)
+    {
+        if (string.IsNullOrEmpty(mood)) return "Lo-Fi Beats";
+        return mood.ToLower() switch
+        {
+            "day" => "Day Focus Lo-Fi",
+            "evening" => "Evening Jazzhop",
+            "night" => "Sleep Ambient",
+            "pixel" => "8/16-Bit Chiptune",
+            "synthwave" => "Outrun Retrowave",
+            _ => "Lo-Fi Beats"
+        };
     }
 
     private static string GetMoodLabel(string? mood)

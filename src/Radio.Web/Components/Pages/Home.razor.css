@@ -370,12 +370,41 @@ body.hud-idle .integrated-player-bar {
 }
 
 .bar-song-sub {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     font-size: 0.65rem;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.65);
     letter-spacing: 0.8px;
     text-transform: uppercase;
     margin-top: 2px;
     font-weight: 500;
+}
+
+.stream-status-indicator {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    transition: all 0.3s ease;
+}
+
+.stream-status-indicator.active {
+    background: #00ff88;
+    box-shadow: 0 0 8px rgba(0, 255, 136, 0.8);
+    animation: stream-pulse 2s infinite ease-in-out;
+}
+
+@keyframes stream-pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.4;
+        transform: scale(0.85);
+    }
 }
 
 /* Bar Center: Playback button & Timeline Progress Slider */
