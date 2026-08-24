@@ -3,8 +3,8 @@
   "short_name": "LofiRadio",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#070314",
-  "theme_color": "#ff9cfc",
+  "background_color": "#1a1030",
+  "theme_color": "#2ee6d6",
   "icons": [
     {
       "src": "icon-192.png",

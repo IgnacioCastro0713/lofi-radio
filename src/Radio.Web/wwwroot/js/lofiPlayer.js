@@ -12,6 +12,8 @@ window.lofiPlayer = {
     sourceNode: null,
     animFrameId: null,
     freqData: null,
+    peakBars: null,        // Tracks floating peak drops with gravity physics
+    mouseVisualizer: { x: -1000, y: -1000, active: false },
 
     init: function (dotNetReference) {
         this.dotNetRef = dotNetReference;
@@ -186,31 +188,6 @@ window.lofiPlayer = {
                     }
                 });
 
-                // Zen Mode: Auto-hide HUD on idle during playback (15 seconds)
-                let idleTimeout = null;
-                const resetIdle = () => {
-                    document.body.classList.remove('hud-idle');
-                    if (idleTimeout) clearTimeout(idleTimeout);
-                    if (this.audio && !this.audio.paused) {
-                        idleTimeout = setTimeout(() => {
-                            document.body.classList.add('hud-idle');
-                            // Auto-close open shortcuts dropdown when HUD fades out
-                            if (this.dotNetRef) {
-                                this.dotNetRef.invokeMethodAsync('CloseShortcutsMenuFromJs');
-                            }
-                        }, 15000);
-                    }
-                };
-
-                ['mousemove', 'mousedown', 'keydown', 'touchstart'].forEach(evt => {
-                    window.addEventListener(evt, resetIdle, { passive: true });
-                });
-
-                this.audio.addEventListener('play', resetIdle);
-                this.audio.addEventListener('pause', () => {
-                    document.body.classList.remove('hud-idle');
-                    if (idleTimeout) clearTimeout(idleTimeout);
-                });
 
             } else {
                 console.error("Failed to find nativeLofiAudio element on screen!");
@@ -247,18 +224,15 @@ window.lofiPlayer = {
                 if (AudioContextClass) {
                     this.audioCtx = new AudioContextClass();
                     this.analyser = this.audioCtx.createAnalyser();
-                    this.analyser.fftSize = 64;
-                    this.analyser.smoothingTimeConstant = 0.8;
+                    this.analyser.fftSize = 256;
+                    this.analyser.smoothingTimeConstant = 0.78; // Silky smooth, zero-stutter frequency response
                     this.freqData = new Uint8Array(this.analyser.frequencyBinCount);
                     this.sourceNode = this.audioCtx.createMediaElementSource(this.audio);
                     this.sourceNode.connect(this.analyser);
                     this.analyser.connect(this.audioCtx.destination);
                 }
             } catch (e) {
-                // ponytail: Web Audio API may fail on CORS or restricted envs; add anim-fallback class
                 console.warn("[lofiPlayer] Web Audio API init skipped or restricted:", e);
-                const sw = document.querySelector('.sound-wave');
-                if (sw) sw.classList.add('anim-fallback');
             }
         }
         if (this.audioCtx && this.audioCtx.state === 'suspended') {
@@ -268,23 +242,135 @@ window.lofiPlayer = {
 
     startVisualizer: function () {
         this.stopVisualizer();
-        const bars = document.querySelectorAll('.sound-wave span');
-        if (!bars || bars.length === 0 || !this.analyser) {
-            const sw = document.querySelector('.sound-wave');
-            if (sw) sw.classList.add('anim-fallback');
+        const canvas = document.getElementById('lofiParticleCanvas');
+        if (!this.analyser) {
             return;
         }
+
+        const ctx = canvas ? canvas.getContext('2d') : null;
+
+        // Interactive mouse proximity listener on the canvas & player bar
+        if (!this._mouseHandlerAttached) {
+            this._mouseHandlerAttached = true;
+            window.addEventListener('mousemove', (e) => {
+                const c = document.getElementById('lofiParticleCanvas');
+                if (c) {
+                    const rect = c.getBoundingClientRect();
+                    if (e.clientY >= rect.top - 60 && e.clientY <= rect.bottom + 60 &&
+                        e.clientX >= rect.left && e.clientX <= rect.right) {
+                        this.mouseVisualizer.x = (e.clientX - rect.left) * (c.width / rect.width);
+                        this.mouseVisualizer.active = true;
+                    } else {
+                        this.mouseVisualizer.active = false;
+                    }
+                }
+            }, { passive: true });
+
+            window.addEventListener('mouseleave', () => {
+                this.mouseVisualizer.active = false;
+            });
+        }
+
+        let frameCount = 0;
+        let cachedAccent = '#00d2ff';
 
         const loop = () => {
             if (this.audio && !this.audio.paused) {
                 this.analyser.getByteFrequencyData(this.freqData);
-                // Map low-mid frequency bands across the 4 visualizer bars
-                const bands = [this.freqData[1] || 0, this.freqData[3] || 0, this.freqData[6] || 0, this.freqData[9] || 0];
-                for (let i = 0; i < bars.length; i++) {
-                    const val = bands[i] / 255; // 0.0 to 1.0
-                    const height = Math.max(3, Math.round(val * 12));
-                    bars[i].style.height = `${height}px`;
+
+                // Render High-Definition, Crisp Solid LED Spectrum
+                if (ctx && canvas) {
+                    const rectWidth = Math.floor(canvas.clientWidth);
+                    const rectHeight = Math.floor(canvas.clientHeight);
+                    if (canvas.width !== rectWidth || canvas.height !== rectHeight) {
+                        canvas.width = rectWidth;
+                        canvas.height = rectHeight;
+                    }
+                    const w = canvas.width;
+                    const h = canvas.height;
+                    const centerX = w / 2;
+                    ctx.clearRect(0, 0, w, h);
+
+                    // Cache CSS variable read every 30 frames to eliminate DOM thrashing / stutter
+                    if (frameCount++ % 30 === 0) {
+                        const playerCard = document.querySelector('.player-card');
+                        if (playerCard) {
+                            cachedAccent = getComputedStyle(playerCard).getPropertyValue('--accent').trim() || '#00d2ff';
+                        }
+                    }
+
+                    // Fixed block dimensions (double width: 6.4px, gap: 2.2px)
+                    // ponytail: fixed step avoids wide-screen distortion
+                    const barWidth = 6.4;
+                    const barGap = 2.2;
+                    const step = barWidth + barGap;
+                    const halfBars = Math.max(8, Math.floor(centerX / step));
+                    const segmentHeight = 2.4;
+                    const segmentGap = 1.4;
+                    const segmentTotal = segmentHeight + segmentGap;
+                    const maxSegments = Math.floor((h - 4) / segmentTotal);
+
+                    if (!this.peakBars || this.peakBars.length !== halfBars) {
+                        this.peakBars = new Float32Array(halfBars);
+                    }
+
+                    ctx.globalAlpha = 1.0;
+
+                    for (let i = 0; i < halfBars; i++) {
+                        // Symmetrical logarithmic frequency mapping (bass in center -> treble at outer edges)
+                        const binRatio = Math.pow(i / halfBars, 1.3);
+                        const binIndex = Math.min(this.freqData.length - 1, Math.floor(binRatio * 52) + 1);
+                        const raw = (this.freqData[binIndex] || 0) / 255;
+                        
+                        // Punchy amplitude: exponent > 1 pulls quiet bins down, creating a wave silhouette
+                        // instead of a flat block wall. ponytail: tune exponent, not a config knob.
+                        let amp = Math.min(1.0, Math.pow(raw, 1.6));
+
+                        const rightX = centerX + (i * step) + 1;
+                        const leftX = centerX - ((i + 1) * step) + 1;
+
+                        // Interactive mouse proximity wave ripple
+                        if (this.mouseVisualizer.active) {
+                            const distR = Math.abs(rightX - this.mouseVisualizer.x);
+                            if (distR < 80) {
+                                amp = Math.min(1.0, amp + (1 - distR / 80) * 0.45);
+                            }
+                            const distL = Math.abs(leftX - this.mouseVisualizer.x);
+                            if (distL < 80) {
+                                amp = Math.min(1.0, amp + (1 - distL / 80) * 0.45);
+                            }
+                        }
+
+                        // Allow bars to fully drop to 0 (was floored at 1) for real silence/contrast
+                        const activeSegments = Math.round(amp * maxSegments);
+
+                        // Peak Drop Physics with faster gravity for a snappier, less "stuck" look
+                        if (activeSegments >= this.peakBars[i]) {
+                            this.peakBars[i] = activeSegments;
+                        } else {
+                            this.peakBars[i] = Math.max(0, this.peakBars[i] - 0.45);
+                        }
+
+                        // Render 100% solid mood color blocks (matching controls var(--accent))
+                        // ponytail: direct fill without specular lines for 100% solid color
+                        ctx.fillStyle = cachedAccent;
+                        for (let s = 0; s < activeSegments; s++) {
+                            const segY = h - 2 - ((s + 1) * segmentTotal);
+                            ctx.fillRect(rightX, segY, barWidth, segmentHeight);
+                            ctx.fillRect(leftX, segY, barWidth, segmentHeight);
+                        }
+
+                        // Floating peak solid white cap
+                        const peakVal = Math.round(this.peakBars[i]);
+                        if (peakVal > 1 && peakVal < maxSegments) {
+                            const peakY = h - 2 - ((peakVal + 1) * segmentTotal);
+                            ctx.fillStyle = '#ffffff';
+                            ctx.fillRect(rightX, peakY, barWidth, segmentHeight);
+                            ctx.fillRect(leftX, peakY, barWidth, segmentHeight);
+                        }
+                    }
                 }
+
                 this.animFrameId = requestAnimationFrame(loop);
             } else {
                 this.stopVisualizer();
@@ -301,6 +387,11 @@ window.lofiPlayer = {
         const bars = document.querySelectorAll('.sound-wave span');
         if (bars) {
             bars.forEach(b => b.style.height = '');
+        }
+        const canvas = document.getElementById('lofiParticleCanvas');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
     },
 

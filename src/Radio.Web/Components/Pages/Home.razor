@@ -355,6 +355,7 @@
             @if (CurrentState != null)
             {
                 <div class="integrated-player-bar">
+                    <canvas id="lofiParticleCanvas" class="particle-strip-canvas"></canvas>
                     <div class="bar-content">
                         <!-- Left Section: Track Title and listeners status -->
                         <div class="bar-left">
@@ -366,12 +367,6 @@
                                 {
                                     <span class="new-badge">NEW</span>
                                 }
-                                <div class="sound-wave @(IsPlaying ? "playing" : "")" title="@(IsPlaying ? "Playing" : "Paused")">
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                </div>
                             </div>
                             <div class="bar-song-sub">
                                 @if (_showSecretInfo)
