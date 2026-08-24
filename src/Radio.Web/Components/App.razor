@@ -4,6 +4,21 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Required for iOS to launch the "Add to Home Screen" PWA in true standalone
+         mode; without it, display-mode: standalone never matches on iOS Safari. -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <script>
+        // Runs before body paints, avoiding a flash of desktop-only controls
+        // on mobile before lofiPlayer.js finishes loading (same UA check).
+        (function () {
+            var isIOS = /iPad|iPhone|iPod/.test(navigator.platform) ||
+                        (navigator.userAgent.includes("Mac") && "ontouchend" in document);
+            var isAndroid = /Android/.test(navigator.userAgent);
+            if (isIOS) document.documentElement.classList.add('is-ios');
+            if (isIOS || isAndroid) document.documentElement.classList.add('is-mobile-device');
+        })();
+    </script>
     <base href="/" />
     <ResourcePreloader />
     <link rel="stylesheet" href="@Assets["lib/bootstrap/dist/css/bootstrap.min.css"]" />

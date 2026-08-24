@@ -1,4 +1,4 @@
-const CACHE_NAME = "lofi-radio-cache-v7";
+const CACHE_NAME = "lofi-radio-cache-v8";
 const ASSETS_TO_CACHE = [
     "/app.css",
     "/favicon.svg",

@@ -1216,23 +1216,25 @@
         width: 110px;
     }
 
-    /* Disable fullscreen toggle button in mobile mode */
-    .fullscreen-btn {
-        display: none !important;
-    }
+}
+
+/* Disable fullscreen toggle and keyboard shortcuts on actual mobile OSes
+   (UA-detected via is-mobile-device class in lofiPlayer.js), not by viewport
+   width: both are desktop-only affordances. Spectrum canvas stays visible. */
+html.is-mobile-device .fullscreen-btn,
+html.is-mobile-device .shortcuts-wrapper {
+    display: none !important;
+}
+
+/* iOS hides both the volume slider (is-ios) and fullscreen button
+   (is-mobile-device), leaving .bar-right fully empty — collapse it so its
+   margin/gap don't leave a dead empty strip at the bottom of the player. */
+html.is-ios .bar-right {
+    display: none !important;
 }
 
 /* Custom iOS Native Volume Layout Constraints */
 html.is-ios .bar-volume-icon,
 html.is-ios .bar-volume-slider {
     display: none !important; /* Hide non-functional JS volume control on Apple devices */
-}
-
-/* Installed PWA on mobile (iPhone/Android "Add to Home Screen"): hide spectrum
-   canvas and shortcuts button, both redundant in the app-like fullscreen shell.
-   display-mode: standalone is the native, cross-platform way to detect this. */
-@media (max-width: 768px) and (display-mode: standalone) {
-    .shortcuts-wrapper {
-        display: none !important;
-    }
 }

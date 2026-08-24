@@ -36,11 +36,11 @@ window.lofiPlayer = {
                     }
                 }
 
-                // Detect iOS/Apple devices to apply specific CSS and layout rules
-                const isIOS = /iPad|iPhone|iPod/.test(navigator.platform) || 
-                              (navigator.userAgent.includes("Mac") && "ontouchend" in document);
+                // iOS/mobile classes are already set synchronously in App.razor's
+                // <head> script (avoids a flash of desktop-only controls). Just
+                // read it back here for the console log / any JS-side checks.
+                const isIOS = document.documentElement.classList.contains('is-ios');
                 if (isIOS) {
-                    document.documentElement.classList.add('is-ios');
                     console.log("[lofiPlayer] iOS device detected. Native volume control constraint active.");
                 }
 
