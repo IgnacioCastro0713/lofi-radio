@@ -1232,7 +1232,6 @@ html.is-ios .bar-volume-slider {
    canvas and shortcuts button, both redundant in the app-like fullscreen shell.
    display-mode: standalone is the native, cross-platform way to detect this. */
 @media (max-width: 768px) and (display-mode: standalone) {
-    .particle-strip-canvas,
     .shortcuts-wrapper {
         display: none !important;
     }
