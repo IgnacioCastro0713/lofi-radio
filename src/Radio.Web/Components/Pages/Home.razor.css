@@ -1227,3 +1227,13 @@ html.is-ios .bar-volume-icon,
 html.is-ios .bar-volume-slider {
     display: none !important; /* Hide non-functional JS volume control on Apple devices */
 }
+
+/* Installed PWA on mobile (iPhone/Android "Add to Home Screen"): hide spectrum
+   canvas and shortcuts button, both redundant in the app-like fullscreen shell.
+   display-mode: standalone is the native, cross-platform way to detect this. */
+@media (max-width: 768px) and (display-mode: standalone) {
+    .particle-strip-canvas,
+    .shortcuts-wrapper {
+        display: none !important;
+    }
+}
