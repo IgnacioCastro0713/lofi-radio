@@ -4,7 +4,9 @@ Welcome to **LofiRadio**, an automated, global time-synchronized 24/7 Lofi radio
 
 The entire web hosting and database infrastructure is designed under a **$0.00 USD Cost Serverless** paradigm (leveraging Google Cloud free tiers), while GenAI API generation costs are kept to an optimized minimum (see the [Financial Section](#-6-financial-billing--cost-breakdown-usd) for full details).
 
-![LofiRadio Retro Widescreen Player Interface](player-interface.png)
+<p align="center">
+  <img src="player-interface.gif" alt="LofiRadio Retro Widescreen Player Interface" width="640">
+</p>
 
 ---
 
