@@ -13,7 +13,7 @@ image_tag   = "v0.4.24"
 track_count = 25
 
 # AI models for music and image generator
-music_model = "lyria-3-pro-preview"
+music_model = "lyria-3.5"
 image_model = "gemini-3.1-flash-image"
 
 # IAM members granted access via IAP (roles/iap.httpsResourceAccessor)
